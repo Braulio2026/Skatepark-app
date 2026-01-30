@@ -21,15 +21,15 @@ nav{
 }
 
 .logo {
-    color: #fff;
-    margin-bottom: 5px;
+  margin-bottom: 5px;
+  height: 34px;
+  width: auto;
 }
 
 nav ul {
     display: flex;
     gap: 10px;   
-    top: 0;
-    justify-items: center;
+    align-items: center;
 }
 
 nav ul li {
@@ -37,11 +37,36 @@ nav ul li {
 }
 
 nav ul li a {
+    position: relative;
     text-decoration: none;
     margin: 20px;
     padding: 0 20px;
     color: #fff;
     font-size: 15px;
+}
+
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+/* hover animation */
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* optional background hover effect */
+nav ul li a:hover {
+    background: #000;
+    border-radius: 10px;
 }
 
 .menu-icon {
@@ -51,72 +76,6 @@ nav ul li a {
 .menu-icon i{
     color: #fff;
     font-size: 30px;
-}
-
-@media (max-width: 600px) {
-    nav ul {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        text-align: center;
-        gap: 0;
-        overflow: hidden;
-    }
-    nav ul li {
-        padding: 30px;
-        z-index: 999;
-        backdrop-filter: blur(7px);
-        background: #6d6d6da1;
-    }
-    .menu-icon {
-        display: block;
-    } 
-
-    #menuList {
-        transition: all 0.5s;
-    }
-
-    body {
-        width: 550px;
-    }
-
-    .container-button {
-        margin-left: 30%;
-        margin-top: 30%;
-    }
-
-    .list-skate,
-    .event {
-        max-width: 325px;
-    }
-
-/* Responsive to movile */
-    .information .title {
-        font-size: 1.1rem;
-    }
-
-    .information span {
-        font-size: 0.9rem;
-    }
-
-    .arrow button {
-        font-size: 1.5rem;
-        padding: 6px;
-    }
-
-    .slider .item {
-        margin: 41px;
-    }
-
-    .slider button {
-        display: block;
-        justify-self: center;
-        margin-bottom: 20px;        
-        height: 42px;
-        width: 200px;
-    }
 }
 
 .menu-icon i{
@@ -196,7 +155,7 @@ input {
    padding: 10px;
    border: 1px solid rgb(151, 151, 151);
    background: #6d6d6da1; 
-   backdrop-filter: blur(6px);
+   backdrop-filter: blur(5px);
    border-radius: 10px;
    margin: 45px;
    width: 450px;
@@ -204,7 +163,8 @@ input {
    height: 8vh;
    font-family: sans-serif;
 }
-a{
+
+a {
     color: rgb(255, 255, 255);
     text-decoration: none;
     font-size: 20px;
@@ -217,9 +177,16 @@ a{
     border: none;
     background: none;
     cursor: pointer;
-    padding-inline: 2rem;
+    padding-inline: 30px;
     width: 400px;
     color: white;
+}
+
+.btn:hover {
+    position: relative;
+    background-color: rgb(176, 188, 192);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
 }
 
 .text-1 {
@@ -227,7 +194,7 @@ a{
     text-align: center;
     padding: 3%;
     margin: 15px;
-    font-size: 19px;
+    font-size: 17px;
     font-family: sans-serif;
 }
 
@@ -243,7 +210,7 @@ span {
 /* general carousel Container */
 .slider-container {
     width: 100%;
-    height: 800px;
+    height: 700px;
     overflow: hidden;
     position: relative;
     top: 2vh;
@@ -252,12 +219,14 @@ span {
 /* internal carousel */
 .slider {
     display: flex;
-    transition: transform 0.4s ease;
+    transition: transform 0.5s ease;
 }
 
 /* each slide */
 .slider .item {
+    position: relative;
     width: 100%;
+    min-height: 100%;
     padding: 30px;
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -270,16 +239,18 @@ span {
 /*responsive image */
 .slider .item .image img {
     width: 400px;
-    height: 400px;
+    height: 300px;
     border-radius: 10px;
     object-fit: cover;
 }
 
 /* Information */
 .information {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     max-width: max-content;
     margin-bottom: 40px;
-    justify-content: center;
 }
 
 .information .title {
@@ -290,32 +261,66 @@ span {
 
 .information span {
     font-size: 1rem;
-    padding: 10px 20px;
+    padding: 10px 15px;
     display: flex;
     flex-wrap: wrap;
     font-family: sans-serif;
     justify-content: center;
     color: #fff;
 }
-
+/* 
 .select {
     position: absolute;
-    display: content;
     background-color: #252525;
     color:rgb(255, 255, 255);
     cursor: pointer;
-    justify-content: space-between;
-    margin: 0 80px;
+    align-self: center;
     width: 15vw;
+    max-width: 220px;
+    min-width: 160px;
+    border-radius: 15px;
     padding: 10px;
-    bottom: 30px;
-    border-radius: 1rem;
+    bottom: 0;
+    margin: 30px;
+
+    transition: 
+        background-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+} */
+
+.select {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 85%;
+    padding: 10px;
+    margin-bottom: 20px;
+
+    background-color: #252525;
+    color: #fff;
+    border-radius: 15px;
+    cursor: pointer;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .select:hover {
     background-color: #ffffff;
     transition: 0.2s;
     color: rgb(0, 0, 0);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+.select:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .arrow button {
@@ -360,4 +365,92 @@ span {
     justify-items: left;
     display: flex;
     color: white;
+}
+
+@media (max-width: 600px) {
+    nav ul {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        text-align: center;
+        gap: 0;
+        overflow: hidden;
+    }
+    nav ul li {
+        padding: 30px;
+        z-index: 999;
+        width: 100%;
+        backdrop-filter: blur(7px);
+        background: #6d6d6da1;
+    }
+ 
+    .menu-icon {
+        display: block;
+    } 
+
+    #menuList {
+        transition: all 0.5s;
+        display: flex;
+    }
+
+    body {
+        width: 550px;
+    }
+
+    .container-button {
+        margin-top: 10%;
+    }
+
+    input {
+        width: 60%;
+    }
+
+    .list-skate,
+    .event {
+        max-width: 325px;
+    }
+
+/* Responsive to movile */
+    .information .title {
+        font-size: 1.1rem;
+    }
+
+    .information span {
+        font-size: 0.9rem;
+    }
+
+    .arrow button {
+        font-size: 1.5rem;
+        padding: 6px;
+    }
+
+    .slider .item {
+        margin: 45px;
+        position: relative;
+        justify-self: center;
+    }
+
+    .slider button {
+        display: block;
+        justify-self: center;
+        margin-bottom: 20px;        
+        height: 42px;
+        width: 200px;
+    } 
+    @media (hover: hover) {
+    .select:hover {
+        transform: translateY(-3px);
+    }
+    }
+}
+
+    @media (min-width: 1024px) {
+    .select {
+        width: 15vw;
+        max-width: 220px;
+        min-width: 160px;
+        margin-bottom: 30px;
+    }
 }
