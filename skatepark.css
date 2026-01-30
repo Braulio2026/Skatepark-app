@@ -28,8 +28,8 @@ nav {
 
 nav ul {
     display: flex;
+    margin-left: 50%;
     gap: 10px; 
-    margin-bottom: 15px;
     justify-items: center;
 }
 
@@ -38,10 +38,36 @@ nav ul li {
 }
 
 nav ul li a {
+    position: relative;
     text-decoration: none;
     margin: 20px;
+    padding: 0 20px;
     color: #fff;
     font-size: 15px;
+}
+
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+/* hover animation */
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* optional background hover effect */
+nav ul li a:hover {
+    background: #000;
+    border-radius: 10px;
 }
 
 .menu-icon i{
