@@ -21,15 +21,15 @@ nav{
 }
 
 .logo {
-    color: #fff;
-    margin-bottom: 5px;
+  margin-bottom: 5px;
+  height: 34px;
+  width: auto;
 }
 
 nav ul {
     display: flex;
     gap: 10px;   
-    top: 0;
-    justify-items: center;
+    align-items: center;
 }
 
 nav ul li {
@@ -67,15 +67,18 @@ nav ul li a {
     nav ul li {
         padding: 30px;
         z-index: 999;
+        width: 100%;
         backdrop-filter: blur(7px);
         background: #6d6d6da1;
     }
+ 
     .menu-icon {
         display: block;
     } 
 
     #menuList {
         transition: all 0.5s;
+        display: flex;
     }
 
     body {
