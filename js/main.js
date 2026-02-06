@@ -72,4 +72,109 @@ mapButtons.forEach(button => {
         menuList.style.maxHeight = "0px";
       }
       }
- 
+      
+      // ==== SLIDER-2 ====
+      (() => {
+const slider = document.querySelector('.slider-2');
+const track = document.querySelector('.slider-track');
+const cards = document.querySelectorAll('.spot-card');
+
+let index = 0;
+let autoSlideInterval;
+let isDragging = false;
+let startX = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
+function cardsPerView() {
+  if (window.innerWidth >= 1200) return 1;
+  if (window.innerWidth >= 768) return 1;
+  return 1;
+}
+
+function slideToIndex() {
+  const percentage = 100 / cardsPerView();
+  track.style.transform = `translateX(-${index * percentage}%)`;
+}
+
+function startAutoSlide() {
+  autoSlideInterval = setInterval(() => {
+    index++;
+    if (index > cards.length - cardsPerView()) {
+      index = 0;
+    }
+    slideToIndex();
+  }, 3000);
+}
+
+function stopAutoSlide() {
+  clearInterval(autoSlideInterval);
+}
+
+/* ----- DRAG SUPPORT ----- */
+function touchStart(e) {
+  isDragging = true;
+  startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+  prevTranslate = -index * (100 / cardsPerView());
+  stopAutoSlide();
+}
+
+function touchMove(e) {
+  if (!isDragging) return;
+
+  const currentX = e.type.includes('mouse')
+    ? e.pageX
+    : e.touches[0].clientX;
+
+  const diff = currentX - startX;
+
+  track.style.transform =
+    `translateX(calc(${prevTranslate}% + ${diff}px))`;
+}
+
+function touchEnd(e) {
+  if (!isDragging) return;
+  isDragging = false;
+
+  const endX = e.type.includes('mouse')
+    ? e.pageX
+    : e.changedTouches[0].clientX;
+
+  const movedBy = endX - startX;
+  const threshold = 80;
+
+  if (movedBy < -threshold && index < cards.length - cardsPerView()) {
+    index++;
+  }
+
+  if (movedBy > threshold && index > 0) {
+    index--;
+  }
+
+  slideToIndex();
+  startAutoSlide();
+}
+
+
+/* EVENTS */
+slider.addEventListener('mouseenter', stopAutoSlide);
+slider.addEventListener('mouseleave', startAutoSlide);
+
+slider.addEventListener('mousedown', touchStart);
+slider.addEventListener('mousemove', touchMove);
+slider.addEventListener('mouseup', touchEnd);
+slider.addEventListener('mouseleave', touchEnd);
+
+slider.addEventListener('touchstart', touchStart);
+slider.addEventListener('touchmove', touchMove);
+slider.addEventListener('touchend', touchEnd);
+
+slider.addEventListener('touchstart', stopAutoSlide);
+slider.addEventListener('touchend', startAutoSlide);
+
+
+window.addEventListener('resize', slideToIndex);
+
+/* INIT */
+startAutoSlide();
+})();
