@@ -15,7 +15,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgb(24, 49, 51);
+    background: #000;
     position: relative;
     height: 55px;
 }
@@ -30,7 +30,7 @@ nav ul {
     display: flex;
     margin-left: 50%;
     gap: 10px; 
-    justify-items: center;
+    align-items: center;
 }
 
 nav ul li {
@@ -41,9 +41,9 @@ nav ul li a {
     position: relative;
     text-decoration: none;
     margin: 20px;
-    padding: 0 20px;
+    padding: 0 25px;
     color: #fff;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 nav ul li a::after {
@@ -62,26 +62,44 @@ nav ul li a::after {
 /* hover animation */
 nav ul li a:hover::after {
     width: 100%;
+    height: 10%;
 }
 
 /* optional background hover effect */
 nav ul li a:hover {
-    background: #000;
+    background:#252525;
     border-radius: 10px;
 }
 
-.menu-icon i{
+.menu-icon {
     display: none;
+}
+
+.menu-icon i{
     color: #fff;
+    font-size: 30px;
+}
+
+.menu-icon i{
+    color: #fff;
+    font-size: 30px;
 }
 
 .main-text  {
-    position: absolute;
-    display: flex;
-    color: white;
-    font-size: 30px;
-    top: 15%;
+   position: absolute;
+   padding: 0.3rem;
+   display: flex;
+   color: #fff;
+   font-size: 25px;
+   font-weight: bold;
+   top: 15%;
+   border: 1px solid rgb(151, 151, 151);
+   background: rgba(var(--color-white), 0.15);
+   backdrop-filter: blur(18px);
+   box-shadow: 0 8px 32px 0 rgba(var(--color-white), 0.1);
+   border-radius: 10px;
 }
+
 .image-container {
     display: flex;
     position: relative;
@@ -97,7 +115,8 @@ nav ul li a:hover {
     display: flex;
     justify-content: center;
     position: relative;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
     margin: 20px;
     padding: 10px;
 }
@@ -184,13 +203,13 @@ h2 {
 
 .footer {
     position: relative;
-    background-color:rgb(24, 49, 51);
+    background-color: #000;
     max-width: 100%;
     height: 58vh;
     top: 10rem;
 }
 
-/*mobile device */
+/* responsive to mobile */
 
 @media (max-width: 600px) {
     nav ul {
@@ -206,11 +225,15 @@ h2 {
     nav ul li {
         padding: 30px;
         z-index: 999;
-        backdrop-filter: blur(7px);
-        background: #6d6d6da1;
+        min-width: 100%;
+        border: 1px solid rgb(151, 151, 151);
+        background: rgba(var(--color-white), 0.15);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 8px 32px 0 rgba(var(--color-white), 0.1);
+        border-radius: 10px;
     }
 
-    .menu-icon i{
+    .menu-icon {
         display: block;
     } 
 
@@ -218,7 +241,17 @@ h2 {
         transition: all 0.5s;
         display: flex;
     }
-    
+
+    .main-text {
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        font-weight: 300;
+    }
+
+    body {
+        width: 550px;
+    }
 
     .carousel-text {
         margin: 10px;
