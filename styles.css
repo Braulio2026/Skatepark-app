@@ -76,6 +76,30 @@ nav ul li a:hover {
     border-radius: 10px;
 }
 
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+/* hover animation */
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* optional background hover effect */
+nav ul li a:hover {
+    background: #000;
+    border-radius: 10px;
+}
+
 .menu-icon {
     display: none;
 }
@@ -219,6 +243,13 @@ a {
 .btn:hover svg {
   transform: translateX(6px) scale(1.1) rotate(5deg);
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+}
+
+.btn:hover {
+    position: relative;
+    background-color: rgb(176, 188, 192);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
 }
 
 .text-1 {

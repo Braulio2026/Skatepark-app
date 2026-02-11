@@ -86,6 +86,29 @@ let startX = 0;
 let currentTranslate = 0;
 let prevTranslate = 0;
 
+      function toggleMenu() {
+        if(menuList.style.maxHeight == "0px")
+      {
+         menuList.style.maxHeight = "300px";
+      }
+      else{
+        menuList.style.maxHeight = "0px";
+      }
+      }
+      
+      // ==== SLIDER-2 ====
+      (() => {
+const slider = document.querySelector('.slider-2');
+const track = document.querySelector('.slider-track');
+const cards = document.querySelectorAll('.spot-card');
+
+let index = 0;
+let autoSlideInterval;
+let isDragging = false;
+let startX = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
 function cardsPerView() {
   if (window.innerWidth >= 1200) return 1;
   if (window.innerWidth >= 768) return 1;

@@ -28,6 +28,7 @@ nav {
 
 nav ul {
     display: flex;
+    margin-left: 50%;
     gap: 10px; 
     align-items: center;
 }
