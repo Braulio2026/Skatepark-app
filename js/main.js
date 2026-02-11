@@ -1,4 +1,18 @@
-// ===== SLIDER =====
+// ==== HAMBURGER-MENU ====
+    let menuList = document.getElementById("menuList")
+      menuList.style.maxHeight = "0px";
+
+      function toggleMenu() {
+        if(menuList.style.maxHeight == "0px")
+      {
+         menuList.style.maxHeight = "600px";
+      }
+      else{
+        menuList.style.maxHeight = "0px";
+      }
+      }
+      
+// ===== SLIDER-1 =====
 let index = 0;
 
 function showSlide() {
@@ -18,7 +32,7 @@ function right() {
   showSlide();
 }
 
-// ===== SEARCH =====
+// ===== SEARCH IMPUT ===== 
 const searchInput = document.getElementById("searchInput");
 const goBtn = document.getElementById("go-btn");
 const slider = document.querySelector(".slider");
@@ -58,21 +72,7 @@ mapButtons.forEach(button => {
     }
   });
 });
-
-// ==== HAMBURGER-MENU ====
-    let menuList = document.getElementById("menuList")
-      menuList.style.maxHeight = "0px";
-
-      function toggleMenu() {
-        if(menuList.style.maxHeight == "0px")
-      {
-         menuList.style.maxHeight = "300px";
-      }
-      else{
-        menuList.style.maxHeight = "0px";
-      }
-      }
-      
+  
       // ==== SLIDER-2 ====
       (() => {
 const slider = document.querySelector('.slider-2');
