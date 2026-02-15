@@ -12,25 +12,35 @@
       }
       }
       
-// ===== SLIDER-1 =====
+
 let index = 0;
 
 function showSlide() {
   const slider = document.querySelector('.slider');
-  slider.style.transform = `translateX(${-index * 100}%)`;
+  const items = document.querySelectorAll('.slider .item');
+  const container = document.querySelector('.slider-container');
+
+  const itemWidth = items[0].getBoundingClientRect().width;
+  const visibleItems = Math.floor(container.offsetWidth / itemWidth);
+  const maxIndex = items.length - visibleItems;
+
+  if (index > maxIndex) index = 0;
+  if (index < 0) index = maxIndex;
+
+  slider.style.transform = `translateX(-${index * itemWidth}px)`;
 }
 
 function left() {
-  const items = document.querySelectorAll('.slider .item');
-  index = index > 0 ? index - 1 : items.length - 1;
+  index--;
   showSlide();
 }
 
 function right() {
-  const items = document.querySelectorAll('.slider .item');
-  index = index < items.length - 1 ? index + 1 : 0;
+  index++;
   showSlide();
 }
+
+window.addEventListener('resize', showSlide);
 
 // ===== SEARCH IMPUT ===== 
 const searchInput = document.getElementById("searchInput");
@@ -74,18 +84,7 @@ mapButtons.forEach(button => {
 });
   
       // ==== SLIDER-2 ====
-      (() => {
-const slider = document.querySelector('.slider-2');
-const track = document.querySelector('.slider-track');
-const cards = document.querySelectorAll('.spot-card');
-
-let index = 0;
-let autoSlideInterval;
-let isDragging = false;
-let startX = 0;
-let currentTranslate = 0;
-let prevTranslate = 0;
-
+ (() => {
       function toggleMenu() {
         if(menuList.style.maxHeight == "0px")
       {
@@ -96,8 +95,6 @@ let prevTranslate = 0;
       }
       }
       
-      // ==== SLIDER-2 ====
-      (() => {
 const slider = document.querySelector('.slider-2');
 const track = document.querySelector('.slider-track');
 const cards = document.querySelectorAll('.spot-card');
