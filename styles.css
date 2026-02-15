@@ -245,19 +245,12 @@ a {
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
 }
 
-.btn:hover {
-    position: relative;
-    background-color: rgb(176, 188, 192);
-    backdrop-filter: blur(5px);
-    border-radius: 10px;
-}
-
 .text-1 {
     display: flex;
     text-align: center;
     padding: 3%;
     margin: 15px;
-    font-size: 17px;
+    font-size: 18px;
     font-family: sans-serif;
 }
 
@@ -285,23 +278,54 @@ span {
     transition: transform 0.5s ease;
 }
 
+.item {
+    width: 100%;
+}
+
 /* each slide */
 .slider .item {
     position: relative;
-    width: 100%;
+    min-width: 480px;
     min-height: 100%;
     padding: 15px;
-    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    margin-right: 50px;
+    margin-right: 20px;
     margin-top: 10px;
     z-index: 999;
-    background-color: #000000;
+    background-color: transparent;
+
+    transition: transform 0.3s ease;
+}
+
+.slider .item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: #000000;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+
+    z-index: -1;
+
+    transition: 
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        background-color 0.3s ease;
+}
+
+.slider .item:hover::before {
+    transform: rotateY(6deg);
+    background-color: #022;
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.6),
+        0 0 25px rgba(0, 255, 255, 0.185);
 }
 
 /*responsive image */
 .slider .item .image img {
-    width: 400px;
+    width: 100%;
     height: 300px;
     border-radius: 10px;
     object-fit: cover;
@@ -481,6 +505,7 @@ span {
   width: 100%;
   height: 300px;
   object-fit: cover;
+  float: left;
 }
 
 .specifications {
@@ -643,7 +668,9 @@ span {
     }
 
     .slider .item {
-        margin-inline: 60px;
+        flex-direction: row;
+        min-width: 100%;
+        margin-right: 1%;
         padding: 15px;
         position: relative;
         justify-self: center;
