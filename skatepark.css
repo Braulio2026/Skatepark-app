@@ -62,7 +62,7 @@ nav ul li a::after {
 /* hover animation */
 nav ul li a:hover::after {
     width: 100%;
-    height: 10%;
+    height: 2px;
 }
 
 /* optional background hover effect */
@@ -120,18 +120,27 @@ nav ul li a:hover {
     padding: 5%;
 }
 
-.single-carousel {
+  .single-carousel {
   position: relative;
-  max-width: 600px;
-  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+  margin-bottom: 180px;
 }
 
+/* IMAGE SIDE */
 .carousel-track {
-  position: relative;
+  flex: 1;
 }
 
 .carousel-image {
   width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
   display: none;
 }
 
@@ -139,19 +148,80 @@ nav ul li a:hover {
   display: block;
 }
 
+/* TEXT SIDE */
 .carousel-text {
-  padding: 25px 0;
-  margin-bottom: 35px;
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
-h2 {
-    padding: 0 0 20px;
-    color: rgb(3, 3, 3);
+/* Title */
+.carousel-text h2 {
+  padding-bottom: 20px;
 }
 
+/* Icons Section */
+.icons-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.icon-item {
+  display: flex;
+  align-items: center; /* vertically align icon + text */
+  gap: 15px; /* space between svg and text */
+  padding: 1%;
+}
+
+.icon-item p {
+  margin: 0; /* default spacing */
+  font-size: 14px;
+  color: #333;
+}
+
+.icons-text svg {
+  margin-right: 8px;
+}
+
+.icons-text p {
+  margin: 0;
+}
+
+.icon-item svg {
+  min-width: 24px;
+}
+
+.icon-item:hover {
+  transform: translateX(10px);
+  transition: 0.2s ease;
+}
+
+
+/* MAP BUTTON - bottom right */
+.button-map {
+  align-self: flex-end;
+  position: absolute;
+  background-color: rgb(24, 49, 51);
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  transition: 0.2s ease;
+  top: 83%;
+}
+
+.button-map:hover {
+  background-color: rgb(0, 122, 122);
+}
+
+/* Carousel buttons */
 .carousel-btn {
   position: absolute;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
   background: rgba(0,0,0,0.5);
   color: white;
@@ -162,34 +232,16 @@ h2 {
 }
 
 .carousel-btn.prev {
-  left: 10px;
+  left: 20px;
 }
 
 .carousel-btn.next {
-  right: 10px;
+  right: 20px;
 }
 
 .carousel-btn:hover {
-    background: #01b3e9; 
-    transition: 0.2s;
+  background: rgba(0, 0, 0, 0.1);
 }
-
-.button-map {
-       display: flex;
-       position: absolute;
-       justify-content: center;
-       width: 100px;
-       background-color: rgb(24, 49, 51);
-       border-radius: 5px;
-       color: #fff;
-       text-decoration: none;
-       margin: 0 80%;
-       padding: 5px;
-       top: 95%;
-    }
-    .button-map:hover{
-       background-color: rgb(0, 122, 122);
-    }
 
 .footer li a{
     margin: 30px;
@@ -208,7 +260,27 @@ h2 {
     top: 10rem;
 }
 
-/* responsive to mobile */
+/* ========================= */
+/* 📱 TABLET (iPad) */
+/* ========================= */
+@media (max-width: 1024px) {
+  .single-carousel {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .carousel-text {
+    align-items: center;
+  }
+
+  .button-map {
+    align-self: center;
+  }
+}
+
+/* ========================= */
+/* 📱 MOBILE */
+/* ========================= */
 
 @media (max-width: 600px) {
     nav ul {
@@ -272,4 +344,29 @@ h2 {
        padding: 5px;
        top: 97%;
     }
+
+    .single-carousel {
+    padding: 1.5rem;
+  }
+
+  .carousel-btn {
+    padding: 0.7rem;
+  }
+
+  .icons-text {
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 20px;
+    align-items: left;
+  }
+
+  .button-map {
+    width: 100px;
+    text-align: center;
+    margin-top: -5rem;
+  }
+
+  .carousel-btn {
+  top: 25%;
+  }
 }
