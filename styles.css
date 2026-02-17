@@ -92,11 +92,12 @@ nav ul li a::after {
 /* hover animation */
 nav ul li a:hover::after {
     width: 100%;
+    height: 2px;
 }
 
 /* optional background hover effect */
 nav ul li a:hover {
-    background: #000;
+    background: #252525;
     border-radius: 10px;
 }
 
