@@ -129,7 +129,7 @@ nav ul li a:hover {
   max-width: 1200px;
   margin: auto;
   padding: 2rem;
-  margin-bottom: 180px;
+  margin-bottom: 150px;
 }
 
 /* IMAGE SIDE */
@@ -151,14 +151,14 @@ nav ul li a:hover {
 /* TEXT SIDE */
 .carousel-text {
   flex: 1;
-  max-width: 600px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
 }
 
 /* Title */
 .carousel-text h2 {
-  padding-bottom: 20px;
+  padding-bottom: 25px;
 }
 
 /* Icons Section */
@@ -172,13 +172,18 @@ nav ul li a:hover {
 
 .icon-item {
   display: flex;
-  align-items: center; /* vertically align icon + text */
+  align-items:flex-end; /* vertically align icon + text */
   gap: 15px; /* space between svg and text */
-  padding: 1%;
+  padding: 1ch;
 }
 
 .icon-item p {
   margin: 0; /* default spacing */
+  font-size: 14px;
+  color: #333;
+}
+
+.road-list {
   font-size: 14px;
   color: #333;
 }
@@ -200,6 +205,24 @@ nav ul li a:hover {
   transition: 0.2s ease;
 }
 
+.modern-icon {
+  width: 30px;
+  height: 30px;
+  color: rgb(255, 137, 2);
+  transition: all 0.3s ease;
+}
+
+.icon-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.icon-item:hover .modern-icon {
+  transform: translateY(-3px);
+  color: rgb(77, 148, 255);
+}
 
 /* MAP BUTTON - bottom right */
 .button-map {
@@ -211,7 +234,7 @@ nav ul li a:hover {
   text-decoration: none;
   padding: 8px 16px;
   transition: 0.2s ease;
-  top: 83%;
+  top: 90%;
 }
 
 .button-map:hover {
@@ -324,13 +347,6 @@ nav ul li a:hover {
         width: 550px;
     }
 
-    .carousel-text {
-        margin: 10px;
-        padding: 0 auto;
-        display: block;
-        margin-bottom: 10vh;
-    }
-
     .button-map {
        display: flex;
        position: absolute;
@@ -345,28 +361,43 @@ nav ul li a:hover {
        top: 97%;
     }
 
-    .single-carousel {
+  .single-carousel {
     padding: 1.5rem;
   }
 
-  .carousel-btn {
-    padding: 0.7rem;
+  .carousel-text { 
+    margin: 20px 0;
+    padding: 0 auto;
+    display: block;
+    margin-bottom: 5vh;
+    font-size: 19px;
+    font-weight: 400;
+    }
+
+   .carousel-btn {
+   top: 22%;
+   padding: 0.7rem;
   }
 
-  .icons-text {
-    flex-direction: column;
+  .icons-text p{
+    flex-direction:block;
     gap: 1rem;
-    font-size: 20px;
+    align-items: left;
+    text-align: left;
+    font-size: 17px;
+  }
+
+  .road-list {
+    font-size: 17px;
+    text-align: left;
+    flex-direction:block;
     align-items: left;
   }
-
+  
   .button-map {
-    width: 100px;
+    width: 120px;
     text-align: center;
-    margin-top: -5rem;
-  }
-
-  .carousel-btn {
-  top: 25%;
+    margin-top: -40px;
+    padding: 9px;
   }
 }
