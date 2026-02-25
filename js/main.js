@@ -1,18 +1,4 @@
-// ==== HAMBURGER-MENU ====
-    let menuList = document.getElementById("menuList")
-      menuList.style.maxHeight = "0px";
-
-      function toggleMenu() {
-        if(menuList.style.maxHeight == "0px")
-      {
-         menuList.style.maxHeight = "600px";
-      }
-      else{
-        menuList.style.maxHeight = "0px";
-      }
-      }
-      
-
+// ==== SLIDER IMAGE #1 ====
 let index = 0;
 
 function showSlide() {
@@ -83,7 +69,7 @@ mapButtons.forEach(button => {
   });
 });
   
-      // ==== SLIDER-2 ====
+      // ==== SLIDER IMAGE #2 ====
  (() => {
       function toggleMenu() {
         if(menuList.style.maxHeight == "0px")
