@@ -5,22 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>skate-list</title>
     <link rel="stylesheet" type="text/css" href="skatepark.css">
+    <link rel="stylesheet" type="text/css" href="navbar.css">
 </head>
-
-<body>
-    <nav>
-      <div class="logo">
-         <img src="image-skates\logo.svg" alt="skr-logo" class="logo"></img>
-      </div>
-      <ul id="menuList">
-          <li><a href="index.html">Home page</a></li>
-          <li><a href="skatepark.html">Skatepark list</a></li>
-          <li><a href="#">Upcoming events</a></li>
-      </ul>
-      <div class="menu-icon">
-        <i class="fa-solid fa-bars" onclick="toggleMenu()"></i>
-      </div>
-    </nav>
+ <body>
+  
+    <div id="navbar"></div> 
 
     <div class="image-container">
           <img src="image-skates\image_font3.webp" alt="img-1">
@@ -728,7 +717,7 @@
     </div>
 
 </body>
-  <script src="Js/main.js"></script>
+  <script src="navbar.js"></script>
   <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
   <script>
      document.querySelectorAll(".single-carousel").forEach(carousel => {
