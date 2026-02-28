@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Up-events</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Upc-events</title>
+  <link rel="stylesheet" href="UpEvent.css">
   <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
 
 </head>
 <body>
    <main>
     <div id="navbar"></div>
 
-     <div class="main-image">
-      <img src="image-skates/background_4.jpg">
-       <div class="text">text here</div>
-     </div>
+      <div class="map-contianer">
+          <h2>🗺️ Skateparks en Costa Rica</h2>
+           <div id="map"></div>
+      </div>
 
-     <div class="container">
+     <!-- <div class="container">
        <div class="add-spot">
         <img src="image-skates/background_4.jpg" alt="">
           <div class="button=-text">
@@ -27,9 +30,100 @@
             <h1>Share with the community your favorite spot</h1>
           </div>
        </div>
-     </div>
+     </div> -->
 
-    </main>
-  </body>
-  <script src="navbar.js"></script>
+</main> 
+ <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+ <script src="navbar.js"></script>
+ <script>
+  // To calculate distance on km
+    function getDistance(lat1, lon1, lat2, lon2) {
+     var R = 6371; // Earth radius on km
+     var dLat = (lat2 - lat1) * Math.PI / 180;
+     var dLon = (lon2 - lon1) * Math.PI / 180;
+
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+  var map = L.map('map').setView([9.9983, -84.1165], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // SKATEPARK LIST
+  var skateparks = [
+  {
+    name: "Los Lagos Skatepark",
+    lat: 9.9983,
+    lng: -84.1165,
+    description: "Heredia"
+  },
+  {
+    name: "Plaza Cleto González Víquez Skatepark",
+    lat: 9.9277,
+    lng: -84.0686,
+    description: "San José centro"
+  },
+  {
+    name: "Guachipelín Skatepark",
+    lat: 9.9565,
+    lng: -84.1870,
+    description: "Escazú"
+  }
+  ];
+ // THIS SECCTION ALLOW TO USER CUURENT LOCATION
+  map.locate({setView: true, maxZoom: 13});
+
+  map.on('locationfound', function(e) {
+  L.marker(e.latlng)
+    .addTo(map)
+    .bindPopup("📍 Estás aquí")
+    .openPopup();
+});
+
+  map.on('locationerror', function() {
+  alert("Activa tu ubicación");
+
+  // To find nearby skatepark
+var nearestPark = null;
+var shortestDistance = Infinity;
+
+skateparks.forEach(function(park) {
+  var distance = getDistance(userLat, userLng, park.lat, park.lng);
+
+  if (distance < shortestDistance) {
+    shortestDistance = distance;
+    nearestPark = park;
+  }
+});
+
+// Show results
+if (nearestPark) {
+  L.popup()
+    .setLatLng([nearestPark.lat, nearestPark.lng])
+    .setContent("🔥 Skatepark más cercano:<br><b>" 
+      + nearestPark.name + 
+      "</b><br>Distancia: " 
+      + shortestDistance.toFixed(2) + " km")
+    .openOn(map);
+}
+});
+
+
+  // ADD EVERY SKATEPARK TO THE MAP
+  skateparks.forEach(function(park) {
+    L.marker([park.lat, park.lng])
+      .addTo(map)
+      .bindPopup("<b>" + park.name + "</b><br>" + park.description);
+  });
+    </script>
+  </body> 
 </html>
