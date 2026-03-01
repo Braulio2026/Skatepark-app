@@ -184,3 +184,9 @@ window.addEventListener('resize', slideToIndex);
 /* INIT */
 startAutoSlide();
 })();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker registrado"))
+    .catch(err => console.log("Error:", err));
+}
