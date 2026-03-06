@@ -17,18 +17,16 @@ main {
 }
 
 .hero-image {
-    display: block;
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    justify-content: center;
-    background-color: #7a7a7a;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .hero-image img {
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .banner-text {
@@ -81,21 +79,33 @@ input {
 
 .list-skate,
 .event {
-   display: flex;
-   position: relative;
-   justify-content: space-around;
-   padding: 10px;
-   border: 1px solid rgb(151, 151, 151);
-   background: rgba(var(--color-white), 0.15);
-   backdrop-filter: blur(18px);
-   box-shadow: 0 8px 32px 0 rgba(var(--color-white), 0.1);
-   border-radius: 10px;
-   margin: 45px;
-   width: 450px;
-   bottom: 27rem;
-   height: 8vh;
-   font-family: sans-serif;
+  position: absolute;
+  left: 5%;
+  width: 380px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+  border: 1px solid rgb(151, 151, 151);
+  background: rgba(var(--color-white), 0.15);
+  box-shadow: 0 8px 32px 0 rgba(var(--color-white), 0.1);
+  backdrop-filter: blur(18px);
+  border-radius: 10px;
+
+  font-family: sans-serif;
 }
+
+.list-skate {
+  top: 50%;
+}
+
+.event {
+  top: 65%;
+}
+
 
 a {
     color: rgb(255, 255, 255);
@@ -256,7 +266,7 @@ span {
     justify-content: center;
     color: #fff;
 }
-
+ /*button go to map*/
 .select {
     position: absolute;
     bottom: 0;
@@ -444,11 +454,6 @@ span {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
-.select:active {
-    transform: translateY(-1px) scale(0.98);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-}
-
 .footer {
     position: relative;
     background-color: #000;
@@ -486,15 +491,19 @@ span {
 
 /* Responsive to movile */
 @media (max-width: 600px) {
-
-    .select {
+body {
+        width: 550px;
+        height: 100%;
+    }
+ /*button go to map*/
+.select {
         padding: 0px 10px;
         margin: 0 auto;
         font-size: 18px;
         font-weight: 200;
     }
 
-    .spot-card {
+.spot-card {
         min-width: 100%;
         min-height: 700px;
         flex-direction: column;
@@ -502,44 +511,53 @@ span {
         margin-bottom: 10%;
   }
   
-    .section-title {
+  .section-title {
         font-size: 1.5rem;
         padding: 12px 26px;
   }
-  
-    body {
-        width: 550px;
-        height: 100%;
-    }
 
-    .container-button {
+
+  .container-button {
         margin-top: 3%;
     }
 
-    input {
+  input {
         width: 60%;
     }
 
-    .list-skate,
-    .event {
-        max-width: 325px;
-    }
+  .list-skate,
+  .event {
+       width: 85%;
+       left: 7.5%;
+  }
 
-    .information .title {
+  .list-skate {
+        top: 60%;
+  }
+
+  .event {
+        top: 72%;
+  }
+
+  .hero-image {
+        height: 115vh;
+  }
+
+  .information .title {
         font-size: 1.1rem;
-    }
+ }
 
-    .information span {
+  .information span {
         font-size: 17px;
         text-indent: 0.9;
     }
 
-    .arrow button {
+  .arrow button {
         font-size: 1.5rem;
         padding: 6px;
     }
 
-    .slider .item {
+  .slider .item {
         flex-direction: row;
         min-width: 100%;
         margin-right: 1%;
@@ -548,7 +566,7 @@ span {
         justify-self: center;
     }
 
-    .slider button {
+  .slider button {
         display: block;
         justify-self: center;
         margin-bottom: 20px;        
@@ -556,7 +574,7 @@ span {
         width: 200px;
     } 
     @media (hover: hover) {
-    .select:hover {
+  .select:hover {
         transform: translateY(-3px);
     }
     }
@@ -569,12 +587,11 @@ span {
         min-width: 160px;
         margin-bottom: 30px;
     }
-}
 
-    @media (max-width: 1440px) {
-     .spot-card {
+    .spot-card {
         display: flex;
-        min-width: 100%; /* 👈 2 cards per screen */
+        min-width: 100%; /* 2 cards per screen */
         max-height: 70vh;
     }
 }
+
