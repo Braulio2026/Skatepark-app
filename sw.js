@@ -6,10 +6,11 @@ const urlsToCache = [
   "/map.html",
   "/skatepark.css",
   "/navbar.css",
-  "/main.js"
+  "/main.js",
+  "/icon-192.png",
 ];
 
-// Instalar y guardar archivos
+// Install and save files
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -17,12 +18,12 @@ self.addEventListener("install", event => {
   );
 });
 
-// Activar
+// Activate
 self.addEventListener("activate", event => {
   console.log("Service Worker activado");
 });
 
-// Interceptar peticiones
+// Intercep requests
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request)
