@@ -207,6 +207,11 @@ function drawMainRoute() {
 
       const route = data.routes[0];
 
+      // 🔹 Convert distance + time
+      const distanceKm = (route.distance / 1000).toFixed(2);
+      const durationMin = Math.round(route.duration / 60);
+
+
       const layer = L.geoJSON(route.geometry, {
         style: {
           color: "blue",
@@ -215,6 +220,14 @@ function drawMainRoute() {
       }).addTo(map);
 
       routeLayers.push(layer);
+       L.popup()
+        .setLatLng([selectedDestination.lat, selectedDestination.lng])
+        .setContent(`
+          🛹 <b>${selectedDestination.name}</b><br>
+          📏 Distance: ${distanceKm} km<br>
+          ⏱️ Time: ~${durationMin} minutes
+        `)
+        .openOn(map);
     })
     .catch(err => {
       console.error("Routing error:", err);
@@ -258,18 +271,22 @@ function drawAlternativeRoutes() {
 
       data.routes.forEach((route, index) => {
 
+          const distanceKm = (route.distance / 1000).toFixed(2);
+          const durationMin = Math.round(route.duration / 60);
+
         const layer = L.geoJSON(route.geometry, {
           style: {
             color: index === 0 ? "blue" : "green",
             weight: 5
           }
-        }).addTo(map);
 
-        routeLayers.push(layer);
+    }).addTo(map);
+           routeLayers.push(layer);
+           console.log(`Route ${index + 1}: ${distanceKm} km - ${durationMin} min`);
       });
     })
-    .catch(err => {
-      console.error("Routing error:", err);
+        .catch(err => {
+         console.error("Routing error:", err);
     });
 }
 
