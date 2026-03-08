@@ -81,6 +81,42 @@ nav ul li a::after {
     font-size: 30px;
 }
 
+.status-indicator {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: center;
+  left: 53vw;
+}
+
+#networkDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  padding: 8px;
+  background-color: rgb(17, 17, 17);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Online */
+.online {
+  background-color: #00ff6a;
+  box-shadow: 0 0 6px #00ff6a;
+}
+
+/* Offline */
+.offline {
+  background-color: #ff0000;
+  box-shadow: 0 0 6px #ff0000;
+}
+
+/* Checking */
+.checking {
+  background-color: orange;
+  box-shadow: 0 0 6px orange;
+}
+
 /* Responsive to movile */
 @media (max-width: 600px) {
 nav ul {
@@ -112,5 +148,9 @@ nav ul {
         margin: 0 10px;
         transition: all 0.5s;
         display: flex;
+    }
+
+    .status-indicator {
+        margin-left: 180px;
     }
 }

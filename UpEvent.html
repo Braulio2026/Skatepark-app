@@ -4,126 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upc-events</title>
+
   <link rel="stylesheet" href="UpEvent.css">
-  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" type="text/css" href="navbar.css">
+
+  <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#000000">
-
 </head>
+
 <body>
    <main>
     <div id="navbar"></div>
 
-      <div class="map-contianer">
-          <h2>🗺️ Skateparks en Costa Rica</h2>
-           <div id="map"></div>
-      </div>
+      <div class="map-container">
+          <h2>
+             🗺️ Skateparks in Costa Rica. 
+             This section will show skateparks near your location. 
+             If you are offline, the map will still display saved skateparks near you.
+          </h2>
 
-     <!-- <div class="container">
-       <div class="add-spot">
-        <img src="image-skates/background_4.jpg" alt="">
-          <div class="button=-text">
-            <button class="upload">Share</button>
+        <div id="map"></div>  
+
+        <div class="option-button">
+          <div class="slide-buttons">
+            <button class="route" id="btn-1">Nearby skateparks</button>
+            <button class="alternative" id="btn-2">Alternative Routes</button>
           </div>
-          <div class="text">
-            <h1>Share with the community your favorite spot</h1>
-          </div>
+        </div>
+
        </div>
-     </div> -->
+
+      <div class="container-list">
+        <div class="text">
+          <div class="column-1">
+             <ul id="name-event" class="Name">
+              <h3>Upcoming events will be aviable here</h3>
+              <li>Upcoming challenges.</li>
+             </ul>
+          </div>
+
+          <div class="column-2">
+             <ul id="schedule-event" class="Schedule">
+              <h3>Schedule will keeps here</h3>
+              <li>available soom</li>
+             </ul>
+          </div>
+        </div>
+      </div>
 
 </main> 
  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
  <script src="navbar.js"></script>
+ <script src="app.js"></script>
  <script>
-  // To calculate distance on km
-    function getDistance(lat1, lon1, lat2, lon2) {
-     var R = 6371; // Earth radius on km
-     var dLat = (lat2 - lat1) * Math.PI / 180;
-     var dLon = (lon2 - lon1) * Math.PI / 180;
+   if ("serviceWorker" in navigator) {
 
-  var a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
+  window.addEventListener("load", () => {
 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
-}
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(reg => console.log("Service Worker registered:", reg.scope))
+      .catch(err => console.log("Service Worker error:", err));
 
-  var map = L.map('map').setView([9.9983, -84.1165], 10);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  // SKATEPARK LIST
-  var skateparks = [
-  {
-    name: "Los Lagos Skatepark",
-    lat: 9.9983,
-    lng: -84.1165,
-    description: "Heredia"
-  },
-  {
-    name: "Plaza Cleto González Víquez Skatepark",
-    lat: 9.9277,
-    lng: -84.0686,
-    description: "San José centro"
-  },
-  {
-    name: "Guachipelín Skatepark",
-    lat: 9.9565,
-    lng: -84.1870,
-    description: "Escazú"
-  }
-  ];
- // THIS SECCTION ALLOW TO USER CUURENT LOCATION
-  map.locate({setView: true, maxZoom: 13});
-
-  map.on('locationfound', function(e) {
-  L.marker(e.latlng)
-    .addTo(map)
-    .bindPopup("📍 Estás aquí")
-    .openPopup();
-});
-
-  map.on('locationerror', function() {
-  alert("Activa tu ubicación");
-
-  // To find nearby skatepark
-var nearestPark = null;
-var shortestDistance = Infinity;
-
-skateparks.forEach(function(park) {
-  var distance = getDistance(userLat, userLng, park.lat, park.lng);
-
-  if (distance < shortestDistance) {
-    shortestDistance = distance;
-    nearestPark = park;
-  }
-});
-
-// Show results
-if (nearestPark) {
-  L.popup()
-    .setLatLng([nearestPark.lat, nearestPark.lng])
-    .setContent("🔥 Skatepark más cercano:<br><b>" 
-      + nearestPark.name + 
-      "</b><br>Distancia: " 
-      + shortestDistance.toFixed(2) + " km")
-    .openOn(map);
-}
-});
-
-
-  // ADD EVERY SKATEPARK TO THE MAP
-  skateparks.forEach(function(park) {
-    L.marker([park.lat, park.lng])
-      .addTo(map)
-      .bindPopup("<b>" + park.name + "</b><br>" + park.description);
   });
-    </script>
+
+}
+</script>
   </body> 
 </html>
