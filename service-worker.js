@@ -92,3 +92,13 @@ self.addEventListener("fetch", event => {
   );
 
 });
+
+/* TO FORCE THE NEW SERVICE WORKER TO REPLACE THE OLD ONE INSTANTLY */
+
+self.addEventListener("install", event => {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
+});

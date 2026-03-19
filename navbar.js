@@ -1,52 +1,80 @@
-// Load navbar automatically
+// ===== LOAD NAVBAR =====
 fetch("navbar.html")
   .then(response => response.text())
   .then(data => {
+
+    // Insert navbar into page
     document.getElementById("navbar").innerHTML = data;
 
-    // ==== AFTER NAVBAR ====
+    // ===== NETWORK INDICATOR =====
     const networkDot = document.getElementById("networkDot");
-if (!networkDot) return;
+    if (!networkDot) return;
 
-async function checkRealConnection() {
-  networkDot.classList.remove("online", "offline");
-  networkDot.classList.add("checking");
+    async function checkRealConnection() {
 
-  try {
-    await fetch("https://www.google.com/favicon.ico", {
-      method: "GET",
-      mode: "no-cors",
-      cache: "no-store"
+      networkDot.classList.remove("online","offline");
+      networkDot.classList.add("checking");
+
+      try {
+
+        await fetch("https://www.google.com/favicon.ico", {
+          method: "GET",
+          mode: "no-cors",
+          cache: "no-store"
+        });
+
+        networkDot.classList.remove("checking","offline");
+        networkDot.classList.add("online");
+
+      } catch {
+
+        networkDot.classList.remove("checking","online");
+        networkDot.classList.add("offline");
+
+      }
+
+    }
+
+    // First check
+    checkRealConnection();
+
+    // Check every 15 seconds
+    setInterval(checkRealConnection,15000);
+
+    // Browser online/offline events
+    window.addEventListener("online",checkRealConnection);
+    window.addEventListener("offline",checkRealConnection);
+
+
+    // ===== CLOSE MENU WHEN CLICKING A LINK =====
+    const links = document.querySelectorAll("#menuList a");
+
+    links.forEach(link => {
+      link.addEventListener("click", () => {
+
+        const menu = document.getElementById("menuList");
+        const icon = document.querySelector(".menu-icon");
+
+        if(menu && icon){
+          menu.classList.remove("open");
+          icon.classList.remove("active");
+        }
+
+      });
     });
 
-    networkDot.classList.remove("checking", "offline");
-    networkDot.classList.add("online");
-
-  } catch (error) {
-    networkDot.classList.remove("checking", "online");
-    networkDot.classList.add("offline");
-  }
-}
-
-// first verification
-checkRealConnection();
-
-// check every 15 minutes
-setInterval(checkRealConnection, 15000);
-
-// also to listen navigator events
-window.addEventListener("online", checkRealConnection);
-window.addEventListener("offline", checkRealConnection);
-});
+  });
 
 
-// ==== HAMBURGER MENU ====
-function toggleMenu() {
-  let menuList = document.getElementById("menuList");
+// ===== HAMBURGER MENU =====
+function toggleMenu(){
 
-  if (menuList.style.maxHeight === "0px") {
-    menuList.style.maxHeight = "300px";
-  } else {
-    menuList.style.maxHeight = "0px";
-  }
+  const menu = document.getElementById("menuList");
+  const icon = document.querySelector(".menu-icon");
+
+  if(!menu || !icon) return;
+
+  menu.classList.toggle("open");
+  icon.classList.toggle("active");
+
 }
