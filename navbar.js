@@ -1,52 +1,92 @@
-// Load navbar automatically
+// ===== LOAD NAVBAR =====
 fetch("navbar.html")
   .then(response => response.text())
   .then(data => {
+
+    // Insert navbar into page
     document.getElementById("navbar").innerHTML = data;
 
-    // ==== AFTER NAVBAR ====
+    // ===== NETWORK INDICATOR =====
     const networkDot = document.getElementById("networkDot");
-if (!networkDot) return;
+    if (!networkDot) return;
 
-async function checkRealConnection() {
-  networkDot.classList.remove("online", "offline");
-  networkDot.classList.add("checking");
+    async function checkRealConnection() {
 
-  try {
-    await fetch("https://www.google.com/favicon.ico", {
-      method: "GET",
-      mode: "no-cors",
-      cache: "no-store"
-    });
+      networkDot.classList.remove("online","offline");
+      networkDot.classList.add("checking");
 
-    networkDot.classList.remove("checking", "offline");
-    networkDot.classList.add("online");
+      try {
+        await fetch("https://www.google.com/favicon.ico", {
+          method: "GET",
+          mode: "no-cors",
+          cache: "no-store"
+        });
 
-  } catch (error) {
-    networkDot.classList.remove("checking", "online");
-    networkDot.classList.add("offline");
-  }
-}
+        networkDot.classList.remove("checking","offline");
+        networkDot.classList.add("online");
 
-// first verification
-checkRealConnection();
+      } catch {
+        networkDot.classList.remove("checking","online");
+        networkDot.classList.add("offline");
+      }
+    }
 
-// check every 15 minutes
-setInterval(checkRealConnection, 15000);
+    // First check
+    checkRealConnection();
 
-// also to listen navigator events
-window.addEventListener("online", checkRealConnection);
-window.addEventListener("offline", checkRealConnection);
-});
+    // Check every 15 seconds
+    setInterval(checkRealConnection,15000);
+
+    // Browser events
+    window.addEventListener("online",checkRealConnection);
+    window.addEventListener("offline",checkRealConnection);
 
 
-// ==== HAMBURGER MENU ====
-function toggleMenu() {
-  let menuList = document.getElementById("menuList");
+    // ===== NAVBAR INTERACTIONS  =====
+    const menu = document.getElementById("menuList");
+    const button = document.querySelector(".menu-icon");
 
-  if (menuList.style.maxHeight === "0px") {
-    menuList.style.maxHeight = "300px";
-  } else {
-    menuList.style.maxHeight = "0px";
-  }
-}
+    if (menu && button) {
+
+      let isOpen = false;
+
+      // TOGGLE MENU
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        isOpen = !isOpen;
+
+        if (isOpen) {
+          menu.classList.add("open");
+          button.classList.add("active");
+        } else {
+          menu.classList.remove("open");
+          button.classList.remove("active");
+        }
+      });
+
+      // PREVENT CLOSING WHEN CLICKING INSIDE MENU
+      menu.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      // CLOSE WHEN CLICKING OUTSIDE
+      document.addEventListener("click", () => {
+        menu.classList.remove("open");
+        button.classList.remove("active");
+        isOpen = false;
+      });
+
+      // CLOSE WHEN CLICKING A LINK
+      const links = menu.querySelectorAll("a");
+
+      links.forEach(link => {
+        link.addEventListener("click", () => {
+          menu.classList.remove("open");
+          button.classList.remove("active");
+          isOpen = false;
+        });
+      });
+    }
+
+  });

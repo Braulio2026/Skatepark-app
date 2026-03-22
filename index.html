@@ -4,79 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skate-app</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="navbar.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
   <main>
     <div id="navbar"></div>
-    <div class="hero-image">
-          <img src="image-skates\background_1.jpg" >
+     
+     <div class="hero-image">
 
-      <div class="banner-text" >
-          <h2>SkateRutes.cr</h2>
-          <p>All you want to know about your next ride.</p>
+      <img src="image-skates/background_1.jpg">
+
+      <div class="banner-text">
+        <h2>SkateRutes COSTA RICA</h2>
+        <p>All you want to know about your next ride</p>
       </div>
-
-        <div class="list-skate"> 
-        
-            <a href="skatepark.html" class="btn">Skatepark list</a>
-          
-            <svg xmlns="http://www.w3.org/2000/svg" height="33px" viewBox="0 -960 960 960" width="33px" fill="#fff">
-              <path d="M280-600v-80h560v80H280Zm0 160v-80h560v80H280Zm0 160v-80h560v80H280ZM160-600q-17 0-28.5-11.5T120-640q0-17 11.5-28.5T160-680q17 0 28.5 11.5T200-640q0 17-11.5 28.5T160-600Zm0 160q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440Zm0 160q-17 0-28.5-11.5T120-320q0-17 11.5-28.5T160-360q17 0 28.5 11.5T200-320q0 17-11.5 28.5T160-280Z"/>
-            </svg>
-        </div>
-
-        <div class="event"> 
-           
-             <a href="NearestEvent.html" class="btn">Upcoming events and utilities</a>
-      
-            <svg xmlns="http://www.w3.org/2000/svg" height="33px" viewBox="0 -960 960 960" width="33px" fill="#fff">
-              <path d="M290 0q-12 0-21-9t-9-21q0-12 9-21t21-9q12 0 21 9t9 21q0 12-9 21t-21 9Zm340 0q-12 0-21-9t-9-21q0-12 9-21t21-9q12 0 21 9t9 21q0 12-9 21t-21 9ZM270-80q-45 0-83-19.5T124-152q-3-5-4.5-9t-1.5-9q0-12 8-21t22-9q8 0 13.5 3t10.5 9q12 17 30.5 28.5T242-143l125-151-53-166q-5-17-3-34t11-32l96-154h-94l-76 122-68-42 100-160h228q27 0 43.5 15t22.5 28l21 48q20 48 64.5 78.5T760-560v80q-70 0-128-33.5T539-602l-72 115 173 107v240h12q29 0 54-13t42-35q5-6 10.5-9t13.5-3q13 0 21.5 9t8.5 21q0 5-1.5 9t-4.5 9q-25 33-62 52.5T652-80H270Zm74-60h216v-184l-140-88 40 132-116 140Zm256-620q-33 0-56.5-23.5T520-840q0-33 23.5-56.5T600-920q33 0 56.5 23.5T680-840q0 33-23.5 56.5T600-760Z"/>
-            </svg>
-        </div>            
-  </div>   
-
-    <div class="text-1">
-            Here we bring to you the easy way to explore more about your next day ride.
-          Did it happen to you when you are making plans for the ride to some skatepark 
-          and you do not know where to go or even how  to get there...?
-          this aplication were made exactly to giving just the nesesary 
-          for getting there and make sure your day ride,
-          lets take a look down below!.
-    </div>
-
-    <div class="container-button">
-        <div class="search-container"> 
-          <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name">
-             <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 15px;" height="64px" viewBox="0 -960 960 960" width="34px" fill="#000">
-               <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-             </svg>
-              <datalist id="suggestions">
-                  <option value="Moravia">
-                  <option value="Jose Maria">
-                  <option value="Salvador">
-                  <option value="Alajuelita">
-                  <option value="Luzo">
-                  <option value="Lindora">
-                  <option value="Plaza Viquez">
-                  <option value="Guachipelin">
-                  <option value="Zapote">
-                  <option value="Los Lagos">
-              </datalist>
- 
-          <button 
-                  id="go-btn" 
-                  type="button" 
-                  style="align-self: center; background-color: rgb(253, 253, 253); width: 100px; height: 40px; font-size: 17px; cursor: pointer; border: 1px solid rgb(0, 0, 0); border-radius: 10px; color: rgb(0, 0, 0);">
-                  search
-         </button>
-        
-        </div> 
-    </div>
     
-    <div class="slider-container">
+  <div class="container-button">
+
+  <a href="skatepark.html" class="btn">
+  <span>Skatepark list</span>
+
+    <div class="icon-box">
+      <svg viewBox="0 0 24 24">
+        <path d="M5 12h14M13 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </a>
+
+ <a href="UpEvent.html" class="btn">
+  <span>Upcoming events & more</span>
+
+  <div class="icon-box">
+    <svg viewBox="0 -960 960 960">
+      <path d="M269-9q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9Zm340 0q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9ZM270-80q-45 0-83-19.5T124-152q-3-5-4.5-9t-1.5-9q0-12 8-21t22-9q8 0 13.5 3t10.5 9q12 17 30.5 28.5T242-143l125-151-53-166q-5-17-3-34t11-32l96-154h-94l-76 122-68-42 100-160h228q27 0 43.5 15t22.5 28l21 48q20 48 64.5 78.5T760-560v80q-70 0-128-33.5T539-602l-72 115 173 107v240h12q29 0 54-13t42-35q5-6 10.5-9t13.5-3q13 0 21.5 9t8.5 21q0 5-1.5 9t-4.5 9q-25 33-62 52.5T652-80H270Zm74-60h216v-184l-140-88 40 132-116 140Zm256-620q-33 0-56.5-23.5T520-840q0-33 23.5-56.5T600-920q33 0 56.5 23.5T680-840q0 33-23.5 56.5T600-760Z"/>
+    </svg>
+  </div>
+</a>
+
+</div>
+
+</div>
+
+<div class="content-section">
+
+  <div class="text-1">
+    Here we bring to you the easy way to explore more about your next day ride.
+    Did it happen to you when you are making plans for the ride to some skatepark 
+    and you do not know where to go or even how to get there...?
+    This application was made exactly to give you what’s necessary 
+    to make your ride easier. Let's take a look below!
+  </div>
+
+  <div class="search-container">
+
+    <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name">
+
+    <datalist id="suggestions">
+      <option value="Moravia">
+      <option value="Jose Maria">
+      <option value="Salvador">
+      <option value="Alajuelita">
+      <option value="Luzo">
+      <option value="Lindora">
+      <option value="Plaza Viquez">
+      <option value="Guachipelin">
+      <option value="Zapote">
+      <option value="Los Lagos">
+    </datalist>
+
+    <button id="go-btn">Search</button>
+  </div>
+</div>
+    
+<div class="slider-container">
     <div class="slider">
         <div class="item">
             <div class="image">
@@ -403,7 +405,7 @@
     </div>
 
   </main>
-     <script src="./js/navbar.js"></script>
+     <script src="./navbar.js"></script>
      <script src="./js/main.js" defer></script>
      <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
     </body>

@@ -1,24 +1,35 @@
 <nav class="navbar">
 
+  <!-- LOGO -->
   <div class="nav-left">
     <img src="image-skates/logo.svg" alt="skr-logo" class="logo">
   </div>
 
+  <!-- MENU AREA -->
   <div class="nav-center">
-    <ul id="menuList">
-      <li><a href="index.html">Home page</a></li>
-      <li><a href="skatepark.html">Skatepark list</a></li>
-      <li><a href="UpEvent.html">Upcoming events</a></li>
-    </ul>
+    <div class="menu-group">
+
+      <!-- NETWORK STATUS -->
+      <div class="status-indicator">
+        <span id="networkDot"></span>
+      </div>
+
+      <!-- NAV LINKS -->
+      <ul id="menuList" role="menu">
+        <li><a href="index.html">Home page</a></li>
+        <li><a href="skatepark.html">Skatepark list</a></li>
+        <li><a href="UpEvent.html">Upcoming events</a></li>
+      </ul>
+
+    </div>
   </div>
 
+  <!-- MOBILE MENU BUTTON -->
   <div class="nav-right">
-    <div class="status-indicator">
-      <span id="networkDot"></span>
-    </div>
-
-    <div class="menu-icon">
-      <i class="fa-solid fa-bars" onclick="toggleMenu()"></i>
+    <div class="menu-icon" aria-label="Open menu" role="button" tabindex="0">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </div>
   </div>
 

@@ -17,52 +17,49 @@
 </head>
 
 <body>
-   <main>
+  <main>
     <div id="navbar"></div>
 
-      <div class="map-container">
-          <h2>
-             🗺️ Skateparks in Costa Rica. 
-             This section will show skateparks near your location. 
-             If you are offline, the map will still display saved skateparks near you.
-          </h2>
+<div class="map-container">
 
-        <div id="map"></div>  
+  <h2>
+    🗺️ Skateparks in Costa Rica.
+    This section will show skateparks near your location.
+    If you are offline, the map will still display saved skateparks near you.
+  </h2>
 
-        <div class="option-button">
-          <div class="slide-buttons">
-            <button class="route" id="btn-1">Nearby skateparks</button>
-            <button class="alternative" id="btn-2">Alternative Routes</button>
-          </div>
-        </div>
+  <div id="map"></div>
+
+  <div class="option-button">
+    <div class="slide-buttons">
+      <button class="route" id="btn-1">Nearby skateparks</button>
+      <button class="alternative" id="btn-2">Alternative Routes</button>
     </div>
+  </div>
 
-      <div class="container-card">
-        <div class="container-display">
-          <div class="title-box" id="">
-            <p>Upcoming competition name:</p>
-          </div>
-             <div class="place-text">
-               <h1>direction</h1>
-               <span>text here</span>
-             </div>
-             <div class="schedule-box">
-               <h1>Schedule</h1>
-               <span>text here</span>
-             </div>
-        </div>
-      </div>
+</div>
 
-</main> 
+<button id="events-btn" class="floating-btn">Events</button>
+
+<div id="events-panel">
+
+  <h2>Upcoming Competitions</h2>
+
+  <div id="events-list"></div>
+
+</div>
+
+ </main> 
  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
- <script src="./js/navbar.js"></script>
- <script src="./js/app.js"></script>
+ <script src="./navbar.js"></script>
+ <script src="./app.js"></script>
+ <script src="./events.js"></script>
  <script>
    if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", () => {
 
-    navigator.serviceWorker.register("/service-worker.js")
+    navigator.serviceWorker.register("./service-worker.js")
       .then(reg => console.log("Service Worker registered:", reg.scope))
       .catch(err => console.log("Service Worker error:", err));
 
