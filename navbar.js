@@ -16,7 +16,6 @@ fetch("navbar.html")
       networkDot.classList.add("checking");
 
       try {
-
         await fetch("https://www.google.com/favicon.ico", {
           method: "GET",
           mode: "no-cors",
@@ -27,12 +26,9 @@ fetch("navbar.html")
         networkDot.classList.add("online");
 
       } catch {
-
         networkDot.classList.remove("checking","online");
         networkDot.classList.add("offline");
-
       }
-
     }
 
     // First check
@@ -41,40 +37,56 @@ fetch("navbar.html")
     // Check every 15 seconds
     setInterval(checkRealConnection,15000);
 
-    // Browser online/offline events
+    // Browser events
     window.addEventListener("online",checkRealConnection);
     window.addEventListener("offline",checkRealConnection);
 
 
-    // ===== CLOSE MENU WHEN CLICKING A LINK =====
-    const links = document.querySelectorAll("#menuList a");
+    // ===== NAVBAR INTERACTIONS  =====
+    const menu = document.getElementById("menuList");
+    const button = document.querySelector(".menu-icon");
 
-    links.forEach(link => {
-      link.addEventListener("click", () => {
+    if (menu && button) {
 
-        const menu = document.getElementById("menuList");
-        const icon = document.querySelector(".menu-icon");
+      let isOpen = false;
 
-        if(menu && icon){
+      // TOGGLE MENU
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        isOpen = !isOpen;
+
+        if (isOpen) {
+          menu.classList.add("open");
+          button.classList.add("active");
+        } else {
           menu.classList.remove("open");
-          icon.classList.remove("active");
+          button.classList.remove("active");
         }
-
       });
-    });
+
+      // PREVENT CLOSING WHEN CLICKING INSIDE MENU
+      menu.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      // CLOSE WHEN CLICKING OUTSIDE
+      document.addEventListener("click", () => {
+        menu.classList.remove("open");
+        button.classList.remove("active");
+        isOpen = false;
+      });
+
+      // CLOSE WHEN CLICKING A LINK
+      const links = menu.querySelectorAll("a");
+
+      links.forEach(link => {
+        link.addEventListener("click", () => {
+          menu.classList.remove("open");
+          button.classList.remove("active");
+          isOpen = false;
+        });
+      });
+    }
 
   });
-
-
-// ===== HAMBURGER MENU =====
-function toggleMenu(){
-
-  const menu = document.getElementById("menuList");
-  const icon = document.querySelector(".menu-icon");
-
-  if(!menu || !icon) return;
-
-  menu.classList.toggle("open");
-  icon.classList.toggle("active");
-
-}

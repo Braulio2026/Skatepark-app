@@ -8,6 +8,7 @@ const urlsToCache = [
   "./map.html",
   "./skatepark.css",
   "./navbar.css",
+  "./navbar.html",
   "./manifest.json",
   "./main.js",
   "./icon-192.png"
@@ -96,6 +97,22 @@ self.addEventListener("fetch", event => {
 /* TO FORCE THE NEW SERVICE WORKER TO REPLACE THE OLD ONE INSTANTLY */
 
 self.addEventListener("install", event => {
+  event.waitUntil
+  caches.open(CACHE_NAME).then(cache => {
+  return Promise.all(
+    urlsToCache.map(url =>
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`Failed: ${url}`);
+          return cache.put(url, response);
+        })
+        .catch(err => {
+          console.warn("Skipped caching:", url);
+        })
+    )
+  );
+});
+
   self.skipWaiting();
 });
 

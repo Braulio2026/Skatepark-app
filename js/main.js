@@ -1,17 +1,39 @@
 // ==== SLIDER IMAGE #1 ====
 let index = 0;
 
+function centerSlide(clickedItem) {
+  const slider = document.querySelector('.slider');
+  const items = document.querySelectorAll('.slider .item');
+  const container = document.querySelector('.slider-container');
+
+  const containerWidth = container.offsetWidth;
+  const itemWidth = clickedItem.offsetWidth + 20;
+
+  const itemOffsetLeft = clickedItem.offsetLeft;
+
+  const centerPosition =
+    itemOffsetLeft - (containerWidth / 2) + (clickedItem.offsetWidth / 2);
+
+  slider.style.transform = `translateX(-${centerPosition}px)`;
+
+  // update index so arrows don’t break
+  index = Math.round(itemOffsetLeft / itemWidth);
+}
+
 function showSlide() {
   const slider = document.querySelector('.slider');
   const items = document.querySelectorAll('.slider .item');
   const container = document.querySelector('.slider-container');
 
-  const itemWidth = items[0].getBoundingClientRect().width;
+  if (!items.length) return;
+
+  const gap = 20;
+  const itemWidth = items[0].getBoundingClientRect().width + gap;
+
   const visibleItems = Math.floor(container.offsetWidth / itemWidth);
   const maxIndex = items.length - visibleItems;
 
-  if (index > maxIndex) index = 0;
-  if (index < 0) index = maxIndex;
+  index = Math.max(0, Math.min(index, maxIndex));
 
   slider.style.transform = `translateX(-${index * itemWidth}px)`;
 }
@@ -26,7 +48,27 @@ function right() {
   showSlide();
 }
 
+/* ✅ WAIT FOR DOM */
+document.addEventListener('DOMContentLoaded', () => {
+
+  document.querySelectorAll('.select').forEach(button => {
+    button.addEventListener('click', (e) => {
+
+      const item = e.target.closest('.item');
+      if (!item) return;
+
+      centerSlide(item);
+
+      // OPTIONAL: open map
+      const url = button.dataset.map;
+      if (url) window.open(url, "_blank");
+    });
+  });
+
+});
+
 window.addEventListener('resize', showSlide);
+window.addEventListener('load', showSlide);
 
 // ===== SEARCH IMPUT ===== 
 const searchInput = document.getElementById("searchInput");
