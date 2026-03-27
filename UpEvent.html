@@ -18,15 +18,15 @@
 
 <body>
   <main>
-    <div id="navbar"></div>
+  <div id="navbar"></div>
 
-<div class="map-container">
-
-  <h2>
-    🗺️ Skateparks in Costa Rica.
-    This section will show skateparks near your location.
-    If you are offline, the map will still display saved skateparks near you.
-  </h2>
+     <div class="map-container">
+  
+      <div class="uper-text">
+         🗺️ Skateparks in Costa Rica.
+        This section will show skateparks near your location.
+        If you are offline, the map will still display saved skateparks near you.
+      </div>
 
   <div id="map"></div>
 
@@ -55,17 +55,53 @@
  <script src="./app.js"></script>
  <script src="./events.js"></script>
  <script>
-   if ("serviceWorker" in navigator) {
 
-  window.addEventListener("load", () => {
+if ("serviceWorker" in navigator) {
 
-    navigator.serviceWorker.register("./service-worker.js")
-      .then(reg => console.log("Service Worker registered:", reg.scope))
-      .catch(err => console.log("Service Worker error:", err));
+  window.addEventListener("load", async () => {
+
+    try {
+      const reg = await navigator.serviceWorker.register("./service-worker.js");
+
+      console.log("Service Worker registered:", reg.scope);
+
+      reg.update();
+
+      reg.onupdatefound = () => {
+
+        const newWorker = reg.installing;
+
+        newWorker.onstatechange = () => {
+
+          if (newWorker.state === "installed") {
+
+            if (navigator.serviceWorker.controller) {
+
+              console.log("🔄 New version available");
+
+              // ✅ ADD IT HERE
+              alert("New version available. Refresh!");
+
+            } else {
+
+              console.log("✅ App ready for offline use");
+
+            }
+
+          }
+
+        };
+
+      };
+
+    } catch (err) {
+      console.log("Service Worker error:", err);
+    }
 
   });
 
 }
+
 </script>
   </body> 
 </html>

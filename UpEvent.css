@@ -15,76 +15,97 @@ main {
     margin: 0;
 }
 
+.uper-text {
+  position: absolute;
+  top: 80px; /* below navbar */
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 90%;
+  max-width: 600px;
+
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 16px;
+  border-radius: 10px;
+
+  z-index: 1000;
+}
+
 #map {
-  height: 500px;
+  height: 100%;
   width: 100%;
-  display: block;
 }
 
 .map-container {
+  position: relative;
   width: 100%;
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-
-  background: url("image-skates/background_1.jpg") no-repeat center center;
-  background-size: cover;
-
-  padding: 20px;
-  border-radius: none;
-
-  backdrop-filter: blur(6px);
-}
-
-h2 {
-  display: flex;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 100;
-  width: 100%;
-  height: 10vh;
-  margin-top: 50px;
-  padding: 12px;
-  color: #fff;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .option-button {
-  display: flex;
-  justify-content: center;
-  margin: 40px 0;
+  position: absolute;
+  bottom: 90px; /* space above Events button */
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 1000;
 }
 
 .slide-buttons {
   display: flex;
-  gap: 18px; /* space between buttons */
+  gap: 8px;
+
+  background: rgba(225, 254, 255, 0.95);
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid rgb(88, 88, 88);
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+
+  pointer-events: auto; /* re-enable clicks */
 }
 
 .slide-buttons button {
-  padding: 10px 18px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(175, 175, 175, 0.4);
+  padding: 10px 16px;
+  border-radius: 999px;
   border: none;
-  font-size: 14px;
+
+  font-size: 13px;
+  font-weight: 600;
+
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.25s ease;
+
+  background: transparent;
+  color: #333;
 }
 
 /* main button */
 .route {
-  background: rgb(151, 0, 0);
-  color: white;
+  background: #000;
+  color: #fff;
 }
 
 /* secondary button */
 .alternative {
-  background: #000000;
-  color: white;
+  background: transparent;
+  color: #333;
 }
 
 /* hover effect */
 .slide-buttons button:hover {
   transform: translateY(-2px);
   opacity: 0.8;
+  color: rgb(12, 166, 255);
+}
+
+.slide-buttons button:active {
+  transform: scale(0.96);
 }
 
 .container-card {
@@ -97,7 +118,7 @@ h2 {
   position: relative;
   justify-content: space-between;
   background-color: #adadad;
-  max-width: 100%;
+  max-width: 80%;
 }
 
 .place-text .schedule-box {
@@ -107,8 +128,8 @@ h2 {
 }
 
 .events{
-  max-width:700px;
-  margin:auto;
+  max-width: 700px;
+  margin :auto;
 }
 
 .event-card{
@@ -128,7 +149,7 @@ h2 {
 
 .event-info{
   margin-top: 10px;
-  font-size: s14px;
+  font-size: 14px;
 }
 .event-info p:last-child{
   font-size: 13px;
@@ -142,7 +163,6 @@ h2 {
   display: block;
   animation: fadeIn 0.3s ease;
 }
-
 
 @keyframes fadeIn{
   from{opacity:0;}
@@ -159,7 +179,7 @@ h2 {
 }
 
 /*SLIDING SECTION */
-#events-panel{
+#events-panel {
   position: fixed;
   bottom: -350px;
   left: 0;
@@ -168,10 +188,12 @@ h2 {
 
   background: white;
   border-radius: 15px 15px 0 0;
+
+  display: flex;
+  flex-direction: column; /* 👈 IMPORTANT */
+
   padding: 20px;
-
   transition: 0.3s;
-
   z-index: 1000;
 }
 
@@ -179,12 +201,41 @@ h2 {
   bottom: 0;
 }
 
+#events-panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+
+  background: linear-gradient(to top, white, transparent);
+  pointer-events: none;
+}
+
+#events-list {
+  flex: 1;
+  overflow: auto;
+  padding: 5px;
+  max-width: 80%;
+  scroll-behavior: smooth;
+}
+
+#events-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#events-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
 .event-item{
   background:#f5f5f5;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:10px;
-  font-size:14px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .floating-btn{
@@ -207,15 +258,19 @@ h2 {
 @media (max-width: 768px) {
 
   .map-container {
-    padding-left: 0;
-    padding-right: 0;
+    height: 100vh;
+    padding: 0;
   }
 
   #map {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    height: 550px;
+    height: 100%;
+    width: 100%;
+    margin: 0; 
   }
+
+#events-list {
+  min-width: 100%;
+}
 
 }
 
