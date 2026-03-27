@@ -48,7 +48,7 @@ function right() {
   showSlide();
 }
 
-/* ✅ WAIT FOR DOM */
+/* WAIT FOR DOM */
 document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.select').forEach(button => {
@@ -112,46 +112,40 @@ mapButtons.forEach(button => {
 });
   
       // ==== SLIDER IMAGE #2 ====
- (() => {
-      function toggleMenu() {
-        if(menuList.style.maxHeight == "0px")
-      {
-         menuList.style.maxHeight = "300px";
-      }
-      else{
-        menuList.style.maxHeight = "0px";
-      }
-      }
-      
+ 
+(() => {
+
 const slider = document.querySelector('.slider-2');
 const track = document.querySelector('.slider-track');
-const cards = document.querySelectorAll('.spot-card');
+let cards = document.querySelectorAll('.spot-card');
 
-let index = 0;
-let autoSlideInterval;
+let index = 1;
 let isDragging = false;
 let startX = 0;
 let currentTranslate = 0;
 let prevTranslate = 0;
+let animationID;
+let autoSlideInterval;
 
-function cardsPerView() {
-  if (window.innerWidth >= 1200) return 1;
-  if (window.innerWidth >= 768) return 1;
-  return 1;
-}
+/* CLONE FIRST & LAST */
+const firstClone = cards[0].cloneNode(true);
+const lastClone = cards[cards.length - 1].cloneNode(true);
 
-function slideToIndex() {
-  const percentage = 100 / cardsPerView();
-  track.style.transform = `translateX(-${index * percentage}%)`;
-}
+track.appendChild(firstClone);
+track.insertBefore(lastClone, cards[0]);
 
+cards = document.querySelectorAll('.spot-card');
+
+/* START POSITION */
+const slideWidth = slider.offsetWidth;
+track.style.transform = `translateX(-${slideWidth * index}px)`;
+
+/* ---------- AUTO SLIDE ---------- */
 function startAutoSlide() {
+  clearInterval(autoSlideInterval);
+
   autoSlideInterval = setInterval(() => {
-    index++;
-    if (index > cards.length - cardsPerView()) {
-      index = 0;
-    }
-    slideToIndex();
+    moveToNext();
   }, 3000);
 }
 
@@ -159,12 +153,49 @@ function stopAutoSlide() {
   clearInterval(autoSlideInterval);
 }
 
-/* ----- DRAG SUPPORT ----- */
+/* ---------- MOVE ---------- */
+function moveToNext() {
+  if (index >= cards.length - 1) return;
+  index++;
+  moveSlider();
+}
+
+function moveToPrev() {
+  if (index <= 0) return;
+  index--;
+  moveSlider();
+}
+
+function moveSlider() {
+  track.style.transition = "transform 0.5s ease";
+  track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+}
+
+/* ---------- INFINITE FIX ---------- */
+track.addEventListener('transitionend', () => {
+  if (cards[index].isSameNode(firstClone)) {
+    track.style.transition = "none";
+    index = 1;
+    track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+  }
+
+  if (cards[index].isSameNode(lastClone)) {
+    track.style.transition = "none";
+    index = cards.length - 2;
+    track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+  }
+});
+
+/* ---------- DRAG ---------- */
 function touchStart(e) {
   isDragging = true;
-  startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-  prevTranslate = -index * (100 / cardsPerView());
   stopAutoSlide();
+
+  startX = e.type.includes('mouse')
+    ? e.pageX
+    : e.touches[0].clientX;
+
+  prevTranslate = -slider.offsetWidth * index;
 }
 
 function touchMove(e) {
@@ -175,9 +206,7 @@ function touchMove(e) {
     : e.touches[0].clientX;
 
   const diff = currentX - startX;
-
-  track.style.transform =
-    `translateX(calc(${prevTranslate}% + ${diff}px))`;
+  track.style.transform = `translateX(${prevTranslate + diff}px)`;
 }
 
 function touchEnd(e) {
@@ -189,25 +218,15 @@ function touchEnd(e) {
     : e.changedTouches[0].clientX;
 
   const movedBy = endX - startX;
-  const threshold = 80;
 
-  if (movedBy < -threshold && index < cards.length - cardsPerView()) {
-    index++;
-  }
+  if (movedBy < -100) moveToNext();
+  else if (movedBy > 100) moveToPrev();
+  else moveSlider();
 
-  if (movedBy > threshold && index > 0) {
-    index--;
-  }
-
-  slideToIndex();
   startAutoSlide();
 }
 
-
-/* EVENTS */
-slider.addEventListener('mouseenter', stopAutoSlide);
-slider.addEventListener('mouseleave', startAutoSlide);
-
+/* ---------- EVENTS ---------- */
 slider.addEventListener('mousedown', touchStart);
 slider.addEventListener('mousemove', touchMove);
 slider.addEventListener('mouseup', touchEnd);
@@ -217,14 +236,17 @@ slider.addEventListener('touchstart', touchStart);
 slider.addEventListener('touchmove', touchMove);
 slider.addEventListener('touchend', touchEnd);
 
-slider.addEventListener('touchstart', stopAutoSlide);
-slider.addEventListener('touchend', startAutoSlide);
+slider.addEventListener('mouseenter', stopAutoSlide);
+slider.addEventListener('mouseleave', startAutoSlide);
 
-
-window.addEventListener('resize', slideToIndex);
+window.addEventListener('resize', () => {
+  track.style.transition = "none";
+  track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+});
 
 /* INIT */
 startAutoSlide();
+
 })();
 
 if ("serviceWorker" in navigator) {
