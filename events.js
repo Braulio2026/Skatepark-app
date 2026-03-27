@@ -24,6 +24,13 @@ const events = [
     place: "Curridabat Skatepark",
     schedule: "August 5 - 3:00 PM",
     description: "Friendly bowl contest for intermediate and advanced skaters."
+  },
+  {
+    park: "curridabat",
+    name: "Jose Maria Skate Contest",
+    place: "Curridabat Skatepark",
+    schedule: "August 5 - 3:00 PM",
+    description: "Friendly bowl contest for intermediate and advanced skaters."
   }
 ];
 
