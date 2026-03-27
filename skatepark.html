@@ -19,7 +19,7 @@
     </div>  
 
     <div class="text">
-      <p>Here you will find images and skateparks you migth like to know.</p>
+      <p>Here you will find a list of images and skateparks you migth like to know around the city.</p>
     </div>
 
 <section>
@@ -757,5 +757,20 @@
   });
 
 }
+
+document.querySelectorAll('.button-map').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    const link = this.getAttribute('href');
+    if (!link) return;
+
+    e.preventDefault();
+
+    this.classList.add('clicked');
+
+    setTimeout(() => {
+      window.location.href = link;
+    }, 180); // smooth but fast
+  });
+});
 </script>
 </html>
