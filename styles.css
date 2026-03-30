@@ -72,9 +72,15 @@ main {
 }
 
 /* style for the input within search, if it's necessary*/
-#searchInput .text{
-  width: 80%;
-  font-size: 20px;
+#searchInput {
+  width: 70%;
+  max-width: 350px;
+  height: 40px;
+
+  border-radius: 8px;
+  padding: 10px;
+
+  font-size: 16px;
 }
 
 input {
@@ -84,6 +90,12 @@ input {
 
   border-radius: 8px;
   padding: 10px;
+}
+
+.item.active {
+  outline: 3px solid #00ffcc;
+  transform: scale(1.05);
+  transition: 0.3s;
 }
 
 .list-skate,
@@ -212,7 +224,8 @@ a {
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 0 20px; /* instead of 10% */
+  padding: 0 20px;
+  top: 20px;
 }
 
 .slider {

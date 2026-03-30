@@ -60,7 +60,7 @@ main {
   display: flex;
   gap: 8px;
 
-  background: rgba(225, 254, 255, 0.95);
+  background: rgb(232, 255, 25);
   padding: 6px;
   border-radius: 999px;
   border: 1px solid rgb(88, 88, 88);
@@ -82,7 +82,7 @@ main {
   transition: all 0.25s ease;
 
   background: transparent;
-  color: #333;
+  color: #000000;
 }
 
 /* main button */
@@ -101,7 +101,7 @@ main {
 .slide-buttons button:hover {
   transform: translateY(-2px);
   opacity: 0.8;
-  color: rgb(12, 166, 255);
+  color: rgb(124, 43, 255);
 }
 
 .slide-buttons button:active {
@@ -247,7 +247,7 @@ main {
   border-radius: 30px;
   border: 1px solid rgb(0, 0, 0);
 
-  background: #fff;
+  background: #e9ff20;
   color: #000;
   font-weight: bold;
   cursor: pointer;
