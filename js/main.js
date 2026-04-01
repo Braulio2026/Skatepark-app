@@ -1,14 +1,77 @@
 // ==== SLIDER IMAGE #1 ====
 let index = 0;
 
+/* ================= DATA ================= */
+const skateparks = [
+  {
+    title: "Moravia Skatepark",
+    image: "image-skates/Skatepark_moravia.jpg",
+    description: "Free public park in San Vicente, Moravia. Open 24h with bowl and street elements. Family-friendly with green areas and playgrounds.",
+    map: "https://www.google.com/maps?q=Moravia+Skatepark+Costa+Rica"
+  },
+  {
+    title: "Jose Maria Zeledon Skatepark",
+    image: "image-skates/jose_ma_skate.webp",
+    description: "Located in Curridabat. Open 8AM–8PM. Features ramps and rails for all levels with a strong local skate community.",
+    map: "https://www.google.com/maps?q=Jose+Maria+Zeledon+Skatepark"
+  },
+  {
+    title: "Salvador Skatepark",
+    image: "image-skates/savador_skatepark.webp",
+    description: "Beginner-friendly park near Sabana (Mantica). Known as a safe local skate spot with basic features.",
+    map: "https://www.google.com/maps?q=Salvador+Skatepark+San+Jose"
+  },
+  {
+    title: "Alajuelita Skatepark",
+    image: "image-skates/Skatepark-Alajuelita-in-Costa-Rica0.jpg",
+    description: "Modern 3-level skatepark opened in 2023. Includes street, bowl, and BMX zones. One of the best in Costa Rica.",
+    map: "https://www.google.com/maps?q=Alajuelita+Skatepark"
+  },
+  {
+    title: "Luzo Skatepark Heredia",
+    image: "image-skates/luzo_skatepark.webp",
+    description: "Community-built park in San Rafael, Heredia. Open 7AM–9PM with covered areas and ramps for all levels.",
+    map: "https://www.google.com/maps?q=Luzo+Skatepark+Heredia"
+  },
+  {
+    title: "Lagos de Lindora Skatepark",
+    image: "image-skates/santa_ana_skatepark.jpeg",
+    description: "Planned skatepark in Santa Ana (Lindora area). Project announced by the municipality.",
+    map: "https://www.google.com/maps?q=Lindora+lagos+skatepark"
+  },
+  {
+    title: "Plaza Viquez Skatepark",
+    image: "image-skates/viquez_skat2.jpeg",
+    description: "Concrete skatepark in Cartago behind Escuela Vial. Open 9AM–5PM. Includes rails, ledges, and quarter pipes.",
+    map: "https://www.google.com/maps?q=Plaza+gonzalez+viquez+skatepark"
+  },
+  {
+    title: "Bowl Guachipelin Escazu",
+    image: "image-skates/escazu_skate3.jpeg",
+    description: "Recreational park in Escazú with skate areas, courts, and playgrounds. Great for families and skating.",
+    map: "" // no map provided yet
+  },
+  {
+    title: "Zapote Skatepark",
+    image: "image-skates/zapote_skate2.jpg",
+    description: "Street-style municipal park in Zapote with boxes, ramps, and ledges. Popular local skate spot.",
+    map: "https://www.google.com/maps?q=Zapote+Skatepark"
+  },
+  {
+    title: "Los Lagos Skatepark",
+    image: "image-skates/lagos_skat7.jpeg",
+    description: "Large modern park in Heredia with street, bowl, and pumptrack areas. Suitable for all skill levels.",
+    map: "https://www.google.com/maps?q=Los+lagos+skatepark"
+  }
+ ];
+
+/* ================= FUNCTIONS ================= */
 function centerSlide(clickedItem) {
   const slider = document.querySelector('.slider');
-  const items = document.querySelectorAll('.slider .item');
   const container = document.querySelector('.slider-container');
 
   const containerWidth = container.offsetWidth;
   const itemWidth = clickedItem.offsetWidth + 20;
-
   const itemOffsetLeft = clickedItem.offsetLeft;
 
   const centerPosition =
@@ -16,7 +79,6 @@ function centerSlide(clickedItem) {
 
   slider.style.transform = `translateX(-${centerPosition}px)`;
 
-  // update index so arrows don’t break
   index = Math.round(itemOffsetLeft / itemWidth);
 }
 
@@ -48,9 +110,40 @@ function right() {
   showSlide();
 }
 
-/* WAIT FOR DOM */
+/* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
 
+  const slider = document.querySelector('.slider');
+  const searchInput = document.getElementById("searchInput");
+  const goBtn = document.getElementById("go-btn");
+  const datalist = document.getElementById("suggestions");
+
+  /* ---------- GENERATE SLIDES ---------- */
+  skateparks.forEach(park => {
+    slider.innerHTML += `
+      <div class="item">
+          <div class="image">
+              <img src="${park.image}" loading="lazy" alt="${park.title}">
+          </div>
+          <div class="information">
+              <div class="title">${park.title}</div>
+              <span>${park.description}</span>
+              <button class="select" data-map="${park.map}">
+                  Go to map
+              </button>
+          </div>
+      </div>
+    `;
+  });
+
+  /* ---------- GENERATE SEARCH SUGGESTIONS ---------- */
+  skateparks.forEach(park => {
+    const option = document.createElement("option");
+    option.value = park.title;
+    datalist.appendChild(option);
+  });
+
+  /* ---------- BUTTON EVENTS (MAP + CENTER) ---------- */
   document.querySelectorAll('.select').forEach(button => {
     button.addEventListener('click', (e) => {
 
@@ -59,204 +152,203 @@ document.addEventListener('DOMContentLoaded', () => {
 
       centerSlide(item);
 
-      // OPTIONAL: open map
-      const url = button.dataset.map;
+      const url = e.target.dataset.map;
       if (url) window.open(url, "_blank");
     });
   });
 
+  /* ---------- SEARCH ---------- */
+  goBtn.addEventListener("click", () => {
+    const searchValue = searchInput.value.toLowerCase().trim();
+    const items = document.querySelectorAll(".slider .item");
+
+    let foundIndex = -1;
+
+    items.forEach((item, i) => {
+      const title = item.querySelector(".title").textContent.toLowerCase();
+
+      if (title.includes(searchValue) && foundIndex === -1) {
+        foundIndex = i;
+      }
+    });
+
+    if (foundIndex !== -1) {
+      index = foundIndex;
+      showSlide();
+
+      // highlight
+      items[foundIndex].classList.add("active");
+      setTimeout(() => {
+        items[foundIndex].classList.remove("active");
+      }, 1500);
+
+    } else {
+      alert("Skatepark no encontrado");
+    }
+  });
+
+  /* ---------- ENTER KEY ---------- */
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      goBtn.click();
+    }
+  });
+
+  /* ---------- INITIAL POSITION ---------- */
+  showSlide();
 });
 
+/* ================= GLOBAL EVENTS ================= */
 window.addEventListener('resize', showSlide);
 window.addEventListener('load', showSlide);
 
-// ===== SEARCH IMPUT ===== 
-const searchInput = document.getElementById("searchInput");
-const goBtn = document.getElementById("go-btn");
-const slider = document.querySelector(".slider");
-const items = document.querySelectorAll(".slider .item");
-
-function goToSlide(i) {
-  const itemWidth = items[0].offsetWidth;
-  slider.style.transform = `translateX(-${itemWidth * i}px)`;
-  slider.style.transition = "transform 0.5s ease";
-}
-
-goBtn.addEventListener("click", () => {
-  const searchValue = searchInput.value.toLowerCase().trim();
-  let found = false;
-
-  items.forEach((item, index) => {
-    const title = item.querySelector(".title").textContent.toLowerCase();
-    if (title.includes(searchValue)) {
-      goToSlide(index);
-      found = true;
-    }
-  });
-
-  if (!found) {
-    alert("Skatepark no encontrado");
-  }
-});
-
-// ===== MAP BUTTONS =====
-const mapButtons = document.querySelectorAll(".select");
-
-mapButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const mapUrl = button.dataset.map;
-    if (mapUrl) {
-      window.open(mapUrl, "_blank");
-    }
-  });
-});
-  
-      // ==== SLIDER IMAGE #2 ====
- 
+// ==== SLIDER IMAGE #2 (DRAG + INFINITE) ====
 (() => {
 
-const slider = document.querySelector('.slider-2');
-const track = document.querySelector('.slider-track');
-let cards = document.querySelectorAll('.spot-card');
+  const slider = document.querySelector('.slider-2');
+  const track = document.querySelector('.slider-track');
 
-let index = 1;
-let isDragging = false;
-let startX = 0;
-let currentTranslate = 0;
-let prevTranslate = 0;
-let animationID;
-let autoSlideInterval;
+  if (!slider || !track) return; // safety
 
-/* CLONE FIRST & LAST */
-const firstClone = cards[0].cloneNode(true);
-const lastClone = cards[cards.length - 1].cloneNode(true);
+  let cards = document.querySelectorAll('.spot-card');
 
-track.appendChild(firstClone);
-track.insertBefore(lastClone, cards[0]);
+  let index = 1;
+  let isDragging = false;
+  let startX = 0;
+  let prevTranslate = 0;
+  let autoSlideInterval;
 
-cards = document.querySelectorAll('.spot-card');
+  /* ---------- CLONE FIRST & LAST ---------- */
+  const firstClone = cards[0].cloneNode(true);
+  const lastClone = cards[cards.length - 1].cloneNode(true);
 
-/* START POSITION */
-const slideWidth = slider.offsetWidth;
-track.style.transform = `translateX(-${slideWidth * index}px)`;
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, cards[0]);
 
-/* ---------- AUTO SLIDE ---------- */
-function startAutoSlide() {
-  clearInterval(autoSlideInterval);
+  cards = document.querySelectorAll('.spot-card');
 
-  autoSlideInterval = setInterval(() => {
-    moveToNext();
-  }, 3000);
-}
+  /* ---------- START POSITION ---------- */
+  function setPosition() {
+    const slideWidth = slider.offsetWidth;
+    track.style.transform = `translateX(-${slideWidth * index}px)`;
+  }
 
-function stopAutoSlide() {
-  clearInterval(autoSlideInterval);
-}
+  setPosition();
 
-/* ---------- MOVE ---------- */
-function moveToNext() {
-  if (index >= cards.length - 1) return;
-  index++;
-  moveSlider();
-}
+  /* ---------- AUTO SLIDE ---------- */
+  function startAutoSlide() {
+    stopAutoSlide();
 
-function moveToPrev() {
-  if (index <= 0) return;
-  index--;
-  moveSlider();
-}
+    autoSlideInterval = setInterval(() => {
+      moveToNext();
+    }, 3000);
+  }
 
-function moveSlider() {
-  track.style.transition = "transform 0.5s ease";
-  track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
-}
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
 
-/* ---------- INFINITE FIX ---------- */
-track.addEventListener('transitionend', () => {
-  if (cards[index].isSameNode(firstClone)) {
-    track.style.transition = "none";
-    index = 1;
+  /* ---------- MOVE ---------- */
+  function moveToNext() {
+    if (index >= cards.length - 1) return;
+    index++;
+    moveSlider();
+  }
+
+  function moveToPrev() {
+    if (index <= 0) return;
+    index--;
+    moveSlider();
+  }
+
+  function moveSlider() {
+    track.style.transition = "transform 0.5s ease";
     track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
   }
 
-  if (cards[index].isSameNode(lastClone)) {
-    track.style.transition = "none";
-    index = cards.length - 2;
-    track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+  /* ---------- INFINITE LOOP FIX ---------- */
+  track.addEventListener('transitionend', () => {
+
+    if (cards[index].isSameNode(firstClone)) {
+      track.style.transition = "none";
+      index = 1;
+      setPosition();
+    }
+
+    if (cards[index].isSameNode(lastClone)) {
+      track.style.transition = "none";
+      index = cards.length - 2;
+      setPosition();
+    }
+  });
+
+  /* ---------- DRAG / SWIPE ---------- */
+  function touchStart(e) {
+    isDragging = true;
+    stopAutoSlide();
+
+    startX = e.type.includes('mouse')
+      ? e.pageX
+      : e.touches[0].clientX;
+
+    prevTranslate = -slider.offsetWidth * index;
   }
-});
 
-/* ---------- DRAG ---------- */
-function touchStart(e) {
-  isDragging = true;
-  stopAutoSlide();
+  function touchMove(e) {
+    if (!isDragging) return;
 
-  startX = e.type.includes('mouse')
-    ? e.pageX
-    : e.touches[0].clientX;
+    const currentX = e.type.includes('mouse')
+      ? e.pageX
+      : e.touches[0].clientX;
 
-  prevTranslate = -slider.offsetWidth * index;
-}
+    const diff = currentX - startX;
+    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+  }
 
-function touchMove(e) {
-  if (!isDragging) return;
+  function touchEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
 
-  const currentX = e.type.includes('mouse')
-    ? e.pageX
-    : e.touches[0].clientX;
+    const endX = e.type.includes('mouse')
+      ? e.pageX
+      : e.changedTouches[0].clientX;
 
-  const diff = currentX - startX;
-  track.style.transform = `translateX(${prevTranslate + diff}px)`;
-}
+    const movedBy = endX - startX;
 
-function touchEnd(e) {
-  if (!isDragging) return;
-  isDragging = false;
+    if (movedBy < -100) moveToNext();
+    else if (movedBy > 100) moveToPrev();
+    else moveSlider();
 
-  const endX = e.type.includes('mouse')
-    ? e.pageX
-    : e.changedTouches[0].clientX;
+    startAutoSlide();
+  }
 
-  const movedBy = endX - startX;
+  /* ---------- EVENTS ---------- */
+  slider.addEventListener('mousedown', touchStart);
+  slider.addEventListener('mousemove', touchMove);
+  slider.addEventListener('mouseup', touchEnd);
+  slider.addEventListener('mouseleave', touchEnd);
 
-  if (movedBy < -100) moveToNext();
-  else if (movedBy > 100) moveToPrev();
-  else moveSlider();
+  slider.addEventListener('touchstart', touchStart);
+  slider.addEventListener('touchmove', touchMove);
+  slider.addEventListener('touchend', touchEnd);
 
+  slider.addEventListener('mouseenter', stopAutoSlide);
+  slider.addEventListener('mouseleave', startAutoSlide);
+
+  window.addEventListener('resize', () => {
+    track.style.transition = "none";
+    setPosition();
+  });
+
+  /* ---------- INIT ---------- */
   startAutoSlide();
-}
-
-/* ---------- EVENTS ---------- */
-slider.addEventListener('mousedown', touchStart);
-slider.addEventListener('mousemove', touchMove);
-slider.addEventListener('mouseup', touchEnd);
-slider.addEventListener('mouseleave', touchEnd);
-
-slider.addEventListener('touchstart', touchStart);
-slider.addEventListener('touchmove', touchMove);
-slider.addEventListener('touchend', touchEnd);
-
-slider.addEventListener('mouseenter', stopAutoSlide);
-slider.addEventListener('mouseleave', startAutoSlide);
-
-window.addEventListener('resize', () => {
-  track.style.transition = "none";
-  track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
-});
-
-/* INIT */
-startAutoSlide();
 
 })();
 
 if ("serviceWorker" in navigator) {
-
   window.addEventListener("load", () => {
-
     navigator.serviceWorker.register("./service-worker.js")
       .then(reg => console.log("Service Worker registered:", reg.scope))
       .catch(err => console.log("Service Worker error:", err));
-
   });
-
 }
