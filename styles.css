@@ -52,7 +52,7 @@ main {
 }
 
 .banner-text h2 {
-  font-size: var(--fs-xl);
+  font-size: clamp(1.8rem, 5vw, 3rem);
   color: #fff;
 }
 
@@ -139,7 +139,7 @@ a {
 
 .container-button {
   position: absolute;
-  top: 75%;
+  top: 69%;
   left: 50%; 
   width: 85%;
   max-width: 500px;
@@ -289,7 +289,7 @@ a {
     flex-direction: column;
     height: 100%;
     max-width: max-content;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
 .information .title {
@@ -314,7 +314,7 @@ a {
   left: 50%;
   transform: translateX(-50%);
     
-  width: 85%;
+  width: 55%;
   padding: 2%;
   margin-bottom: 20px;
 

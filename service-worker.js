@@ -147,7 +147,7 @@ self.addEventListener("fetch", event => {
         });
 
       }).catch(() => {
-        // ✅ Better offline fallback
+        //  Better offline fallback
         return caches.match("./offline.html");
       });
 
