@@ -88,7 +88,7 @@
 
   <div class="text-2">
     <h3>
-      Here you will find Upcoming events.
+      Here you will find Upcoming events and shared places around the city perfect for skating.,
       Besides your are capable to share your upcoming events with the community
       filling the form below to let them know every detail about it along with the banner or image event.  
     </h3>
@@ -205,13 +205,19 @@
     <textarea id="description" placeholder="Describe your event..." required></textarea>
 
     <label for="image" class="file-upload">Upload Image</label>
-     <input type="file" id="image" accept="image/*" required hidden>
+      <input type="file" id="image" accept="image/*" style="display: none;">
      <span id="file-name">No file selected</span>
 
     <button type="submit">Publish Event</button>
   </form>
 
 </div>
+</section>
+
+<section class="user-publications">
+  <h1>Community Posts</h1>
+
+  <div id="userPosts"></div>
 </section>
 
           
