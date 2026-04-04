@@ -17,7 +17,7 @@
       <img src="image-skates/background_1.jpg">
 
       <div class="banner-text">
-        <h2>SkateRutes COSTA RICA</h2>
+        <h2>SKATE-RUTES COSTA RICA</h2>
         <p>All you want to know about your next ride</p>
       </div>
     
@@ -65,7 +65,7 @@
       <option value="Jose Maria">
       <option value="Salvador">
       <option value="Alajuelita">
-      <option value="Luzo">
+      <option value="Tecma">
       <option value="Lindora">
       <option value="Plaza Viquez">
       <option value="Guachipelin">
@@ -85,19 +85,19 @@
         <button id="right" onclick="right()">&#10095;</button>
     </div>
 </div>
-   
-<section class="challenge-section">
-  
+
   <div class="text-2">
-      Challenge on the streeth.
-      Here you will find places perfect to skateboarding.
-      Besides your allowed to share your known places to skating around your town
-      the Goal is to make a communitie where you can explore every place perfect to make your clips or just
-      hangin out chill.
+    <h3>
+      Here you will find Upcoming events and shared places around the city perfect for skating.,
+      Besides your are capable to share your upcoming events with the community
+      filling the form below to let them know every detail about it along with the banner or image event.  
+    </h3>
   </div>
+  
+<section class="challenge-section">
 
    <div class="slider-2">
-    <div class="slider-track">
+    <div class="slider-track" id="eventsTrack">
 
       <div class="spot-card">
         <img src="image-skates/spot_3.jpeg" alt="Skate spot">
@@ -190,6 +190,34 @@
       </div>
     </div>
   </div>
+
+  <div class="event-form-container">
+
+  <h3>Share your upcoming event</h3>
+
+  <form id="eventForm">
+    <input type="text" id="title" placeholder="Event title" required>
+
+    <input type="date" id="date" required>
+
+    <input type="text" id="location" placeholder="Location (Google Maps link optional)">
+    
+    <textarea id="description" placeholder="Describe your event..." required></textarea>
+
+    <label for="image" class="file-upload">Upload Image</label>
+      <input type="file" id="image" accept="image/*" style="display: none;">
+     <span id="file-name">No file selected</span>
+
+    <button type="submit">Publish Event</button>
+  </form>
+
+</div>
+</section>
+
+<section class="user-publications">
+  <h1>Community Posts</h1>
+
+  <div id="userPosts"></div>
 </section>
 
           

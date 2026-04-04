@@ -23,15 +23,15 @@ const skateparks = [
   },
   {
     title: "Alajuelita Skatepark",
-    image: "image-skates/Skatepark-Alajuelita-in-Costa-Rica0.jpg",
+    image: "image-skates/alajuelita_1.jpeg",
     description: "Modern 3-level skatepark opened in 2023. Includes street, bowl, and BMX zones. One of the best in Costa Rica.",
     map: "https://www.google.com/maps?q=Alajuelita+Skatepark"
   },
   {
-    title: "Luzo Skatepark Heredia",
-    image: "image-skates/luzo_skatepark.webp",
-    description: "Community-built park in San Rafael, Heredia. Open 7AM–9PM with covered areas and ramps for all levels.",
-    map: "https://www.google.com/maps?q=Luzo+Skatepark+Heredia"
+    title: "Tecma Skatepark",
+    image: "image-skates/tecma_2.jpeg",
+    description: "The Tecma / Sabanilla skatepark is a small outdoor skate spot located in the Sabanilla area of San José. It features basic street-style obstacles such as rails, a box, an inclined plane, and quarter pipes, making it suitable mainly for beginner to intermediate skaters.",
+    map: "https://www.google.com/maps?q=U+Creativa+Sabanilla+Montes+de+Oca+Costa+Rica"
   },
   {
     title: "Lagos de Lindora Skatepark",
@@ -344,6 +344,145 @@ window.addEventListener('load', showSlide);
   startAutoSlide();
 
 })();
+
+// =======================
+// EVENTS SYSTEM
+// =======================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const eventForm = document.getElementById("eventForm");
+  const userPosts = document.getElementById("userPosts");
+  const imageInput = document.getElementById("image");
+  const STORAGE_KEY = "userPostsData";
+
+  if (!eventForm || !userPosts) return;
+
+  // ---------- CONVERT IMAGE ----------
+  function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- CREATE POST ----------
+  function createPostCard(event, index) {
+    return `
+      <div class="post-card">
+        <img src="${event.imageUrl}" alt="Post image">
+
+        <div class="post-content">
+          <h4>${event.title}</h4>
+          <p>
+            ${event.description}
+            <br><br>
+            📅 ${event.date}
+          </p>
+
+          <a href="${event.location || '#'}" target="_blank">
+            📍 View location
+          </a>
+
+          <button class="delete-btn" data-index="${index}">
+            🗑️ Delete
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---------- RENDER ALL POSTS ----------
+  function renderPosts(posts) {
+    userPosts.innerHTML = "";
+
+    posts.forEach((post, index) => {
+      userPosts.insertAdjacentHTML("beforeend", createPostCard(post, index));
+    });
+  }
+
+  // ---------- SAVE ----------
+  function savePostToStorage(post) {
+    const existingPosts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    existingPosts.unshift(post);
+
+    const MAX_POSTS = 10;
+    if (existingPosts.length > MAX_POSTS) {
+      existingPosts.pop();
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existingPosts));
+  }
+
+  // ---------- LOAD ----------
+  function loadPostsFromStorage() {
+    const savedPosts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    renderPosts(savedPosts);
+  }
+
+  // ---------- DELETE ----------
+  userPosts.addEventListener("click", (e) => {
+    if (e.target.classList.contains("delete-btn")) {
+      const index = Number(e.target.dataset.index);
+
+      const posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+      posts.splice(index, 1);
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+
+      renderPosts(posts); // 🔥 no reload needed
+    }
+  });
+
+  // ---------- FORM ----------
+  eventForm.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const imageFile = imageInput.files[0];
+
+    let imageUrl = "image-skates/spot_1.jpeg";
+
+    if (imageFile) {
+      imageUrl = await convertImageToBase64(imageFile);
+    }
+
+    const newEvent = {
+      title: document.getElementById("title").value,
+      description: document.getElementById("description").value,
+      date: document.getElementById("date").value,
+      location: document.getElementById("location").value,
+      imageUrl: imageUrl
+    };
+
+    savePostToStorage(newEvent);
+
+    loadPostsFromStorage(); // 🔥 re-render correctly
+
+    this.reset();
+    document.getElementById("file-name").textContent = "No file selected";
+  });
+
+  // ---------- FILE NAME ----------
+  imageInput.addEventListener("change", () => {
+    const fileNameDisplay = document.getElementById("file-name");
+
+    if (imageInput.files.length > 0) {
+      fileNameDisplay.textContent = imageInput.files[0].name;
+    } else {
+      fileNameDisplay.textContent = "No file selected";
+    }
+  });
+
+  // ---------- INIT ----------
+  loadPostsFromStorage();
+
+});
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
