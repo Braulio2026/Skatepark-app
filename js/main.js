@@ -23,15 +23,15 @@ const skateparks = [
   },
   {
     title: "Alajuelita Skatepark",
-    image: "image-skates/Skatepark-Alajuelita-in-Costa-Rica0.jpg",
+    image: "image-skates/alajuelita_1.jpeg",
     description: "Modern 3-level skatepark opened in 2023. Includes street, bowl, and BMX zones. One of the best in Costa Rica.",
     map: "https://www.google.com/maps?q=Alajuelita+Skatepark"
   },
   {
-    title: "Luzo Skatepark Heredia",
-    image: "image-skates/luzo_skatepark.webp",
-    description: "Community-built park in San Rafael, Heredia. Open 7AM–9PM with covered areas and ramps for all levels.",
-    map: "https://www.google.com/maps?q=Luzo+Skatepark+Heredia"
+    title: "Tecma Skatepark",
+    image: "image-skates/tecma_2.jpeg",
+    description: "The Tecma / Sabanilla skatepark is a small outdoor skate spot located in the Sabanilla area of San José. It features basic street-style obstacles such as rails, a box, an inclined plane, and quarter pipes, making it suitable mainly for beginner to intermediate skaters.",
+    map: "https://www.google.com/maps?q=U+Creativa+Sabanilla+Montes+de+Oca+Costa+Rica"
   },
   {
     title: "Lagos de Lindora Skatepark",
