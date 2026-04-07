@@ -747,6 +747,32 @@ input {
   color: #ff7b00;
 }
 
+/* button likes */
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.like-btn {
+  background: transparent;
+  border: none;
+  color: #ff4d6d;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.like-btn:hover {
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 /* FOOTER */
 .footer {
   background: #000;

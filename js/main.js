@@ -356,6 +356,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById("image");
   const STORAGE_KEY = "userPostsData";
 
+  /* USER ID (GLOBAL) */
+  const USER_KEY = "userId";
+
+    let userId = localStorage.getItem(USER_KEY);
+
+      if (!userId) {
+         userId = "user-" + Date.now();
+          localStorage.setItem(USER_KEY, userId);
+  }
+
   if (!eventForm || !userPosts) return;
 
   // ---------- CONVERT IMAGE ----------
@@ -372,6 +382,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- CREATE POST ----------
   function createPostCard(event, index) {
+   
+    const isLiked = event.likedBy && event.likedBy.includes(userId); //button UI
+
     return `
       <div class="post-card">
         <img src="${event.imageUrl}" alt="Post image">
@@ -388,9 +401,15 @@ document.addEventListener("DOMContentLoaded", () => {
             📍 View location
           </a>
 
+          <div class="post-actions">
+            <button class="like-btn ${isLiked ? 'liked' : ''}" data-index="${index}">
+              ${isLiked ? '❤️' : '🤍'} ${event.likes || 0}
+            </button>
+          
           <button class="delete-btn" data-index="${index}">
             🗑️ Delete
           </button>
+          </div>
         </div>
       </div>
     `;
@@ -425,20 +444,46 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPosts(savedPosts);
   }
 
-  // ---------- DELETE ----------
-  userPosts.addEventListener("click", (e) => {
-    if (e.target.classList.contains("delete-btn")) {
-      const index = Number(e.target.dataset.index);
+  // ---------- ACTIONS (LIKE + DELETE) ----------
+userPosts.addEventListener("click", (e) => {
 
-      const posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if (!e.target.dataset.index) return;
 
-      posts.splice(index, 1);
+  const index = Number(e.target.dataset.index);
+  const posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+   //  LIKE (toggle per user)
+    if (e.target.classList.contains("like-btn")) {
 
-      renderPosts(posts); // 🔥 no reload needed
-    }
-  });
+  const post = posts[index];
+
+  // protect old posts
+    if (!post.likedBy) {
+    post.likedBy = [];
+  }
+
+  const alreadyLiked = post.likedBy.includes(userId);
+
+  if (alreadyLiked) {
+    //  UNLIKE
+    post.likedBy = post.likedBy.filter(id => id !== userId);
+    post.likes = Math.max(0, post.likes - 1);
+  } else {
+    //  LIKE
+    post.likedBy.push(userId);
+    post.likes = (post.likes || 0) + 1;
+  }
+}
+
+  //  DELETE
+  if (e.target.classList.contains("delete-btn")) {
+    posts.splice(index, 1);
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  renderPosts(posts);
+
+});
 
   // ---------- FORM ----------
   eventForm.addEventListener("submit", async function(e) {
@@ -457,12 +502,14 @@ document.addEventListener("DOMContentLoaded", () => {
       description: document.getElementById("description").value,
       date: document.getElementById("date").value,
       location: document.getElementById("location").value,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      likes: 0,//reactions
+      likedBy: []
     };
 
     savePostToStorage(newEvent);
 
-    loadPostsFromStorage(); // 🔥 re-render correctly
+    loadPostsFromStorage(); // re-render correctly
 
     this.reset();
     document.getElementById("file-name").textContent = "No file selected";
