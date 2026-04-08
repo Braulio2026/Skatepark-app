@@ -199,10 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ================= GLOBAL EVENTS ================= */
+
 window.addEventListener('resize', showSlide);
 window.addEventListener('load', showSlide);
 
 // ==== SLIDER IMAGE #2 (DRAG + INFINITE) ====
+
 (() => {
 
   const slider = document.querySelector('.slider-2');
@@ -219,6 +221,7 @@ window.addEventListener('load', showSlide);
   let autoSlideInterval;
 
   /* ---------- CLONE FIRST & LAST ---------- */
+  const TRANSITION = "transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)";
   const firstClone = cards[0].cloneNode(true);
   const lastClone = cards[cards.length - 1].cloneNode(true);
 
@@ -230,7 +233,7 @@ window.addEventListener('load', showSlide);
   /* ---------- START POSITION ---------- */
   function setPosition() {
     const slideWidth = slider.offsetWidth;
-    track.style.transform = `translateX(-${slideWidth * index}px)`;
+    track.style.transform = `translate3d(-${slideWidth * index}px, 0, 0)`;
   }
 
   setPosition();
@@ -241,7 +244,7 @@ window.addEventListener('load', showSlide);
 
     autoSlideInterval = setInterval(() => {
       moveToNext();
-    }, 3000);
+    }, 5000);
   }
 
   function stopAutoSlide() {
@@ -262,25 +265,31 @@ window.addEventListener('load', showSlide);
   }
 
   function moveSlider() {
-    track.style.transition = "transform 0.5s ease";
-    track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+    track.style.transition = TRANSITION;
+    track.style.transform = `translate3d(-${slider.offsetWidth * index}px, 0, 0)`;
   }
 
   /* ---------- INFINITE LOOP FIX ---------- */
+  
   track.addEventListener('transitionend', () => {
 
-    if (cards[index].isSameNode(firstClone)) {
+  if (cards[index].isSameNode(firstClone)) {
+    setTimeout(() => {
       track.style.transition = "none";
       index = 1;
       setPosition();
-    }
+    }, 20);
+  }
 
-    if (cards[index].isSameNode(lastClone)) {
+  if (cards[index].isSameNode(lastClone)) {
+    setTimeout(() => {
       track.style.transition = "none";
       index = cards.length - 2;
       setPosition();
-    }
-  });
+    }, 20);
+  }
+
+});
 
   /* ---------- DRAG / SWIPE ---------- */
   function touchStart(e) {
@@ -302,7 +311,9 @@ window.addEventListener('load', showSlide);
       : e.touches[0].clientX;
 
     const diff = currentX - startX;
-    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+
+    const resistance = 0.85;  /* more fluid finger */
+    track.style.transform = `translate3d(${prevTranslate + diff * resistance}px, 0, 0)`;
   }
 
   function touchEnd(e) {
@@ -317,7 +328,9 @@ window.addEventListener('load', showSlide);
 
     if (movedBy < -100) moveToNext();
     else if (movedBy > 100) moveToPrev();
-    else moveSlider();
+    else {
+      moveSlider()
+    }
 
     startAutoSlide();
   }
@@ -356,6 +369,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById("image");
   const STORAGE_KEY = "userPostsData";
 
+  /* USER ID (GLOBAL) */
+  const USER_KEY = "userId";
+
+    let userId = localStorage.getItem(USER_KEY);
+
+      if (!userId) {
+         userId = "user-" + Date.now();
+          localStorage.setItem(USER_KEY, userId);
+  }
+
   if (!eventForm || !userPosts) return;
 
   // ---------- CONVERT IMAGE ----------
@@ -372,6 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- CREATE POST ----------
   function createPostCard(event, index) {
+   
+    const isLiked = event.likedBy && event.likedBy.includes(userId); //button UI
+
     return `
       <div class="post-card">
         <img src="${event.imageUrl}" alt="Post image">
@@ -388,9 +414,15 @@ document.addEventListener("DOMContentLoaded", () => {
             📍 View location
           </a>
 
+          <div class="post-actions">
+            <button class="like-btn ${isLiked ? 'liked' : ''}" data-index="${index}">
+              ${isLiked ? '❤️' : '🤍'} ${event.likes || 0}
+            </button>
+          
           <button class="delete-btn" data-index="${index}">
             🗑️ Delete
           </button>
+          </div>
         </div>
       </div>
     `;
@@ -425,20 +457,46 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPosts(savedPosts);
   }
 
-  // ---------- DELETE ----------
-  userPosts.addEventListener("click", (e) => {
-    if (e.target.classList.contains("delete-btn")) {
-      const index = Number(e.target.dataset.index);
+  // ---------- ACTIONS (LIKE + DELETE) ----------
+userPosts.addEventListener("click", (e) => {
 
-      const posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if (!e.target.dataset.index) return;
 
-      posts.splice(index, 1);
+  const index = Number(e.target.dataset.index);
+  const posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+   //  LIKE (toggle per user)
+    if (e.target.classList.contains("like-btn")) {
 
-      renderPosts(posts); // 🔥 no reload needed
-    }
-  });
+  const post = posts[index];
+
+  // protect old posts
+    if (!post.likedBy) {
+    post.likedBy = [];
+  }
+
+  const alreadyLiked = post.likedBy.includes(userId);
+
+  if (alreadyLiked) {
+    //  UNLIKE
+    post.likedBy = post.likedBy.filter(id => id !== userId);
+    post.likes = Math.max(0, post.likes - 1);
+  } else {
+    //  LIKE
+    post.likedBy.push(userId);
+    post.likes = (post.likes || 0) + 1;
+  }
+}
+
+  //  DELETE
+  if (e.target.classList.contains("delete-btn")) {
+    posts.splice(index, 1);
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  renderPosts(posts);
+
+});
 
   // ---------- FORM ----------
   eventForm.addEventListener("submit", async function(e) {
@@ -457,12 +515,14 @@ document.addEventListener("DOMContentLoaded", () => {
       description: document.getElementById("description").value,
       date: document.getElementById("date").value,
       location: document.getElementById("location").value,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      likes: 0,//reactions
+      likedBy: []
     };
 
     savePostToStorage(newEvent);
 
-    loadPostsFromStorage(); // 🔥 re-render correctly
+    loadPostsFromStorage(); // re-render correctly
 
     this.reset();
     document.getElementById("file-name").textContent = "No file selected";
