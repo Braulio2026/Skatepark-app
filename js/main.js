@@ -199,10 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ================= GLOBAL EVENTS ================= */
+
 window.addEventListener('resize', showSlide);
 window.addEventListener('load', showSlide);
 
 // ==== SLIDER IMAGE #2 (DRAG + INFINITE) ====
+
 (() => {
 
   const slider = document.querySelector('.slider-2');
@@ -219,6 +221,7 @@ window.addEventListener('load', showSlide);
   let autoSlideInterval;
 
   /* ---------- CLONE FIRST & LAST ---------- */
+  const TRANSITION = "transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)";
   const firstClone = cards[0].cloneNode(true);
   const lastClone = cards[cards.length - 1].cloneNode(true);
 
@@ -230,7 +233,7 @@ window.addEventListener('load', showSlide);
   /* ---------- START POSITION ---------- */
   function setPosition() {
     const slideWidth = slider.offsetWidth;
-    track.style.transform = `translateX(-${slideWidth * index}px)`;
+    track.style.transform = `translate3d(-${slideWidth * index}px, 0, 0)`;
   }
 
   setPosition();
@@ -241,7 +244,7 @@ window.addEventListener('load', showSlide);
 
     autoSlideInterval = setInterval(() => {
       moveToNext();
-    }, 3000);
+    }, 5000);
   }
 
   function stopAutoSlide() {
@@ -262,25 +265,31 @@ window.addEventListener('load', showSlide);
   }
 
   function moveSlider() {
-    track.style.transition = "transform 0.5s ease";
-    track.style.transform = `translateX(-${slider.offsetWidth * index}px)`;
+    track.style.transition = TRANSITION;
+    track.style.transform = `translate3d(-${slider.offsetWidth * index}px, 0, 0)`;
   }
 
   /* ---------- INFINITE LOOP FIX ---------- */
+  
   track.addEventListener('transitionend', () => {
 
-    if (cards[index].isSameNode(firstClone)) {
+  if (cards[index].isSameNode(firstClone)) {
+    setTimeout(() => {
       track.style.transition = "none";
       index = 1;
       setPosition();
-    }
+    }, 20);
+  }
 
-    if (cards[index].isSameNode(lastClone)) {
+  if (cards[index].isSameNode(lastClone)) {
+    setTimeout(() => {
       track.style.transition = "none";
       index = cards.length - 2;
       setPosition();
-    }
-  });
+    }, 20);
+  }
+
+});
 
   /* ---------- DRAG / SWIPE ---------- */
   function touchStart(e) {
@@ -302,7 +311,9 @@ window.addEventListener('load', showSlide);
       : e.touches[0].clientX;
 
     const diff = currentX - startX;
-    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+
+    const resistance = 0.85;  /* more fluid finger */
+    track.style.transform = `translate3d(${prevTranslate + diff * resistance}px, 0, 0)`;
   }
 
   function touchEnd(e) {
@@ -317,7 +328,9 @@ window.addEventListener('load', showSlide);
 
     if (movedBy < -100) moveToNext();
     else if (movedBy > 100) moveToPrev();
-    else moveSlider();
+    else {
+      moveSlider()
+    }
 
     startAutoSlide();
   }
