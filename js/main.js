@@ -12,7 +12,7 @@ const skateparks = [
   {
     title: "Jose Maria Zeledon Skatepark",
     image: "image-skates/jose_ma_skate.webp",
-    description: "Located in Curridabat. Open 8AM–8PM. Features ramps and rails for all levels with a strong local skate community.",
+    description: "Located in Curridabat. Open 8AM-8PM. Features ramps and rails for all levels with a strong local skate community.",
     map: "https://www.google.com/maps?q=Jose+Maria+Zeledon+Skatepark"
   },
   {
@@ -31,7 +31,7 @@ const skateparks = [
     title: "Tecma Skatepark",
     image: "image-skates/tecma_2.jpeg",
     description: "The Tecma / Sabanilla skatepark is a small outdoor skate spot located in the Sabanilla area of San José. It features basic street-style obstacles such as rails, a box, an inclined plane, and quarter pipes, making it suitable mainly for beginner to intermediate skaters.",
-    map: "https://www.google.com/maps?q=U+Creativa+Sabanilla+Montes+de+Oca+Costa+Rica"
+    map: "https://maps.app.goo.gl/k71HagxcxBhH6LZ17"
   },
   {
     title: "Lagos de Lindora Skatepark",
@@ -42,7 +42,7 @@ const skateparks = [
   {
     title: "Plaza Viquez Skatepark",
     image: "image-skates/viquez_skat2.jpeg",
-    description: "Concrete skatepark in Cartago behind Escuela Vial. Open 9AM–5PM. Includes rails, ledges, and quarter pipes.",
+    description: "Concrete skatepark in Cartago behind Escuela Vial. Open 9AM-5PM. Includes rails, ledges, and quarter pipes.",
     map: "https://www.google.com/maps?q=Plaza+gonzalez+viquez+skatepark"
   },
   {
@@ -62,7 +62,13 @@ const skateparks = [
     image: "image-skates/lagos_skat7.jpeg",
     description: "Large modern park in Heredia with street, bowl, and pumptrack areas. Suitable for all skill levels.",
     map: "https://www.google.com/maps?q=Los+lagos+skatepark"
-  }
+  },
+  {
+    title: "Plaza Barrio Pinto",
+    image: "image-skates/pinto_2.jpeg",
+    description: "Plaza Barrio Pinto is a popular street skate spot located in San Pedro, San José. It features ledges, stairs, rails, and open flat areas, making it ideal for street skating and intermediate to advanced riders.",
+    map: "https://www.google.com/maps?q=WXH3+9R8,San+José,San+Pedro,Barrio+Pinto,11801"
+  },
  ];
 
 /* ================= FUNCTIONS ================= */
