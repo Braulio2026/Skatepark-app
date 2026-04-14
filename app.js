@@ -71,10 +71,10 @@ const skateparks = [
     description: "Alajuelita"
   },
   {
-    name: "Luz Skatepark (Desamparados)",
-    lat: 10.012612, 
-    lng: -84.105765,
-    description: "Desamparados"
+    name: "Plaza Barrio Pinto",
+    lat: 9.928069,
+    lng: -84.090725,
+    description: "San José, Barrio Pinto, Costa Rica"
   },
   {
     name: "Lindora Skatepark",
@@ -83,11 +83,17 @@ const skateparks = [
     description: "Santa Ana"
   },
   {
-    name: "Zapote Skatepark",
+    name: "Zapote Skatepark", 
     lat: 9.921427, 
     lng:  -84.050931,
     description: "Zapote"
-  }
+  },
+  {
+    name: "Tecma Skatepark",
+    lat: 9.942895,
+    lng: -84.048910,
+    description: "Tecma Skatepark", 
+} 
 ];
 
 // =======================
