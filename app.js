@@ -1,12 +1,17 @@
 // =======================
 // MAP INITIALIZATION
 // =======================
+const map = L.map('map').setView([9.93, -84.08], 13);
 
-const map = L.map('map').setView([9.93, -84.08], 11);
+map.setMaxBounds([
+  [9.85, -84.25],  // southwest corner
+  [10.05, -83.90]  // northeast corner
+]);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors',
-  maxZoom: 19
+ L.tileLayer('./tiles/{z}/{x}/{y}.png', {
+  maxZoom: 12,
+  minZoom: 12,
+  attribution: 'Offline Map'
 }).addTo(map);
 
 
@@ -72,8 +77,8 @@ const skateparks = [
   },
   {
     name: "Plaza Barrio Pinto",
-    lat: 9.928069,
-    lng: -84.090725,
+    lat: 9.928221,
+    lng: -84.045588,
     description: "San José, Barrio Pinto, Costa Rica"
   },
   {
@@ -185,12 +190,11 @@ function findNearestSkatepark() {
 }
 
 
-
-
 // =======================
 // DRAW MAIN ROUTE
 // =======================
 
+// ONLINE ROUTING
 function drawMainRoute() {
 
   if (!selectedDestination || !navigator.onLine) {
@@ -199,6 +203,33 @@ function drawMainRoute() {
   }
 
   clearRoutes();
+
+  // OFFLINE FALLBACK
+  if (!navigator.onLine) {
+
+    const line = L.polyline([
+      userLocation,
+      [selectedDestination.lat, selectedDestination.lng]
+    ], {
+      color: "blue",
+      weight: 5
+    }).addTo(map);
+
+    routeLayers.push(line);
+
+    L.popup()
+      .setLatLng([selectedDestination.lat, selectedDestination.lng])
+      .setContent(`
+        🛹 <b>${selectedDestination.name}</b><br>
+        📡 Offline mode<br>
+        📏 Direct path (no roads)
+      `)
+      .openOn(map);
+
+    return;
+  }
+
+   //ONLINE-ROUTING
 
   const url = `https://router.project-osrm.org/route/v1/driving/${userLocation[1]},${userLocation[0]};${selectedDestination.lng},${selectedDestination.lat}?overview=full&alternatives=false&geometries=geojson`;
 

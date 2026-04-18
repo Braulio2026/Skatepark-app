@@ -1,6 +1,6 @@
 const CACHE_NAME = "skaterutes-v3";
 const TILE_CACHE = "map-tiles";
-const MAX_TILES = 200;
+const MAX_TILES = 1000;
 
 const urlsToCache = [
   "./",
@@ -117,7 +117,7 @@ self.addEventListener("fetch", event => {
             return res;
           });
 
-          return cached || networkFetch;
+          return cached || networkFetch.catch(() => cached);
 
         });
       })
