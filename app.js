@@ -1,23 +1,42 @@
 // =======================
 // MAP INITIALIZATION
 // =======================
+
 const map = L.map('map').setView([9.93, -84.08], 13);
 
 map.setMaxBounds([
-  [9.85, -84.25],  // southwest corner
-  [10.05, -83.90]  // northeast corner
+  [9.85, -84.25],
+  [10.05, -83.90]
 ]);
 
- L.tileLayer('./tiles/{z}/{x}/{y}.png', {
-  maxZoom: 12,
-  minZoom: 12,
-  attribution: 'Offline Map'
-}).addTo(map);
+// =======================
+// TILE LAYER (SMART LOAD)
+// =======================
 
+let tileLayer = null;
 
-map.on("click", function(e){
-  console.log(e.latlng);
-});
+function loadTiles() {
+  if (tileLayer) return;
+
+  tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+}
+
+function removeTiles() {
+  if (tileLayer) {
+    map.removeLayer(tileLayer);
+    tileLayer = null;
+  }
+}
+
+// Initial load
+if (navigator.onLine) loadTiles();
+
+// React to connection changes
+window.addEventListener("online", loadTiles);
+window.addEventListener("offline", removeTiles);
 
 // =======================
 // GLOBAL VARIABLES
@@ -31,7 +50,6 @@ let routeLayers = [];
 // =======================
 // SKATEPARK LIST
 // =======================
-
 const skateparks = [
   {
     name: "Los Lagos Skatepark",
@@ -102,22 +120,45 @@ const skateparks = [
 ];
 
 // =======================
+// VISITED STORAGE
+// =======================
+
+function getVisited() {
+  return JSON.parse(localStorage.getItem("visited")) || [];
+}
+
+function saveVisited(park) {
+  const visited = getVisited();
+
+  if (!visited.find(p => p.name === park.name)) {
+    visited.push(park);
+    localStorage.setItem("visited", JSON.stringify(visited));
+  }
+}
+
+// =======================
 // ADD SKATEPARK MARKERS
 // =======================
 
+const visitedList = getVisited();
+
 skateparks.forEach(park => {
 
-  const marker = L.marker([park.lat, park.lng])
+  const isVisited = visitedList.find(p => p.name === park.name);
+
+  const marker = L.marker([park.lat, park.lng], {
+    opacity: isVisited ? 0.5 : 1
+  })
     .addTo(map)
     .bindPopup(`<b>${park.name}</b><br>${park.description}`);
 
   marker.on("click", () => {
     selectedDestination = park;
+    saveVisited(park);
     drawMainRoute();
   });
 
 });
-
 
 // =======================
 // GET USER LOCATION
@@ -138,9 +179,8 @@ navigator.geolocation.getCurrentPosition(position => {
   map.setView(userLocation, 13);
 
 }, () => {
-  alert("Please enable location access.");
+  console.log("Location not available");
 });
-
 
 // =======================
 // CLEAR ROUTES
@@ -150,7 +190,6 @@ function clearRoutes() {
   routeLayers.forEach(layer => map.removeLayer(layer));
   routeLayers = [];
 }
-
 
 // =======================
 // FIND NEAREST SKATEPARK
@@ -167,11 +206,7 @@ function findNearestSkatepark() {
   let minDistance = Infinity;
 
   skateparks.forEach(park => {
-
-    const distance = map.distance(
-      userLocation,
-      [park.lat, park.lng]
-    );
+    const distance = map.distance(userLocation, [park.lat, park.lng]);
 
     if (distance < minDistance) {
       minDistance = distance;
@@ -183,29 +218,32 @@ function findNearestSkatepark() {
 
   L.popup()
     .setLatLng([nearest.lat, nearest.lng])
-    .setContent(`🔥 Nearest Skatepark:<br><b>${nearest.name}</b><br>Distance: ${(minDistance/1000).toFixed(2)} km`)
+    .setContent(`🔥 <b>${nearest.name}</b><br>${(minDistance/1000).toFixed(2)} km`)
     .openOn(map);
 
   drawMainRoute();
 }
 
-
 // =======================
 // DRAW MAIN ROUTE
 // =======================
 
-// ONLINE ROUTING
 function drawMainRoute() {
 
-  if (!selectedDestination || !navigator.onLine) {
-    alert("You must be online to calculate routes.");
+  if (!selectedDestination) {
+    alert("Select a skatepark first.");
     return;
   }
 
   clearRoutes();
 
-  // OFFLINE FALLBACK
+  // OFFLINE
   if (!navigator.onLine) {
+
+    if (!userLocation) {
+      alert("Location not available offline.");
+      return;
+    }
 
     const line = L.polyline([
       userLocation,
@@ -222,32 +260,29 @@ function drawMainRoute() {
       .setContent(`
         🛹 <b>${selectedDestination.name}</b><br>
         📡 Offline mode<br>
-        📏 Direct path (no roads)
+        📏 Direct path
       `)
       .openOn(map);
 
     return;
   }
 
-   //ONLINE-ROUTING
-
+  // ONLINE ROUTING
   const url = `https://router.project-osrm.org/route/v1/driving/${userLocation[1]},${userLocation[0]};${selectedDestination.lng},${selectedDestination.lat}?overview=full&alternatives=false&geometries=geojson`;
 
   fetch(url)
     .then(res => res.json())
     .then(data => {
 
-      if (!data.routes || data.routes.length === 0) {
+      if (!data.routes?.length) {
         alert("Route not found.");
         return;
       }
 
       const route = data.routes[0];
 
-      // 🔹 Convert distance + time
       const distanceKm = (route.distance / 1000).toFixed(2);
       const durationMin = Math.round(route.duration / 60);
-
 
       const layer = L.geoJSON(route.geometry, {
         style: {
@@ -257,20 +292,18 @@ function drawMainRoute() {
       }).addTo(map);
 
       routeLayers.push(layer);
-       L.popup()
+
+      L.popup()
         .setLatLng([selectedDestination.lat, selectedDestination.lng])
         .setContent(`
           🛹 <b>${selectedDestination.name}</b><br>
           📏 Distance: ${distanceKm} km<br>
-          ⏱️ Time: ~${durationMin} minutes
+          ⏱️ Time: ~${durationMin} min
         `)
         .openOn(map);
     })
-    .catch(err => {
-      console.error("Routing error:", err);
-    });
+    .catch(err => console.error("Routing error:", err));
 }
-
 
 // =======================
 // DRAW ALTERNATIVE ROUTES
@@ -283,8 +316,8 @@ function drawAlternativeRoutes() {
     return;
   }
 
-  if (!selectedDestination || !navigator.onLine) {
-    alert("Please select a skatepark first.");
+  if (!selectedDestination) {
+    alert("Select a skatepark first.");
     return;
   }
 
@@ -301,6 +334,8 @@ function drawAlternativeRoutes() {
     .then(res => res.json())
     .then(data => {
 
+      console.log("ROUTES DATA:", data); // 🔍 DEBUG (you can remove later)
+
       if (!data.routes || data.routes.length === 0) {
         alert("No alternative routes found.");
         return;
@@ -308,28 +343,69 @@ function drawAlternativeRoutes() {
 
       data.routes.forEach((route, index) => {
 
-          const distanceKm = (route.distance / 1000).toFixed(2);
-          const durationMin = Math.round(route.duration / 60);
+        const distanceKm = (route.distance / 1000).toFixed(2);
+        const durationMin = Math.round(route.duration / 60);
 
         const layer = L.geoJSON(route.geometry, {
           style: {
             color: index === 0 ? "blue" : "green",
-            weight: 5
+            weight: 5,
+            opacity: 0.7,
+            dashArray: index === 0 ? null : "6,6"
           }
+        }).addTo(map);
 
-    }).addTo(map);
-           routeLayers.push(layer);
-           console.log(`Route ${index + 1}: ${distanceKm} km - ${durationMin} min`);
+        routeLayers.push(layer);
+
+        // CLICK TO HIGHLIGHT ROUTE
+        layer.on("click", () => {
+
+          routeLayers.forEach(r => {
+            r.setStyle({
+              weight: 5,
+              opacity: 0.5
+            });
+          });
+
+          layer.setStyle({
+            weight: 8,
+            opacity: 1
+          });
+
+          L.popup()
+            .setLatLng([selectedDestination.lat, selectedDestination.lng])
+            .setContent(`
+              🛹 <b>${selectedDestination.name}</b><br>
+              📏 Distance: ${distanceKm} km<br>
+              ⏱️ Time: ~${durationMin} min<br>
+              ⭐ Selected route
+            `)
+            .openOn(map);
+        });
+
+        // 📍 Popup for main route
+        if (index === 0) {
+          L.popup()
+            .setLatLng([selectedDestination.lat, selectedDestination.lng])
+            .setContent(`
+              🛹 <b>${selectedDestination.name}</b><br>
+              📏 Distance: ${distanceKm} km<br>
+              ⏱️ Time: ~${durationMin} min<br>
+              🟢 + alternative routes available
+            `)
+            .openOn(map);
+        }
+
       });
+
     })
-        .catch(err => {
-         console.error("Routing error:", err);
+    .catch(err => {
+      console.error("Routing error:", err);
     });
 }
 
-
 // =======================
-// CONNECT BUTTONS
+// BUTTONS
 // =======================
 
 document.getElementById("btn-1")
@@ -337,3 +413,17 @@ document.getElementById("btn-1")
 
 document.getElementById("btn-2")
   .addEventListener("click", drawAlternativeRoutes);
+
+// =======================
+// ONLINE / OFFLINE UI
+// =======================
+
+window.addEventListener("offline", () => {
+  console.log("📡 Offline mode");
+  document.getElementById("map").style.opacity = "0.6";
+});
+
+window.addEventListener("online", () => {
+  console.log("🌐 Back online");
+  document.getElementById("map").style.opacity = "1";
+});
