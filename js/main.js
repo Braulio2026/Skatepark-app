@@ -22,7 +22,7 @@ const skateparks = [
     map: "https://www.google.com/maps?q=Salvador+Skatepark+San+Jose"
   },
   {
-    title: "Alajuelita Skatepark",
+    title: "Turba Alajuelita Skatepark",
     image: "image-skates/alajuelita_1.jpeg",
     description: "Modern 3-level skatepark opened in 2023. Includes street, bowl, and BMX zones. One of the best in Costa Rica.",
     map: "https://www.google.com/maps?q=Alajuelita+Skatepark"
@@ -214,11 +214,9 @@ window.addEventListener('load', showSlide);
 (() => {
 
   const slider = document.querySelector('.slider-2');
-  const track = document.querySelector('.slider-track');
+  const track = document.getElementById('eventsTrack');
 
-  if (!slider || !track) return; // safety
-
-  let cards = document.querySelectorAll('.spot-card');
+  if (!slider || !track) return;
 
   let index = 1;
   let isDragging = false;
@@ -226,8 +224,84 @@ window.addEventListener('load', showSlide);
   let prevTranslate = 0;
   let autoSlideInterval;
 
-  /* ---------- CLONE FIRST & LAST ---------- */
   const TRANSITION = "transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)";
+
+  // =======================
+  // DATA
+  // =======================
+
+  const shops = [
+    {
+      name: "Skate Shop 1",
+      img: "image-skates/s_shop1.jpg",
+      description: "Featured skate shop in San José.",
+      link: "https://maps.google.com",
+      sponsored: true
+    },
+    {
+      name: "Skate Shop 2",
+      img: "image-skates/s_shop2.webp",
+      description: "Local skate shop.",
+      link: "https://maps.google.com",
+      sponsored: false
+    },
+    {
+      name: "Skate Shop 3",
+      img: "image-skates/s_shop3.webp",
+      description: "Want to advertise here?",
+      link: "https://maps.google.com",
+      sponsored: false
+    },
+    {
+      name: "Skate Shop 4",
+      img: "image-skates/s_shop4.jpg",
+      description: "Want to advertise here?",
+      link: "https://maps.google.com",
+      sponsored: false
+    }
+  ];
+
+  // =======================
+  // RENDER FIRST
+  // =======================
+
+  function renderShops() {
+    track.innerHTML = "";
+
+    shops.forEach(shop => {
+      const card = document.createElement("div");
+      card.className = `spot-card ${shop.sponsored ? "sponsored" : ""}`;
+
+      card.innerHTML = `
+        ${shop.sponsored ? `<span class="badge">Sponsored</span>` : ""}
+        <img src="${shop.img}">
+        <div class="specifications">
+          <h4>${shop.name}</h4>
+          <p>${shop.description}</p>
+          <a href="${shop.link}" target="_blank" class="map-button"
+             onclick="trackClick('${shop.name}')">
+             Go to explore
+          </a>
+        </div>
+      `;
+
+      track.appendChild(card);
+    });
+  }
+
+  renderShops();
+
+  // =======================
+  // NOW GET CARDS
+  // =======================
+
+  let cards = document.querySelectorAll('.spot-card');
+  if (!cards.length) return;
+
+  // =======================
+  // CLONES (AFTER RENDER)
+  // =======================
+
   const firstClone = cards[0].cloneNode(true);
   const lastClone = cards[cards.length - 1].cloneNode(true);
 
@@ -236,7 +310,10 @@ window.addEventListener('load', showSlide);
 
   cards = document.querySelectorAll('.spot-card');
 
-  /* ---------- START POSITION ---------- */
+  // =======================
+  // POSITION
+  // =======================
+
   function setPosition() {
     const slideWidth = slider.offsetWidth;
     track.style.transform = `translate3d(-${slideWidth * index}px, 0, 0)`;
@@ -244,28 +321,25 @@ window.addEventListener('load', showSlide);
 
   setPosition();
 
-  /* ---------- AUTO SLIDE ---------- */
+  // =======================
+  // AUTO SLIDE
+  // =======================
+
   function startAutoSlide() {
     stopAutoSlide();
-
-    autoSlideInterval = setInterval(() => {
-      moveToNext();
-    }, 5000);
+    autoSlideInterval = setInterval(moveToNext, 4000);
   }
 
   function stopAutoSlide() {
     clearInterval(autoSlideInterval);
   }
 
-  /* ---------- MOVE ---------- */
   function moveToNext() {
-    if (index >= cards.length - 1) return;
     index++;
     moveSlider();
   }
 
   function moveToPrev() {
-    if (index <= 0) return;
     index--;
     moveSlider();
   }
@@ -275,29 +349,30 @@ window.addEventListener('load', showSlide);
     track.style.transform = `translate3d(-${slider.offsetWidth * index}px, 0, 0)`;
   }
 
-  /* ---------- INFINITE LOOP FIX ---------- */
-  
+  // =======================
+  // LOOP FIX
+  // =======================
+
   track.addEventListener('transitionend', () => {
 
-  if (cards[index].isSameNode(firstClone)) {
-    setTimeout(() => {
+    if (cards[index] === firstClone) {
       track.style.transition = "none";
       index = 1;
       setPosition();
-    }, 20);
-  }
+    }
 
-  if (cards[index].isSameNode(lastClone)) {
-    setTimeout(() => {
+    if (cards[index] === lastClone) {
       track.style.transition = "none";
       index = cards.length - 2;
       setPosition();
-    }, 20);
-  }
+    }
 
-});
+  });
 
-  /* ---------- DRAG / SWIPE ---------- */
+  // =======================
+  // DRAG
+  // =======================
+
   function touchStart(e) {
     isDragging = true;
     stopAutoSlide();
@@ -318,8 +393,8 @@ window.addEventListener('load', showSlide);
 
     const diff = currentX - startX;
 
-    const resistance = 0.85;  /* more fluid finger */
-    track.style.transform = `translate3d(${prevTranslate + diff * resistance}px, 0, 0)`;
+    track.style.transition = "none";
+    track.style.transform = `translate3d(${prevTranslate + diff}px, 0, 0)`;
   }
 
   function touchEnd(e) {
@@ -332,16 +407,27 @@ window.addEventListener('load', showSlide);
 
     const movedBy = endX - startX;
 
-    if (movedBy < -100) moveToNext();
-    else if (movedBy > 100) moveToPrev();
-    else {
-      moveSlider()
-    }
+    if (movedBy < -80) moveToNext();
+    else if (movedBy > 80) moveToPrev();
+    else moveSlider();
 
     startAutoSlide();
   }
 
-  /* ---------- EVENTS ---------- */
+  // =======================
+  // TRACKING
+  // =======================
+
+  window.trackClick = function(name) {
+    let clicks = JSON.parse(localStorage.getItem("adClicks")) || {};
+    clicks[name] = (clicks[name] || 0) + 1;
+    localStorage.setItem("adClicks", JSON.stringify(clicks));
+  };
+
+  // =======================
+  // EVENTS
+  // =======================
+
   slider.addEventListener('mousedown', touchStart);
   slider.addEventListener('mousemove', touchMove);
   slider.addEventListener('mouseup', touchEnd);
@@ -359,7 +445,10 @@ window.addEventListener('load', showSlide);
     setPosition();
   });
 
-  /* ---------- INIT ---------- */
+  // =======================
+  // INIT
+  // =======================
+
   startAutoSlide();
 
 })();
