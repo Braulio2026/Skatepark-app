@@ -52,16 +52,15 @@ main {
   text-align: center;
   width: 90%;
   max-width: 600px;
+  color: #fff;
 }
 
 .banner-text h2 {
   font-size: clamp(28px, 10vw, 40px);
-  color: #fff;
 }
 
 .banner-text p {
   font-size: clamp(16px, 3.5vw, 20px);
-  color: #fff;
   margin-top: 10px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -70,11 +69,10 @@ main {
 .container-button {
   position: absolute;
   top: 69%;
-  left: 50%; 
-  width: 85%;
-  max-width: 500px;
-
+  left: 50%;
   transform: translate(-50%, -50%);
+
+  width: min(85%, 500px);
 
   display: flex;
   flex-direction: column;
@@ -82,10 +80,10 @@ main {
   gap: 20px;
 }
 
+/* shared card style */
 .list-skate,
 .event {
-  width: 90%;
-  max-width: 380px;
+  width: min(90%, 380px);
 
   display: flex;
   align-items: center;
@@ -97,36 +95,32 @@ main {
 
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(18px);
+
+  transition: 0.2s;
 }
 
-.list-skate {
-  top: 50%;
-}
-
-.event {
-  top: 65%;
-}
-
+/* hover */
 .list-skate:hover,
 .event:hover {
   background: rgba(255,255,255,0.2);
   transform: scale(1.02);
-  transition: 0.2s;
 }
 
-/* style for buttons within .list-skate and .event, if it's necessary */
+/* links */
 a {
-    color:#fff;
-    text-decoration: none;
-    font-size: var(--fs-sm);
- }
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--fs-sm);
+}
 
+/* active state */
 .item.active {
   outline: 3px solid #00ffcc;
   transform: scale(1.05);
   transition: 0.3s;
 }
 
+/* button */
 .btn {
   display: flex;
   align-items: center;
@@ -134,31 +128,25 @@ a {
   gap: 15px;
 
   width: 100%;
-
   padding: 1rem;
 
   font-size: var(--fs-md);
   text-align: left;
-
   color: #fff;
   text-decoration: none;
 
-  background: rgba(255, 255, 255 0.08);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.37);
   backdrop-filter: blur(12px);
 
-  transition: 
-    transform 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: 0.25s ease;
 }
 
-.btn span{
-  flex: 1;    /* takes available space */
+.btn span {
+  flex: 1;
 }
 
-/* SVG */
 .btn svg {
   width: 22px;
   height: 22px;
@@ -166,20 +154,17 @@ a {
   transition: 0.3s;
 }
 
- /* Hover */
 .btn:hover {
   transform: translateX(6px);
   background: rgba(255,255,255,0.15);
   box-shadow: 0 6px 20px rgba(0,0,0,0.35);
 }
 
-/* Icon animation */
 .btn:hover svg {
   transform: translateX(6px) scale(1.1);
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
 }
-
-/* Click effect */
+/* click */
 .btn:active {
   transform: scale(0.97);
 }
@@ -187,11 +172,100 @@ a {
 .icon-box {
   margin-right: 20px;
 }
+/* SEARCH CONTAINER */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 
-.information span {
-    text-align: center;
-    font-size: var(--fs-sm);
-    font-family: sans-serif;
+  padding: 5px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* INPUT */
+#searchInput {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+
+  background: rgba(255,255,255,0.15);
+  transition: 0.2s;
+}
+
+/* INPUT FOCUS */
+#searchInput:focus {
+  background: rgba(255,255,255,0.25);
+  box-shadow: 0 0 0 2px #000;
+}
+
+#searchInput::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+/* BUTTON */
+#go-btn {
+  padding: 10px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+
+  color: #fff;
+  border: 2px solid transparent;
+
+  /* animated border */
+  background:
+    linear-gradient(rgb(29, 29, 29), rgb(80, 4, 143)),
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 150, 1),
+      rgba(0, 200, 255, 1),
+      rgba(0, 255, 150, 1),
+      rgba(255, 0, 150, 1)
+    );
+
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 300% 300%;
+
+  animation: borderSpin 3s linear infinite;
+}
+
+/* ANIMATION */
+@keyframes borderSpin {
+  to {
+    background-position: 0% 50%, 300% 50%;
+  }
+}
+
+/* SECTION */
+.content-section {
+  width: min(100%, 500px);
+  margin: -50px auto -20px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  position: relative;
+  z-index: 10;
+}
+/* TEXT CARD */
+.text-1 {
+  padding: 20px;
+  border-radius: 16px;
+  line-height: 1.6;
+  color: #000;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 /* general carousel Container 1 */
@@ -282,6 +356,12 @@ a {
     text-align: left; 
 }
 
+.information span {
+    text-align: center;
+    font-size: var(--fs-sm);
+    font-family: sans-serif;
+}
+
  /*button go to map*/
 .select {
   position: absolute;
@@ -323,7 +403,6 @@ a {
   width: 100%;
   height: 100%;
   pointer-events: none;
-
   z-index: 1;
 }
 
@@ -355,111 +434,6 @@ a {
 
 .arrow button:hover {
     background: #050505be;
-}
-
-/* input & text */
-.content-section {
-  width: 100%;
-  max-width: 500px;
-  margin: -50px auto -20px auto; 
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  position: relative;
-  z-index: 10;
-}
-
-input {
-  width: 70%;
-  max-width: 300px;
-  height: 35px;
-
-  border-radius: 8px;
-  padding: 10px;
-}
-
-.text-1 {
-  line-height: 1.6;
-  color: #000;
-
-  padding: 20px;
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-
-/* SEARCH CONTAINER */
-.search-container {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-
-  padding: 5px;
-  border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-}
-
-/* INPUT */
-#searchInput {
-  flex: 1;
-  padding: 10px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  background: rgba(255,255,255,0.15);
-}
-/* INPUT FOCUS EFFECT */
-#searchInput:focus {
-  background: rgba(255,255,255,0.25);
-  box-shadow: 0 0 0 2px #000;
-}
-
-#searchInput::placeholder {
-  color: rgba(255,255,255,0.7);
-}
-
-#go-btn {
-  position: relative;
-  padding: 10px 16px;
-  border-radius: 18px;
-  cursor: pointer;
-  background: rgb(29, 29, 29);
-  color: #fff;
-  margin-left: 50px;
-  border: 2px solid transparent;
-
-  /* fake animated border */
-  background-image: 
-    linear-gradient(rgb(29, 29, 29), rgb(80, 4, 143)), 
-    linear-gradient(
-      90deg,
-      rgba(255, 0, 150, 1),
-      rgba(0, 200, 255, 1),
-      rgba(0, 255, 150, 1),
-      rgba(255, 0, 150, 1)
-    );
-
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  background-size: 100% 100%, 300% 300%;
-  animation: borderSpin 3s linear infinite;
-}
-
-@keyframes borderSpin {
-  0% {
-    background-position: 0% 50%, 0% 50%;
-  }
-  100% {
-    background-position: 0% 50%, 300% 50%;
-  }
 }
 
 .text-2 h3{
@@ -556,11 +530,9 @@ input {
 }
 
 /* Button */
-
 .map-button {
   display: block;
-  margin: 90px auto 0 auto;
-
+  margin: 150px auto 0 auto;
   padding: 12px 20px;
 
   width: fit-content; 
@@ -568,7 +540,7 @@ input {
   max-width: 220px;     
 
   text-align: center;
-
+  
   background: #020202;
   color: white;
   border-radius: 12px;
@@ -807,6 +779,10 @@ input {
   .spot-card img {
     width: 50%;
     height: 100%;
+  }
+
+  .map-button{
+    margin: 30px auto 0 250px;
   }
 
   .event-form-container {
