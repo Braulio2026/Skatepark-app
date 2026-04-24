@@ -10,12 +10,12 @@
 
 <body>
   <main>
-    <div id="navbar"></div>`
+    <div id="navbar"></div>
      
      <div class="hero-image">
 
       <img 
-         src="image-skates/main_image.webp"
+         src="image-skates\main_image_small.webp"
          srcset=
              "
              image-skates/main_image_small.webp 800w,
@@ -67,6 +67,8 @@
     Scroll down and discover your next ride! 🛹
   </div>
 
+  <label for="searchInput" class="visually-hidden">Search skatepark by name</label>
+
   <div class="search-container">
 
     <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name">
@@ -82,6 +84,7 @@
       <option value="Guachipelin">
       <option value="Zapote">
       <option value="Los Lagos">
+      <option value="Bel Air">
     </datalist>
 
     <button id="go-btn">Search</button>
@@ -116,10 +119,13 @@
   <h3>Share your upcoming event</h3>
 
   <form id="eventForm">
+    <label for="title" class="visually-hidden">Event title</label>
     <input type="text" id="title" placeholder="Event title" required>
 
+    <label for="date" class="visually-hidden">Event date</label>
     <input type="date" id="date" required>
 
+    <label for="location" class="visually-hidden">Event location</label>
     <input type="text" id="location" placeholder="Location (Google Maps link optional)">
     
     <textarea id="description" placeholder="Describe your event..." required></textarea>
@@ -139,13 +145,16 @@
 
   <div id="userPosts"></div>
 </section>
-
           
-    <div class="footer">
-           <li><a href="skatepark.html">Skateparks List</a></li>
-           <li><a href="#">Home page</a></li>
-           <li><a href="#">Upcoming Event & more</a></li>
-    </div>
+    <footer class="footer">
+      <nav>
+          <ul>
+          <li><a href="skatepark.html">Skateparks List</a></li>
+          <li><a href="#">Home page</a></li>
+          <li><a href="#">Upcoming Event & more</a></li>
+      </ul>
+      </nav>
+    </footer>
 
   </main>
      <script src="./navbar.js"></script>

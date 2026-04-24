@@ -69,6 +69,12 @@ const skateparks = [
     description: "Plaza Barrio Pinto is a popular street skate spot located in San Pedro, San José. It features ledges, stairs, rails, and open flat areas, making it ideal for street skating and intermediate to advanced riders.",
     map: "https://www.google.com/maps?q=WXH3+9R8,San+José,San+Pedro,Barrio+Pinto,11801"
   },
+  {
+    title: "Bel Air Skatepark",
+    image: "image-skates/bel_air4.jpeg",
+    description: "Plaza Barrio Pinto is a popular street skate spot located in San Pedro, San José. It features ledges, stairs, rails, and open flat areas, making it ideal for street skating and intermediate to advanced riders.",
+    map: "https://www.google.com/maps?q=WXH3+9R8,San+José,San+Pedro,Barrio+Pinto,11801"
+  },
  ];
 
 /* ================= FUNCTIONS ================= */

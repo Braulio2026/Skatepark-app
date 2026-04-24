@@ -12,7 +12,7 @@
     <div id="navbar"></div> 
 
     <div class="image-container">
-          <img src="image-skates\image_font3.webp" alt="img-1">
+          <img src="image-skates/image_font3.webp" alt="img-1">
         <div class="main-text">
             <p>Skate-Rutes CostaRica.</p>
         </div>
@@ -26,13 +26,17 @@
   <div id="skateparks-container"></div>
 </section>
 
-    <div class="footer">
-           <li><a href="skatepark.html">Skateparks List</a></li>
-           <li><a href="#">Go to skatepark map</a></li>
-           <li><a href="#">Upcoming events</a></li>
-    </div>
-
+    <footer class="footer">
+      <nav>
+          <ul>
+          <li><a href="skatepark.html">Skateparks List</a></li>
+          <li><a href="#">Home page</a></li>
+          <li><a href="#">Upcoming Event & more</a></li>
+      </ul>
+      </nav>
+    </footer>
 </body>
+
   <script src="./navbar.js"></script>
   <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
   <script>
@@ -85,18 +89,20 @@
   },
 
   {
-    name: "Zapote Skatepark",
-    map: "https://www.google.com/maps?q=Zapote+Skatepark",
-    description: "A municipal street-style skatepark located in Polideportivo de Zapote. It includes ramps, boxes, and ledges. Managed for community use, although some areas may require maintenance.",
-    address: "WWCX+GJ9, San Gerardo, San José, Costa Rica",
-    directions: "Access from downtown San José, Route 39 ring road, or eastern suburbs like Curridabat and Tres Ríos.",
-    schedule: "Monday - Sunday: 8:00 AM - 6:00 PM",
+    name: "Bel Air Skatepark",
+    map: "https://www.google.com/maps?q=XRMJ+2QM,+Calle+112,+Heredia,+Belén,+40703",
+    description: "mall concrete skatepark in Belén, Heredia. It features basic obstacles ideal for street and transition skating, including a bowl, quarterpipes, banks, and a mini ramp. Good for casual sessions and local skaters.",
+    address: "XRMJ+2QM, Calle 112, Heredia, Belén, 40703, Costa Rica",
+    directions: "Located in La Asunción de Belén, near Pueblo Nuevo. You can access it via Calle 112; it's a public outdoor skatepark in a residential area.",
+    schedule: "Open daily (public outdoor park, typically accessible all day",
     images: [
-      "image-skates/jose_ma_skate.webp",
-      "image-skates/zapote_skate2.jpg"
+      "image-skates/bel_air1.jpeg",
+      "image-skates/bel_air2.jpeg",
+      "image-skates/bel_air3.jpeg",
+      "image-skates/bel_air4.jpeg"
     ]
   },
-
+  
   {
     name: "Turba Alajuelita Skatepark",
     map: "https://www.google.com/maps?q=Alajuelita+Skatepark",
@@ -120,7 +126,8 @@
     directions: "Access via Ruta 27 and Radial Lindora (Route 147). Bus routes from San José to Lindora also available.",
     schedule: "Mon-Fri: 6 AM - 9 PM | Sat: 8 AM - 5 PM | Sun: 10 AM - 2 PM",
     images: [
-      "image-skates/santa_ana_skatepark.jpeg"
+      "image-skates/santa_ana_skatepark.jpeg",
+      "image-skates/lindora_sk2.jpeg"
     ]
   },
 
@@ -200,6 +207,19 @@
       "image-skates/pinto_4.jpeg"
     ]
   },
+
+  {
+    name: "Zapote Skatepark",
+    map: "https://www.google.com/maps?q=Zapote+Skatepark",
+    description: "A municipal street-style skatepark located in Polideportivo de Zapote. It includes ramps, boxes, and ledges. Managed for community use, although some areas may require maintenance.",
+    address: "WWCX+GJ9, San Gerardo, San José, Costa Rica",
+    directions: "Access from downtown San José, Route 39 ring road, or eastern suburbs like Curridabat and Tres Ríos.",
+    schedule: "Monday - Sunday: 8:00 AM - 6:00 PM",
+    images: [
+      "image-skates/jose_ma_skate.webp",
+      "image-skates/zapote_skate2.jpg"
+    ]
+  },
 ];
 
 // SLIDER
@@ -216,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     slider.innerHTML = `
   <div class="carousel-track">
     ${park.images.map((img, i) => `
-      <img class="carousel-image ${i === 0 ? "active" : ""}" src="${img}" alt="${park.name}">
+      <img class="carousel-image ${i === 0 ? "active" : ""}" src="${img}" alt="${park.name} image ${i + 1}" >
     `).join("")}
   </div>
 
