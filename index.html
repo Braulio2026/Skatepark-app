@@ -10,12 +10,12 @@
 
 <body>
   <main>
-    <div id="navbar"></div>`
+    <div id="navbar"></div>
      
      <div class="hero-image">
 
       <img 
-         src="image-skates/main_image.webp"
+         src="image-skates\main_image_small.webp"
          srcset=
              "
              image-skates/main_image_small.webp 800w,
@@ -67,6 +67,8 @@
     Scroll down and discover your next ride! 🛹
   </div>
 
+  <label for="searchInput" class="visually-hidden">Search skatepark by name</label>
+
   <div class="search-container">
 
     <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name">
@@ -75,13 +77,14 @@
       <option value="Moravia">
       <option value="Jose Maria">
       <option value="Salvador">
-      <option value="Alajuelita">
+      <option value="Alajuelita Turba">
       <option value="Tecma">
       <option value="Lindora">
       <option value="Plaza Viquez">
       <option value="Guachipelin">
       <option value="Zapote">
       <option value="Los Lagos">
+      <option value="Bel Air">
     </datalist>
 
     <button id="go-btn">Search</button>
@@ -99,7 +102,7 @@
 
   <div class="text-2">
     <h3>
-      Discover upcoming skate events and shared spots around the city.
+      Discover upcoming skate events and Skate-shops around the city.
       Got an event to share? Add it below and let the community know all the details—don't forget to include an image!
     </h3>
   </div>
@@ -107,109 +110,22 @@
 <section class="challenge-section">
 
    <div class="slider-2">
-    <div class="slider-track" id="eventsTrack">
-
-      <div class="spot-card">
-        <img src="image-skates/spot_3.jpeg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Neighbornhood Carit: The thorn breaker</h4>
-          <p>
-            This place is located in barrio Carit Calle 4.
-            perfect to videoclips (advanced level)
-            Here the image and direction for the community-users.
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <img src="image-skates/skatepark-in-quepos-in.jpg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Add place:</h4>
-          <p>
-            Location and specification about the spot
-            Nulla bibendum sodales consequat. Fusce at mi porttitor, consectetur odio in, 
-            elementum libero. Donec consectetur velit quis lorem
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-      
-      <div class="spot-card">
-        <img src="image-skates/skatepark-in-quepos-in.jpg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Add place</h4>
-          <p>
-            Location and specification about the spot
-            Nulla bibendum sodales consequat. Fusce at mi porttitor, consectetur odio in, 
-            elementum libero. Donec consectetur velit quis lorem
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <img src="image-skates/spot_2.jpeg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Add spot:</h4>
-          <p>
-            Location and specification about the spot
-            Nulla bibendum sodales consequat. Fusce at mi porttitor, consectetur odio in, 
-            elementum libero. Donec consectetur velit quis lorem
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <img src="image-skates/skatepark-in-quepos-in.jpg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Name spot</h4>
-          <p>
-            Location and specification about the spot
-            Nulla bibendum sodales consequat. Fusce at mi porttitor, consectetur odio in, 
-            elementum libero. Donec consectetur velit quis lorem
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-      
-      <div class="spot-card">
-        <img src="image-skates/spot_1.jpeg" alt="Skate spot">
-        <div class="specifications">
-          <h4>Name spot</h4>
-          <p>
-            Location and specification about the spot
-            Nulla bibendum sodales consequat. Fusce at mi porttitor, consectetur odio in, 
-            elementum libero. Donec consectetur velit quis lorem
-          </p>
-          <a href="https://www.google.com/maps" target="_blank" class="map-button">
-            Go to explore
-          </a>
-        </div>
-      </div>
-    </div>
+    <div class="slider-track" id="eventsTrack"></div>
   </div>
+
 
   <div class="event-form-container">
 
   <h3>Share your upcoming event</h3>
 
   <form id="eventForm">
+    <label for="title" class="visually-hidden">Event title</label>
     <input type="text" id="title" placeholder="Event title" required>
 
+    <label for="date" class="visually-hidden">Event date</label>
     <input type="date" id="date" required>
 
+    <label for="location" class="visually-hidden">Event location</label>
     <input type="text" id="location" placeholder="Location (Google Maps link optional)">
     
     <textarea id="description" placeholder="Describe your event..." required></textarea>
@@ -221,7 +137,7 @@
     <button type="submit">Publish Event</button>
   </form>
 
-</div>
+ </div>
 </section>
 
 <section class="user-publications">
@@ -229,13 +145,16 @@
 
   <div id="userPosts"></div>
 </section>
-
           
-    <div class="footer">
-           <li><a href="skatepark.html">Skateparks List</a></li>
-           <li><a href="#">Home page</a></li>
-           <li><a href="#">Upcoming Event & more</a></li>
-    </div>
+    <footer class="footer">
+      <nav>
+          <ul>
+          <li><a href="skatepark.html">Skateparks List</a></li>
+          <li><a href="#">Home page</a></li>
+          <li><a href="#">Upcoming Event & more</a></li>
+      </ul>
+      </nav>
+    </footer>
 
   </main>
      <script src="./navbar.js"></script>

@@ -88,7 +88,7 @@ const skateparks = [
     description: "San José"
   },
   {
-    name: "Alajuelita Skatepark",
+    name: "Turba Alajuelita Skatepark",
     lat: 9.902849, 
     lng: -84.100284,
     description: "Alajuelita"
