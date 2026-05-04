@@ -2,12 +2,25 @@
 // MAP INITIALIZATION
 // =======================
 
-const map = L.map('map').setView([9.93, -84.08], 13);
+import { supabase } from './js/supabase.js'
 
-map.setMaxBounds([
-  [9.85, -84.25],
-  [10.05, -83.90]
-]);
+async function testConnection() {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+
+  console.log("DATA:", data)
+  console.log("ERROR:", error)
+}
+
+testConnection();
+
+// const map = L.map('map').setView([9.93, -84.08], 13);
+
+// map.setMaxBounds([
+//   [9.85, -84.25],
+//   [10.05, -83.90]
+// ]);
 
 // =======================
 // TILE LAYER (SMART LOAD)
@@ -426,4 +439,167 @@ window.addEventListener("offline", () => {
 window.addEventListener("online", () => {
   console.log("🌐 Back online");
   document.getElementById("map").style.opacity = "1";
+});
+
+// =======================
+// EVENTS SYSTEM
+// =======================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const eventForm = document.getElementById("eventForm");
+  const userPosts = document.getElementById("userPosts");
+  const imageInput = document.getElementById("image");
+
+  if (!eventForm || !userPosts) return;
+
+  // ---------- CONVERT IMAGE ----------
+  function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- CREATE POST CARD ----------
+  function createPostCard(event) {
+    return `
+      <div class="post-card">
+        <img src="${event.imageUrl}" alt="Post image">
+
+        <div class="post-content">
+          <h4>${event.title}</h4>
+          <p>
+            ${event.description}
+            <br><br>
+            📅 ${event.date}
+          </p>
+
+          <a href="${event.location || '#'}" target="_blank">
+            📍 View location
+          </a>
+
+          <div class="post-actions">
+            <button class="like-btn" data-id="${event.id}">
+              ❤️ ${event.likes || 0}
+            </button>
+
+            <button class="delete-btn" data-id="${event.id}">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---------- RENDER POSTS ----------
+  function renderPosts(posts) {
+    userPosts.innerHTML = "";
+
+    posts.forEach(post => {
+      userPosts.insertAdjacentHTML("beforeend", createPostCard(post));
+    });
+  }
+
+  // ---------- SAVE ----------
+  async function savePost(post) {
+    const { error } = await supabase
+      .from('posts')
+      .insert([{
+        title: post.title,
+        description: post.description,
+        date: post.date,
+        location: post.location,
+        image_url: post.imageUrl,
+        likes: 0
+      }]);
+
+    if (error) {
+      console.error("Error saving post:", error);
+    }
+  }
+
+  // ---------- LOAD ----------
+  async function loadPosts() {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error loading posts:", error);
+      return;
+    }
+
+    const formattedPosts = data.map(post => ({
+      ...post,
+      imageUrl: post.image_url
+    }));
+
+    renderPosts(formattedPosts);
+  }
+
+  // ---------- DELETE ----------
+  userPosts.addEventListener("click", async (e) => {
+    const postId = e.target.dataset.id;
+    if (!postId) return;
+
+    if (e.target.classList.contains("delete-btn")) {
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', postId);
+
+      if (error) {
+        console.error("Delete error:", error);
+      } else {
+        await loadPosts();
+      }
+    }
+  });
+
+  // ---------- FORM ----------
+  eventForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const imageFile = imageInput.files[0];
+
+    let imageUrl = "image-skates/spot_1.jpeg";
+
+    if (imageFile) {
+      imageUrl = await convertImageToBase64(imageFile);
+    }
+
+    const newEvent = {
+      title: document.getElementById("title").value,
+      description: document.getElementById("description").value,
+      date: document.getElementById("date").value,
+      location: document.getElementById("location").value,
+      imageUrl: imageUrl
+    };
+
+    await savePost(newEvent);
+    await loadPosts();
+
+    eventForm.reset();
+    document.getElementById("file-name").textContent = "No file selected";
+  });
+
+  // ---------- FILE NAME ----------
+  imageInput.addEventListener("change", () => {
+    const fileNameDisplay = document.getElementById("file-name");
+
+    if (imageInput.files.length > 0) {
+      fileNameDisplay.textContent = imageInput.files[0].name;
+    } else {
+      fileNameDisplay.textContent = "No file selected";
+    }
+  });
+
+  // ---------- INIT ----------
+  loadPosts();
+
 });
