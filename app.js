@@ -22,7 +22,11 @@ supabase
       loadPosts();
     }
   )
-  .subscribe();
+  .subscribe((status) => {
+  console.log("📡 Realtime status:", status);
+});
+
+  
 
   // =======================
   // MAP INITIALIZATION
