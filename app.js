@@ -83,119 +83,173 @@ document.addEventListener("DOMContentLoaded", () => {
 
   testConnection();
 
-  // =======================
-  // AUTH SYSTEM
-  // =======================
+// =======================
+// AUTH SYSTEM
+// =======================
 
-  if (signupBtn) {
+if (signupBtn) {
 
-    signupBtn.addEventListener("click", async () => {
+  signupBtn.addEventListener("click", async () => {
 
-      const email =
-        document.getElementById("email").value;
+    const email =
+      document.getElementById("email").value.trim();
 
-      const password =
-        document.getElementById("password").value;
+    const password =
+      document.getElementById("password").value.trim();
 
-      const { data, error } =
-        await supabase.auth.signUp({
-          email,
-          password
-        });
+    if (!email || !password) {
+      alert("Complete all fields");
+      return;
+    }
 
-      console.log(data);
-      console.log(error);
+    if (password.length < 6) {
+      alert("Password needs 6+ characters");
+      return;
+    }
 
-      if (error) {
+    const { data, error } =
+      await supabase.auth.signUp({
+        email,
+        password
+      });
 
-        alert(error.message);
+    console.log(data);
+    console.log(error);
 
-      } else {
+    if (error) {
 
-        alert("✅ User created!");
+      if (error.message.includes("rate limit")) {
+        alert("Too many requests. Wait a minute.");
+        return;
       }
-    });
-  }
 
-  if (loginBtn) {
-
-    loginBtn.addEventListener("click", async () => {
-
-      const email =
-        document.getElementById("email").value;
-
-      const password =
-        document.getElementById("password").value;
-
-      const { data, error } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-      console.log(data);
-      console.log(error);
-
-      if (error) {
-
-        alert(error.message);
-
-      } else {
-
-        alert("✅ Logged in!");
+      if (error.message.includes("already registered")) {
+        alert("User already registered. Try login.");
+        return;
       }
-    });
-  }
 
-  if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", async () => {
-
-      await supabase.auth.signOut();
-
-      alert("👋 Logged out");
-    });
-  }
-
-  // =======================
-  // CHECK SESSION
-  // =======================
-
-  async function checkUser() {
-
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
-
-    console.log("CURRENT SESSION:", session);
-
-    const userInfo =
-      document.getElementById("userInfo");
-
-    if (!userInfo) return;
-
-    if (session?.user) {
-
-      userInfo.textContent =
-        `Logged as: ${session.user.email}`;
+      alert(error.message);
 
     } else {
 
-      userInfo.textContent =
-        "No user logged";
+      alert(
+        "✅ Account created! Check your email to confirm."
+      );
     }
+  });
+}
+
+if (loginBtn) {
+
+  loginBtn.addEventListener("click", async () => {
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+      alert("Complete all fields");
+      return;
+    }
+
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    console.log(data);
+    console.log(error);
+
+    if (error) {
+
+      if (
+        error.message.includes("Email not confirmed")
+      ) {
+
+        alert("📧 Confirm your email first");
+        return;
+      }
+
+      alert(error.message);
+
+    } else {
+
+      alert("✅ Logged in!");
+    }
+  });
+}
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener("click", async () => {
+
+    await supabase.auth.signOut();
+
+    alert("👋 Logged out");
+  });
+}
+
+// =======================
+// CHECK SESSION
+// =======================
+
+async function checkUser() {
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  console.log("CURRENT SESSION:", session);
+
+  const userInfo =
+    document.getElementById("userInfo");
+
+  const authScreen =
+    document.getElementById("authScreen");
+
+  const mainApp =
+    document.getElementById("mainApp");
+
+  if (!userInfo) return;
+
+  if (session?.user) {
+
+    userInfo.textContent =
+      `Logged as: ${session.user.email}`;
+
+    if (mainApp)
+      mainApp.style.display = "block";
+
+    if (authScreen)
+      authScreen.style.display = "none";
+
+    if (logoutBtn)
+      logoutBtn.style.display = "block";
+
+  } else {
+
+    userInfo.textContent =
+      "No user logged";
+
+    if (authScreen)
+      authScreen.style.display = "flex";
+
+    if (mainApp)
+      mainApp.style.display = "none";
+
+    if (logoutBtn)
+      logoutBtn.style.display = "none";
   }
+}
 
-  checkUser();
+checkUser();
 
-  supabase.auth.onAuthStateChange(
-    (event, session) => {
-
-      console.log("AUTH EVENT:", event);
-
-      checkUser();
-    }
-  );
+supabase.auth.onAuthStateChange(
+  () => checkUser()
+);
 
   // =======================
   // CREATE POST CARD
