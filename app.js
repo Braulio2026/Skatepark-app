@@ -196,11 +196,16 @@ if (logoutBtn) {
 // CHECK SESSION
 // =======================
 
-async function checkUser() {
+async function checkUser(session = null) {
 
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  // GET SESSION ONLY IF NOT PROVIDED
+  if (!session) {
+
+    const { data } =
+      await supabase.auth.getSession();
+
+    session = data.session;
+  }
 
   console.log("CURRENT SESSION:", session);
 
@@ -213,18 +218,18 @@ async function checkUser() {
   const mainApp =
     document.getElementById("mainApp");
 
-  if (!userInfo) return;
+  if (!userInfo || !authScreen || !mainApp)
+    return;
 
+  // USER LOGGED
   if (session?.user) {
 
     userInfo.textContent =
       `Logged as: ${session.user.email}`;
 
-    if (mainApp)
-      mainApp.style.display = "block";
+    authScreen.style.display = "none";
 
-    if (authScreen)
-      authScreen.style.display = "none";
+    mainApp.style.display = "block";
 
     if (logoutBtn)
       logoutBtn.style.display = "block";
@@ -234,26 +239,35 @@ async function checkUser() {
     userInfo.textContent =
       "No user logged";
 
-    if (authScreen)
-      authScreen.style.display = "flex";
+    authScreen.style.display = "flex";
 
-    if (mainApp)
-      mainApp.style.display = "none";
+    mainApp.style.display = "none";
 
     if (logoutBtn)
       logoutBtn.style.display = "none";
   }
 }
 
-checkUser();
+// INITIAL SESSION
+supabase.auth.getSession()
+  .then(({ data }) => {
 
+    checkUser(data.session);
+  });
+
+// AUTH CHANGES
 supabase.auth.onAuthStateChange(
-  () => checkUser()
+  (event, session) => {
+
+    console.log("AUTH EVENT:", event);
+
+    checkUser(session);
+  }
 );
 
-  // =======================
-  // CREATE POST CARD
-  // =======================
+// =======================
+// CREATE POST CARD
+// =======================
 
   function createPostCard(event) {
 
