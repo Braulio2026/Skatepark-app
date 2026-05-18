@@ -12,7 +12,36 @@
 </head>
 
 <body>
-  <main>
+
+<section id="authScreen" style="display: none";>
+  <!-- login form -->
+  <section class="auth-box">
+
+  <h2>Account</h2>
+
+  <input type="email" id="email" placeholder="Email" autocomplete="email">
+
+  <input type="password" id="password" placeholder="Password"autocomplete="current-password" >
+
+  <button type="button" id="signupBtn">
+    Create account
+  </button>
+
+  <button type="button" id="loginBtn">
+    Login
+  </button>
+
+  <button type="button" id="logoutBtn">
+    Logout
+  </button>
+
+  <p id="userInfo">Checking session...</p>
+
+  </section>
+</section>
+
+  <main id="mainApp" style="display: none;">
+
     <div id="navbar"></div>
      
      <div class="hero-image">
@@ -149,28 +178,6 @@
   <div id="userPosts"></div>
 </section>
 
-<section class="auth-box">
- 
-  <input type="email" id="email" placeholder="Email">
-
-  <input type="password" id="password" placeholder="Password">
-  
-  <button type="button" id="signupBtn">
-    Create account
-  </button>
-
-  <button type="button" id="loginBtn">
-    Login
-  </button>
-
-  <button type="button" id="logoutBtn">
-    Logout
-  </button>
-
-  <p id="userInfo">Checking session...</p>
-
-</section>
-
 <section class="about">
   <div class="container">
     
@@ -219,7 +226,7 @@
      <script src="./navbar.js"></script>
      <script src="./js/main.js" defer></script>
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-     <script type="module" src="./app.js"></script>
+     <script type="module" src="./app.js" defer></script>
      <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
     </body>
 </html>

@@ -650,104 +650,172 @@ a {
   text-align: center;
 }
 
-/* =========================
-   BUTTON
-========================= */
-#eventForm button {
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid rgb(104, 104, 104);
-  background: #000;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.2s ease;
+/* BUTTON */
+#eventForm button{
+  padding:14px;
+  border:1px solid #686868;
+  border-radius:12px;
+  background:#000;
+  color:#fff;
+  font:700 1rem sans-serif;
+  cursor:pointer;
+  transition:.2s ease;
 }
 
-#eventForm button:hover {
-  background-color:#fff; 
-  color: rgb(0, 0, 0);
-  transform: translateY(-2px); 
-  transition: 0.2s;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+#eventForm button:hover{
+  background:#fff;
+  color:#000;
+  transform:translateY(-2px);
+  box-shadow:0 0 15px rgba(255,255,255,.4);
 }
 
-.eventForm .file-upload:active {
-  transform: translateY(-1px) scale(0.98);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+.eventForm .file-upload:active{
+  transform:translateY(-1px) scale(.98);
+  box-shadow:0 3px 8px rgba(0,0,0,.2);
 }
 
-.user-publications {
-  width: 90%;
-  max-width: 900px;
-  margin: 40px auto;
+/* POSTS */
+.user-publications{
+  width:90%;
+  max-width:900px;
+  margin:40px auto;
 }
 
-#userPosts {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+#userPosts{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
 
-.post-card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  overflow: hidden;
-  color: rgb(0, 0, 0);
+.post-card{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+  border-radius:16px;
+  overflow:hidden;
+  color:#000;
 }
 
-.post-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.post-card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
 }
 
-.post-content {
-  padding: 15px;
+.post-content{
+  padding:15px;
 }
 
-.post-content h4 {
-  margin-bottom: 5px;
+.post-content h4{
+  margin-bottom:5px;
 }
 
-.post-content p {
-  font-size: 14px;
-  line-height: 1.5;
+.post-content p{
+  font-size:14px;
+  line-height:1.5;
 }
 
-.post-content a {
-  display: inline-block;
-  margin-top: 10px;
-  color: #ff7b00;
+.post-content a{
+  display:inline-block;
+  margin-top:10px;
+  color:#ff7b00;
 }
 
-/* button likes */
-.post-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
+/* ACTIONS */
+.post-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:10px;
 }
 
-.like-btn {
-  background: transparent;
-  border: none;
-  color: #ff4d6d;
-  font-size: 16px;
-  cursor: pointer;
+.like-btn,
+.delete-btn{
+  background:transparent;
+  border:none;
+  cursor:pointer;
 }
 
-.like-btn:hover {
-  transform: scale(1.1);
+.like-btn{
+  color:#ff4d6d;
+  font-size:16px;
 }
 
-.delete-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.like-btn:hover{
+  transform:scale(1.1);
 }
+
+/* AUTH SCREEN */
+#authScreen{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0082b6;
+  padding:20px;
+  box-sizing:border-box;
+}
+
+/* AUTH BOX */
+.auth-box{
+  width:100%;
+  max-width:450px;
+  background:#1c1c1c;
+  padding:18px;
+  border-radius:0;
+  display:flex;
+  flex-direction:column;
+  gap:33px;
+  box-sizing:border-box;
+}
+
+/* TITLE + USER INFO */
+.auth-box h2,
+#userInfo{
+  text-align:center;
+}
+
+.auth-box h2{
+  color:#fff;
+  margin:0 0 10px;
+}
+
+#userInfo{
+  color:#d1d5db;
+  font-size:14px;
+  word-break:break-word;
+}
+
+/* INPUTS */
+.auth-box input{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* BUTTONS */
+.auth-box button{
+  width:80%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+  transition:.3s;
+  align-self:center;
+}
+
+.auth-box button:hover{
+  opacity:.85;
+}
+
+/* BUTTON COLORS */
+#signupBtn{ background:#4f46e5; color:#fff; }
+#loginBtn{ background:#7b0086; color:#fff; }
+#logoutBtn{ background:#f30707; color:#fff; }
 
 /* FOOTER */
 .footer {
@@ -813,6 +881,10 @@ a {
   #eventForm {
     gap: 16px;
   }
+
+  .auth-box {
+    justify-self: center;
+  }
 }
 
 /* Desktop */
@@ -830,6 +902,19 @@ a {
 
   .btn {
     font-size: 1.1rem;
+  }
+
+  .auth-box{
+    max-width: 800px;
+    padding: 25px;
+    border-radius: 12px;
+    justify-self: center; 
+  }
+
+  .auth-box input,
+  .auth-box button{
+    font-size:15px;
+    padding:15px;
   }
 }
 
