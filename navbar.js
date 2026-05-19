@@ -1,4 +1,6 @@
 // ===== LOAD NAVBAR =====
+import { supabase } from './js/supabase.js';
+
 fetch("navbar.html")
   .then(response => response.text())
   .then(data => {
@@ -16,77 +18,128 @@ fetch("navbar.html")
       networkDot.classList.add("checking");
 
       try {
-        await fetch("https://www.google.com/favicon.ico", {
-          method: "GET",
-          mode: "no-cors",
-          cache: "no-store"
-        });
 
-        networkDot.classList.remove("checking","offline");
+        await fetch(
+          "https://www.google.com/favicon.ico",
+          {
+            method:"GET",
+            mode:"no-cors",
+            cache:"no-store"
+          }
+        );
+
+        networkDot.classList.remove(
+          "checking",
+          "offline"
+        );
+
         networkDot.classList.add("online");
 
       } catch {
-        networkDot.classList.remove("checking","online");
+
+        networkDot.classList.remove(
+          "checking",
+          "online"
+        );
+
         networkDot.classList.add("offline");
       }
     }
 
-    // First check
+    // FIRST CHECK
     checkRealConnection();
 
-    // Check every 15 seconds
+    // EVERY 15s
     setInterval(checkRealConnection,15000);
 
-    // Browser events
-    window.addEventListener("online",checkRealConnection);
-    window.addEventListener("offline",checkRealConnection);
+    // ONLINE/OFFLINE EVENTS
+    window.addEventListener(
+      "online",
+      checkRealConnection
+    );
 
+    window.addEventListener(
+      "offline",
+      checkRealConnection
+    );
 
-    // ===== NAVBAR INTERACTIONS  =====
-    const menu = document.getElementById("menuList");
-    const button = document.querySelector(".menu-icon");
+    // ===== NAVBAR INTERACTIONS =====
+
+    const menu =
+      document.getElementById("menuList");
+
+    const button =
+      document.querySelector(".menu-icon");
 
     if (menu && button) {
 
       let isOpen = false;
 
       // TOGGLE MENU
-      button.addEventListener("click", (e) => {
+      button.addEventListener("click",(e)=>{
+
         e.stopPropagation();
 
         isOpen = !isOpen;
 
         if (isOpen) {
+
           menu.classList.add("open");
           button.classList.add("active");
+
         } else {
+
           menu.classList.remove("open");
           button.classList.remove("active");
         }
       });
 
-      // PREVENT CLOSING WHEN CLICKING INSIDE MENU
-      menu.addEventListener("click", (e) => {
+      // PREVENT CLOSE INSIDE MENU
+      menu.addEventListener("click",(e)=>{
         e.stopPropagation();
       });
 
-      // CLOSE WHEN CLICKING OUTSIDE
-      document.addEventListener("click", () => {
+      // CLOSE OUTSIDE
+      document.addEventListener("click",()=>{
+
         menu.classList.remove("open");
         button.classList.remove("active");
+
         isOpen = false;
       });
 
-      // CLOSE WHEN CLICKING A LINK
-      const links = menu.querySelectorAll("a");
+      // CLOSE WHEN CLICK LINK
+      const links =
+        menu.querySelectorAll("a");
 
       links.forEach(link => {
-        link.addEventListener("click", () => {
+
+        link.addEventListener("click",()=>{
+
           menu.classList.remove("open");
           button.classList.remove("active");
+
           isOpen = false;
         });
       });
+    }
+
+    // ===== LOGOUT =====
+
+    const logoutBtn =
+      document.getElementById("navlogoutBtn");
+
+    if (logoutBtn) {
+
+      logoutBtn.addEventListener(
+        "click",
+        async () => {
+
+          await supabase.auth.signOut();
+
+          window.location.reload();
+        }
+      );
     }
 
   });

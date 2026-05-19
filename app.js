@@ -182,16 +182,6 @@ if (loginBtn) {
   });
 }
 
-if (logoutBtn) {
-
-  logoutBtn.addEventListener("click", async () => {
-
-    await supabase.auth.signOut();
-
-    alert("👋 Logged out");
-  });
-}
-
 // =======================
 // CHECK SESSION
 // =======================
@@ -231,9 +221,6 @@ async function checkUser(session = null) {
 
     mainApp.style.display = "block";
 
-    if (logoutBtn)
-      logoutBtn.style.display = "block";
-
   } else {
 
     userInfo.textContent =
@@ -242,9 +229,6 @@ async function checkUser(session = null) {
     authScreen.style.display = "flex";
 
     mainApp.style.display = "none";
-
-    if (logoutBtn)
-      logoutBtn.style.display = "none";
   }
 }
 
@@ -363,31 +347,41 @@ supabase.auth.onAuthStateChange(
   // SAVE POST
   // =======================
 
-  async function savePost(post) {
+async function savePost(post) {
 
-    const { error } = await supabase
-      .from('posts')
-      .insert([
-        {
-          title: post.title,
-          description: post.description,
-          date: post.date,
-          location: post.location,
-          image_url: post.imageUrl,
-          likes: 0
-        }
-      ]);
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-    if (error) {
-
-      console.error(
-        "❌ Error saving post:",
-        error.message
-      );
-
-      alert(error.message);
-    }
+  if (!user) {
+    alert("Login required");
+    return;
   }
+
+  const { error } = await supabase
+    .from('posts')
+    .insert([
+      {
+        title: post.title,
+        description: post.description,
+        date: post.date,
+        location: post.location,
+        image_url: post.imageUrl,
+        likes: 0,
+        user_id: user.id
+      }
+    ]);
+
+  if (error) {
+
+    console.error(
+      "❌ Error saving post:",
+      error.message
+    );
+
+    alert(error.message);
+  }
+}
 
   // =======================
   // IMAGE UPLOAD
@@ -621,30 +615,40 @@ supabase.auth.onAuthStateChange(
         // DELETE
         // =======================
 
-        if (
-          e.target.classList.contains(
-            "delete-btn"
-          )
-        ) {
+         if (
+            e.target.classList.contains(
+             "delete-btn"
+            )
+         ) {
 
-          const { error } =
-            await supabase
-              .from('posts')
-              .delete()
-              .eq('id', postId);
+           const {
+            data: { user }
+            } = await supabase.auth.getUser();
 
-          if (error) {
-
-            console.error(
-              "❌ Delete error:",
-              error.message
-            );
-
-          } else {
-
-            await loadPosts();
+          if (!user) {
+            alert("Login required");
+            return;
           }
+
+         const { error } =
+                await supabase
+                .from('posts')
+                .delete()
+                .eq('id', postId)
+                .eq('user_id', user.id);
+
+       if (error) {
+
+       console.error(
+        "❌ Delete error:",
+         error.message
+         );
+
+         } else {
+
+         await loadPosts();
         }
+       }
       }
     );
   }
