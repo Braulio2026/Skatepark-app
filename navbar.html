@@ -1,31 +1,69 @@
 <nav class="navbar">
 
+  <!-- LEFT -->
   <div class="nav-left">
-    <img src="image-skates/logo.svg" alt="SKR logo" class="logo">
+    <img 
+      src="image-skates/logo.svg" 
+      alt="SKR logo" 
+      class="logo"
+    >
   </div>
 
+  <!-- CENTER -->
   <div class="nav-center">
+
     <div class="menu-group">
 
+      <!-- NETWORK STATUS -->
       <div class="status-indicator">
         <span id="networkDot"></span>
       </div>
 
+      <!-- MENU -->
       <ul id="menuList">
-        <li><a href="index.html">Home page</a></li>
-        <li><a href="skatepark.html">Skatepark list</a></li>
-        <li><a href="UpEvent.html">Upcoming events</a></li>
+        <li>
+          <a href="index.html">
+            Home page
+          </a>
+        </li>
+
+        <li>
+          <a href="skatepark.html">
+            Skatepark list
+          </a>
+        </li>
+
+        <li>
+          <a href="UpEvent.html">
+            Upcoming events
+          </a>
+        </li>
+
+        <!-- LOGOUT -->
+        <li>
+          <button id="navlogoutBtn" class="logout-btn">
+            Logout
+          </button>
+        </li>
+
       </ul>
 
     </div>
+
   </div>
 
+  <!-- RIGHT -->
   <div class="nav-right">
-    <button class="menu-icon" aria-label="Open menu">
+
+    <button 
+      class="menu-icon" 
+      aria-label="Open menu"
+    >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
     </button>
+
   </div>
 
 </nav>
