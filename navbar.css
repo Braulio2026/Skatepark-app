@@ -156,6 +156,21 @@
   box-shadow: 0 0 6px orange;
 }
 
+.logout-btn{
+  background:#f30707;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  justify-items: center;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover{
+  opacity:.85;
+}
+
 /* =======================
    MOBILE
 ======================= */
@@ -221,6 +236,6 @@
   }
 
   .status-indicator {
-    margin-right: 40px;
+    margin-right: 20px;
   }
 }
