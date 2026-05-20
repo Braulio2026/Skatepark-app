@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skate-app</title>
     
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="navbar.css">
     <link rel="icon" href="image-skates/icon.png">
-
-    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
 
-<section id="authScreen" style="display:none";>
+<section id="authScreen" style="display:none;">
   <!-- login form -->
   <section class="auth-box">
 
@@ -62,7 +61,7 @@
       > 
 
       <div class="banner-text">
-        <h2>SKATE-RUTES COSTA RICA</h2>
+        <h2>SKATE-ROUTES COSTA RICA</h2>
         <p>All you want to know about your next ride</p>
       </div>
     
@@ -103,7 +102,7 @@
 
   <div class="search-container">
 
-    <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name">
+    <input id="searchInput" type="text" list="suggestions" placeholder="search-by-name" autocomplete="off">
 
     <datalist id="suggestions">
       <option value="Moravia">
@@ -127,17 +126,19 @@
     <div class="slider"></div>
 
     <div class="arrow">
-        <button id="left" onclick="left()">&#10094;</button>
-        <button id="right" onclick="right()">&#10095;</button>
+        <button id="left">&#10094;</button>
+        <button id="right">&#10095;</button>
     </div>
 </div>
 
-  <div class="text-2">
+<section>
+    <div class="text-2">
     <h3>
       Discover upcoming skate events and Skate-shops around the city.
       Got an event to share? Add it below and let the community know all the details—don't forget to include an image!
     </h3>
   </div>
+</section>
   
 <section class="challenge-section">
 
@@ -163,7 +164,7 @@
     <textarea id="description" placeholder="Describe your event..." required></textarea>
 
     <label for="image" class="file-upload">Upload Image</label>
-      <input type="file" id="image" accept="image/*" style="display: none;">
+      <input type="file" id="image" accept="image/webp,image/jpeg,image/png" style="display: none;">
      <span id="file-name">No file selected</span>
 
     <button type="submit">Publish Event</button>
@@ -222,11 +223,11 @@
       </nav>
     </footer>
 
-  </main>
-     <script type="module" src="./navbar.js"></script>
+   </main>
+     <script type="module" src="./navbar.js" defer></script>
      <script src="./js/main.js" defer></script>
-     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
      <script type="module" src="./app.js" defer></script>
-     <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
-    </body>
+     <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous" defer></script>
+  </body>
 </html>

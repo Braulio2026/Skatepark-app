@@ -130,6 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const goBtn = document.getElementById("go-btn");
   const datalist = document.getElementById("suggestions");
 
+  const leftBtn = document.getElementById("left");
+  const rightBtn = document.getElementById("right");
+
+        leftBtn.addEventListener("click", left);
+        rightBtn.addEventListener("click", right);
+
   /* ---------- GENERATE SLIDES ---------- */
   skateparks.forEach(park => {
     slider.innerHTML += `
@@ -280,7 +286,11 @@ window.addEventListener('load', showSlide);
 
       card.innerHTML = `
         ${shop.sponsored ? `<span class="badge">Sponsored</span>` : ""}
-        <img src="${shop.img}">
+        <img src="${shop.img}" 
+             loading="lazy" 
+             alt="${shop.name}"
+        >
+
         <div class="specifications">
           <h4>${shop.name}</h4>
           <p>${shop.description}</p>
