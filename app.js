@@ -255,6 +255,15 @@ supabase.auth.onAuthStateChange(
 
   function createPostCard(event) {
 
+     function escapeHTML(str = "") {
+      return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+   }
+
     return `
       <div class="post-card" id="post-${event.id}">
 
@@ -262,10 +271,10 @@ supabase.auth.onAuthStateChange(
 
         <div class="post-content">
 
-          <h4>${event.title}</h4>
+          <h4>${escapeHTML(event.title)}</h4>
 
           <p>
-            ${event.description}
+            ${escapeHTML(event.description)}
             <br><br>
             📅 ${event.date}
           </p>
@@ -280,14 +289,14 @@ supabase.auth.onAuthStateChange(
               ❤️ ${event.likes ?? 0}
             </button>
 
+            ${event.canDelete ? `
             <button class="delete-btn" data-id="${event.id}">
-              🗑️ Delete
+             🗑️ Delete
             </button>
+           ` : ""}
 
           </div>
-
         </div>
-
       </div>
     `;
   }
@@ -315,33 +324,39 @@ supabase.auth.onAuthStateChange(
   // LOAD POSTS
   // =======================
 
-  async function loadPosts() {
+   async function loadPosts() {
 
-    const { data, error } =
-      await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', {
-          ascending: false
-        });
+  // GET CURRENT USER
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-    if (error) {
+  // LOAD POSTS
+  const { data, error } =
+    await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', {
+        ascending: false
+      });
 
-      console.error(
-        "❌ Error loading posts:",
-        error.message
-      );
-
-      return;
-    }
-
-    const formattedPosts = data.map(post => ({
-      ...post,
-      imageUrl: post.image_url
-    }));
-
-    renderPosts(formattedPosts);
+  if (error) {
+    console.error(
+      "❌ Error loading posts:",
+      error.message
+    );
+    return;
   }
+
+  // FORMAT POSTS
+  const formattedPosts = data.map(post => ({
+    ...post,
+    imageUrl: post.image_url,
+    canDelete: user?.id === post.user_id
+  }));
+
+  renderPosts(formattedPosts);
+}
 
   // =======================
   // SAVE POST
