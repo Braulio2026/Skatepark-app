@@ -1,5 +1,5 @@
 import { supabase } from './js/supabase.js';
-
+   
 document.addEventListener("DOMContentLoaded", () => {
 
   console.log("✅ APP LOADED");
@@ -20,250 +20,194 @@ document.addEventListener("DOMContentLoaded", () => {
   const userPosts = document.getElementById("userPosts");
   const imageInput = document.getElementById("image");
 
-  // =======================
-  // MAP
-  // =======================
+  
+// =======================
+// TEST CONNECTION
+// =======================
+async function testConnection() {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*");
 
-  const mapElement = document.getElementById("map");
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+}
 
-  let map = null;
-  let tileLayer = null;
-
-  if (mapElement && typeof L !== "undefined") {
-
-    map = L.map('map').setView([9.93, -84.08], 13);
-
-    map.setMaxBounds([
-      [9.85, -84.25],
-      [10.05, -83.90]
-    ]);
-
-    function loadTiles() {
-
-      if (tileLayer) return;
-
-      tileLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution: '© OpenStreetMap'
-        }
-      ).addTo(map);
-    }
-
-    function removeTiles() {
-
-      if (!tileLayer) return;
-
-      map.removeLayer(tileLayer);
-      tileLayer = null;
-    }
-
-    if (navigator.onLine) {
-      loadTiles();
-    }
-
-    window.addEventListener("online", loadTiles);
-    window.addEventListener("offline", removeTiles);
-  }
-
-  // =======================
-  // TEST CONNECTION
-  // =======================
-
-  async function testConnection() {
-
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*');
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-  }
-
-  testConnection();
+testConnection();
 
 // =======================
 // AUTH SYSTEM
 // =======================
 
-if (signupBtn) {
+const getInput = (id) =>
+  document.getElementById(id).value.trim();
 
-  signupBtn.addEventListener("click", async () => {
+function validateAuth(email, password) {
+  if (!email || !password) {
+    alert("Complete all fields");
+    return false;
+  }
+  return true;
+}
 
-    const email =
-      document.getElementById("email").value.trim();
+async function handleAuth(type) {
+  const email = getInput("email");
+  const password = getInput("password");
 
-    const password =
-      document.getElementById("password").value.trim();
+  if (!validateAuth(email, password)) return;
 
-    if (!email || !password) {
-      alert("Complete all fields");
+  // Extra signup validation
+  if (type === "signup" && password.length < 6) {
+    alert("Password needs 6+ characters");
+    return;
+  }
+
+  const action =
+    type === "signup"
+      ? supabase.auth.signUp({ email, password })
+      : supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+  const { data, error } = await action;
+
+  console.log(data);
+  console.log(error);
+
+  if (error) {
+    const msg = error.message;
+
+    if (msg.includes("rate limit")) {
+      alert("Too many requests. Wait a minute.");
       return;
     }
 
-    if (password.length < 6) {
-      alert("Password needs 6+ characters");
+    if (msg.includes("already registered")) {
+      alert("User already registered. Try login.");
       return;
     }
 
-    const { data, error } =
-      await supabase.auth.signUp({
-        email,
-        password
-      });
-
-    console.log(data);
-    console.log(error);
-
-    if (error) {
-
-      if (error.message.includes("rate limit")) {
-        alert("Too many requests. Wait a minute.");
-        return;
-      }
-
-      if (error.message.includes("already registered")) {
-        alert("User already registered. Try login.");
-        return;
-      }
-
-      alert(error.message);
-
-    } else {
-
-      alert(
-        "✅ Account created! Check your email to confirm."
-      );
-    }
-  });
-}
-
-if (loginBtn) {
-
-  loginBtn.addEventListener("click", async () => {
-
-    const email =
-      document.getElementById("email").value.trim();
-
-    const password =
-      document.getElementById("password").value.trim();
-
-    if (!email || !password) {
-      alert("Complete all fields");
+    if (msg.includes("Email not confirmed")) {
+      alert("📧 Confirm your email first");
       return;
     }
 
-    const { data, error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+    alert(msg);
+    return;
+  }
 
-    console.log(data);
-    console.log(error);
-
-    if (error) {
-
-      if (
-        error.message.includes("Email not confirmed")
-      ) {
-
-        alert("📧 Confirm your email first");
-        return;
-      }
-
-      alert(error.message);
-
-    } else {
-
-      alert("✅ Logged in!");
-    }
-  });
+  alert(
+    type === "signup"
+      ? "✅ Account created! Check your email to confirm."
+      : "✅ Logged in!"
+  );
 }
 
-if (logoutBtn) {
+// Buttons
+signupBtn?.addEventListener("click", () =>
+  handleAuth("signup")
+);
 
-  logoutBtn.addEventListener("click", async () => {
-
-    await supabase.auth.signOut();
-
-    alert("👋 Logged out");
-  });
-}
+loginBtn?.addEventListener("click", () =>
+  handleAuth("login")
+);
 
 // =======================
 // CHECK SESSION
 // =======================
 
-async function checkUser(session = null) {
+const $ = (id) => document.getElementById(id);
 
-  // GET SESSION ONLY IF NOT PROVIDED
-  if (!session) {
+const userInfo = $("userInfo");
+const authScreen = $("authScreen");
+const mainApp = $("mainApp");
 
-    const { data } =
-      await supabase.auth.getSession();
+function updateUI(session) {
+  if (!userInfo || !authScreen || !mainApp) return;
 
-    session = data.session;
-  }
+  const user = session?.user;
 
-  console.log("CURRENT SESSION:", session);
-
-  const userInfo =
-    document.getElementById("userInfo");
-
-  const authScreen =
-    document.getElementById("authScreen");
-
-  const mainApp =
-    document.getElementById("mainApp");
-
-  if (!userInfo || !authScreen || !mainApp)
-    return;
-
-  // USER LOGGED
-  if (session?.user) {
-
-    userInfo.textContent =
-      `Logged as: ${session.user.email}`;
-
+  if (user) {
+    userInfo.textContent = `Logged as: ${user.email}`;
     authScreen.style.display = "none";
-
     mainApp.style.display = "block";
-
-    if (logoutBtn)
-      logoutBtn.style.display = "block";
-
   } else {
-
-    userInfo.textContent =
-      "No user logged";
-
+    userInfo.textContent = "No user logged";
     authScreen.style.display = "flex";
-
     mainApp.style.display = "none";
-
-    if (logoutBtn)
-      logoutBtn.style.display = "none";
   }
 }
 
+async function checkUser(session = null) {
+  try {
+    // Get session only if not passed
+    if (!session) {
+      const { data, error } =
+        await supabase.auth.getSession();
+
+      if (error) {
+        console.error(error);
+        return updateUI(null);
+      }
+
+      session = data.session;
+    }
+
+    console.log("CURRENT SESSION:", session);
+    updateUI(session);
+
+  } catch (err) {
+    console.error("Session error:", err);
+    updateUI(null);
+  }
+}
+
+// =======================
 // INITIAL SESSION
-supabase.auth.getSession()
-  .then(({ data }) => {
+// =======================
+checkUser();
 
-    checkUser(data.session);
-  });
-
+// =======================
 // AUTH CHANGES
-supabase.auth.onAuthStateChange(
+// =======================
+const {
+  data: { subscription }
+} = supabase.auth.onAuthStateChange(
   (event, session) => {
-
     console.log("AUTH EVENT:", event);
-
-    checkUser(session);
+    updateUI(session);
   }
 );
+
+// Optional cleanup
+  window.addEventListener("beforeunload", () => {
+  subscription?.unsubscribe();
+});
+
+// =======================
+// HELPERS
+// =======================
+
+function escapeHTML(str = "") {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeUrl(url = "") {
+  try {
+    const parsed = new URL(url);
+    return ["http:", "https:"].includes(parsed.protocol)
+      ? parsed.href
+      : "#";
+  } catch {
+    return "#";
+  }
+}
 
 // =======================
 // CREATE POST CARD
@@ -278,15 +222,15 @@ supabase.auth.onAuthStateChange(
 
         <div class="post-content">
 
-          <h4>${event.title}</h4>
+          <h4>${escapeHTML(event.title)}</h4>
 
           <p>
-            ${event.description}
+            ${escapeHTML(event.description)}
             <br><br>
             📅 ${event.date}
           </p>
 
-          <a href="${event.location || '#'}" target="_blank">
+          <a href="${safeUrl(event.location)}" target="_blank" rel="noopener noreferrer">
             📍 View location
           </a>
 
@@ -296,14 +240,14 @@ supabase.auth.onAuthStateChange(
               ❤️ ${event.likes ?? 0}
             </button>
 
+            ${event.canDelete ? `
             <button class="delete-btn" data-id="${event.id}">
-              🗑️ Delete
+             🗑️ Delete
             </button>
+           ` : ""}
 
           </div>
-
         </div>
-
       </div>
     `;
   }
@@ -331,63 +275,79 @@ supabase.auth.onAuthStateChange(
   // LOAD POSTS
   // =======================
 
-  async function loadPosts() {
+   async function loadPosts() {
 
-    const { data, error } =
-      await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', {
-          ascending: false
-        });
+  // GET CURRENT USER
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-    if (error) {
+  // LOAD POSTS
+  const { data, error } =
+    await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', {
+        ascending: false
+      });
 
-      console.error(
-        "❌ Error loading posts:",
-        error.message
-      );
-
-      return;
-    }
-
-    const formattedPosts = data.map(post => ({
-      ...post,
-      imageUrl: post.image_url
-    }));
-
-    renderPosts(formattedPosts);
+  if (error) {
+    console.error(
+      "❌ Error loading posts:",
+      error.message
+    );
+    return;
   }
+
+  // FORMAT POSTS
+  const formattedPosts = data.map(post => ({
+    ...post,
+    imageUrl: post.image_url,
+    canDelete: user?.id === post.user_id
+  }));
+
+  renderPosts(formattedPosts);
+}
 
   // =======================
   // SAVE POST
   // =======================
 
-  async function savePost(post) {
+async function savePost(post) {
 
-    const { error } = await supabase
-      .from('posts')
-      .insert([
-        {
-          title: post.title,
-          description: post.description,
-          date: post.date,
-          location: post.location,
-          image_url: post.imageUrl,
-          likes: 0
-        }
-      ]);
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-    if (error) {
-
-      console.error(
-        "❌ Error saving post:",
-        error.message
-      );
-
-      alert(error.message);
-    }
+  if (!user) {
+    alert("Login required");
+    return;
   }
+
+  const { error } = await supabase
+    .from('posts')
+    .insert([
+      {
+        title: post.title,
+        description: post.description,
+        date: post.date,
+        location: post.location,
+        image_url: post.imageUrl,
+        likes: 0,
+        user_id: user.id
+      }
+    ]);
+
+  if (error) {
+
+    console.error(
+      "❌ Error saving post:",
+      error.message
+    );
+
+    alert(error.message);
+  }
+}
 
   // =======================
   // IMAGE UPLOAD
@@ -430,66 +390,71 @@ supabase.auth.onAuthStateChange(
   // FORM SUBMIT
   // =======================
 
-  if (eventForm) {
+ if (eventForm) {
+    eventForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    eventForm.addEventListener(
-      "submit",
-      async (e) => {
+    const imageFile = imageInput.files[0];
+    let imageUrl = "image-skates/spot_1.jpeg";
 
-        e.preventDefault();
+    if (imageFile) {
 
-        const imageFile =
-          imageInput.files[0];
-
-        let imageUrl =
-          "image-skates/spot_1.jpeg";
-
-        if (imageFile) {
-
-          const uploadedUrl =
-            await uploadImage(imageFile);
-
-          if (uploadedUrl) {
-
-            imageUrl = uploadedUrl;
-          }
-        }
-
-        const newEvent = {
-
-          title:
-            document.getElementById("title").value,
-
-          description:
-            document.getElementById("description").value,
-
-          date:
-            document.getElementById("date").value,
-
-          location:
-            document.getElementById("location").value,
-
-          imageUrl: imageUrl
-        };
-
-        console.log(
-          "NEW EVENT:",
-          newEvent
-        );
-
-        await savePost(newEvent);
-
-        await loadPosts();
-
-        eventForm.reset();
-
-        document.getElementById(
-          "file-name"
-        ).textContent =
-          "No file selected";
+      // 1. SIZE VALIDATION
+      if (imageFile.size > 3 * 1024 * 1024) {
+        alert("Max 3MB");
+        return;
       }
-    );
-  }
+
+      // 2. TYPE VALIDATION
+      const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+      if (!allowed.includes(imageFile.type)) {
+        alert("Only JPG, PNG, WEBP");
+        return;
+      }
+
+      // 3. UPLOAD ONLY AFTER VALIDATION
+      const uploadedUrl = await uploadImage(imageFile);
+
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      }
+    }
+
+    const newEvent = {
+      title: document.getElementById("title").value.trim(),
+      description: document.getElementById("description").value.trim(),
+      date: document.getElementById("date").value,
+      location: document.getElementById("location").value.trim(),
+      imageUrl: imageUrl
+    };
+
+    // 4. REQUIRED FIELDS CHECK
+    if (
+      !newEvent.title ||
+      !newEvent.description ||
+      !newEvent.date ||
+      !newEvent.location
+    ) {
+      alert("All fields required");
+      return;
+    }
+
+    console.log("NEW EVENT:", newEvent);
+
+    await savePost(newEvent);
+    await loadPosts();
+
+    eventForm.reset();
+
+    document.getElementById("file-name").textContent =
+      "No file selected";
+  });
+}
 
   // =======================
   // FILE NAME
@@ -621,30 +586,40 @@ supabase.auth.onAuthStateChange(
         // DELETE
         // =======================
 
-        if (
-          e.target.classList.contains(
-            "delete-btn"
-          )
-        ) {
+         if (
+            e.target.classList.contains(
+             "delete-btn"
+            )
+         ) {
 
-          const { error } =
-            await supabase
-              .from('posts')
-              .delete()
-              .eq('id', postId);
+           const {
+            data: { user }
+            } = await supabase.auth.getUser();
 
-          if (error) {
-
-            console.error(
-              "❌ Delete error:",
-              error.message
-            );
-
-          } else {
-
-            await loadPosts();
+          if (!user) {
+            alert("Login required");
+            return;
           }
+
+         const { error } =
+                await supabase
+                .from('posts')
+                .delete()
+                .eq('id', postId)
+                .eq('user_id', user.id);
+
+       if (error) {
+
+       console.error(
+        "❌ Delete error:",
+         error.message
+         );
+
+         } else {
+
+         await loadPosts();
         }
+       }
       }
     );
   }
@@ -687,5 +662,4 @@ supabase.auth.onAuthStateChange(
   // =======================
 
   loadPosts();
-
 });

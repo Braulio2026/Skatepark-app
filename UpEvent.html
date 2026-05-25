@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upc-events</title>
 
   <link rel="stylesheet" href="UpEvent.css">
-  <link rel="stylesheet" type="text/css" href="navbar.css">
+  <link rel="stylesheet" href="navbar.css">
 
-  <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+  <!-- Leaflet lazy CSS -->
+  <link
+    rel="preload"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  >
+  <noscript>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  </noscript>
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#000000">
@@ -50,57 +63,32 @@
 </div>
 
  </main> 
- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
- <script src="./navbar.js"></script>
- <script src="./app.js"></script>
- <script src="./events.js"></script>
- <script>
 
+<!-- Leaflet FIRST -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- App AFTER Leaflet -->
+<script type="module" src="./mapInit.js"></script>
+
+<!-- Other scripts -->
+<script type="module" src="./navbar.js"></script>
+<script defer src="./events.js"></script>
+
+<script>
 if ("serviceWorker" in navigator) {
-
   window.addEventListener("load", async () => {
-
     try {
-      const reg = await navigator.serviceWorker.register("./service-worker.js");
+      const reg =
+        await navigator.serviceWorker.register("./service-worker.js");
 
-      console.log("Service Worker registered:", reg.scope);
-
+      console.log("SW registered:", reg.scope);
       reg.update();
-
-      reg.onupdatefound = () => {
-
-        const newWorker = reg.installing;
-
-        newWorker.onstatechange = () => {
-
-          if (newWorker.state === "installed") {
-
-            if (navigator.serviceWorker.controller) {
-
-              console.log("🔄 New version available");
-
-              alert("New version available. Refresh!");
-
-            } else {
-
-              console.log("✅ App ready for offline use");
-
-            }
-
-          }
-
-        };
-
-      };
-
     } catch (err) {
-      console.log("Service Worker error:", err);
+      console.log("SW error:", err);
     }
-
   });
-
 }
-
 </script>
+
   </body> 
 </html>
