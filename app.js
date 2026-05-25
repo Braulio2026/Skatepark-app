@@ -1,5 +1,5 @@
 import { supabase } from './js/supabase.js';
-
+   
 document.addEventListener("DOMContentLoaded", () => {
 
   console.log("✅ APP LOADED");
@@ -20,249 +20,200 @@ document.addEventListener("DOMContentLoaded", () => {
   const userPosts = document.getElementById("userPosts");
   const imageInput = document.getElementById("image");
 
-  // =======================
-  // MAP
-  // =======================
+  
+// =======================
+// TEST CONNECTION
+// =======================
+async function testConnection() {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*");
 
-  const mapElement = document.getElementById("map");
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+}
 
-  let map = null;
-  let tileLayer = null;
-
-  if (mapElement && typeof L !== "undefined") {
-
-    map = L.map('map').setView([9.93, -84.08], 13);
-
-    map.setMaxBounds([
-      [9.85, -84.25],
-      [10.05, -83.90]
-    ]);
-
-    function loadTiles() {
-
-      if (tileLayer) return;
-
-      tileLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution: '© OpenStreetMap'
-        }
-      ).addTo(map);
-    }
-
-    function removeTiles() {
-
-      if (!tileLayer) return;
-
-      map.removeLayer(tileLayer);
-      tileLayer = null;
-    }
-
-    if (navigator.onLine) {
-      loadTiles();
-    }
-
-    window.addEventListener("online", loadTiles);
-    window.addEventListener("offline", removeTiles);
-  }
-
-  // =======================
-  // TEST CONNECTION
-  // =======================
-
-  async function testConnection() {
-
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*');
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-  }
-
-  testConnection();
+testConnection();
 
 // =======================
 // AUTH SYSTEM
 // =======================
 
-if (signupBtn) {
+const getInput = (id) =>
+  document.getElementById(id).value.trim();
 
-  signupBtn.addEventListener("click", async () => {
-
-    const email =
-      document.getElementById("email").value.trim();
-
-    const password =
-      document.getElementById("password").value.trim();
-
-    if (!email || !password) {
-      alert("Complete all fields");
-      return;
-    }
-
-    if (password.length < 6) {
-      alert("Password needs 6+ characters");
-      return;
-    }
-
-    const { data, error } =
-      await supabase.auth.signUp({
-        email,
-        password
-      });
-
-    console.log(data);
-    console.log(error);
-
-    if (error) {
-
-      if (error.message.includes("rate limit")) {
-        alert("Too many requests. Wait a minute.");
-        return;
-      }
-
-      if (error.message.includes("already registered")) {
-        alert("User already registered. Try login.");
-        return;
-      }
-
-      alert(error.message);
-
-    } else {
-
-      alert(
-        "✅ Account created! Check your email to confirm."
-      );
-    }
-  });
+function validateAuth(email, password) {
+  if (!email || !password) {
+    alert("Complete all fields");
+    return false;
+  }
+  return true;
 }
 
-if (loginBtn) {
+async function handleAuth(type) {
+  const email = getInput("email");
+  const password = getInput("password");
 
-  loginBtn.addEventListener("click", async () => {
+  if (!validateAuth(email, password)) return;
 
-    const email =
-      document.getElementById("email").value.trim();
+  // Extra signup validation
+  if (type === "signup" && password.length < 6) {
+    alert("Password needs 6+ characters");
+    return;
+  }
 
-    const password =
-      document.getElementById("password").value.trim();
+  const action =
+    type === "signup"
+      ? supabase.auth.signUp({ email, password })
+      : supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-    if (!email || !password) {
-      alert("Complete all fields");
+  const { data, error } = await action;
+
+  console.log(data);
+  console.log(error);
+
+  if (error) {
+    const msg = error.message;
+
+    if (msg.includes("rate limit")) {
+      alert("Too many requests. Wait a minute.");
       return;
     }
 
-    const { data, error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    console.log(data);
-    console.log(error);
-
-    if (error) {
-
-      if (
-        error.message.includes("Email not confirmed")
-      ) {
-
-        alert("📧 Confirm your email first");
-        return;
-      }
-
-      alert(error.message);
-
-    } else {
-
-      alert("✅ Logged in!");
+    if (msg.includes("already registered")) {
+      alert("User already registered. Try login.");
+      return;
     }
-  });
+
+    if (msg.includes("Email not confirmed")) {
+      alert("📧 Confirm your email first");
+      return;
+    }
+
+    alert(msg);
+    return;
+  }
+
+  alert(
+    type === "signup"
+      ? "✅ Account created! Check your email to confirm."
+      : "✅ Logged in!"
+  );
 }
+
+// Buttons
+signupBtn?.addEventListener("click", () =>
+  handleAuth("signup")
+);
+
+loginBtn?.addEventListener("click", () =>
+  handleAuth("login")
+);
 
 // =======================
 // CHECK SESSION
 // =======================
 
-async function checkUser(session = null) {
+const $ = (id) => document.getElementById(id);
 
-  // GET SESSION ONLY IF NOT PROVIDED
-  if (!session) {
+const userInfo = $("userInfo");
+const authScreen = $("authScreen");
+const mainApp = $("mainApp");
 
-    const { data } =
-      await supabase.auth.getSession();
+function updateUI(session) {
+  if (!userInfo || !authScreen || !mainApp) return;
 
-    session = data.session;
-  }
+  const user = session?.user;
 
-  console.log("CURRENT SESSION:", session);
-
-  const userInfo =
-    document.getElementById("userInfo");
-
-  const authScreen =
-    document.getElementById("authScreen");
-
-  const mainApp =
-    document.getElementById("mainApp");
-
-  if (!userInfo || !authScreen || !mainApp)
-    return;
-
-  // USER LOGGED
-  if (session?.user) {
-
-    userInfo.textContent =
-      `Logged as: ${session.user.email}`;
-
+  if (user) {
+    userInfo.textContent = `Logged as: ${user.email}`;
     authScreen.style.display = "none";
-
     mainApp.style.display = "block";
-
   } else {
-
-    userInfo.textContent =
-      "No user logged";
-
+    userInfo.textContent = "No user logged";
     authScreen.style.display = "flex";
-
     mainApp.style.display = "none";
   }
 }
 
+async function checkUser(session = null) {
+  try {
+    // Get session only if not passed
+    if (!session) {
+      const { data, error } =
+        await supabase.auth.getSession();
+
+      if (error) {
+        console.error(error);
+        return updateUI(null);
+      }
+
+      session = data.session;
+    }
+
+    console.log("CURRENT SESSION:", session);
+    updateUI(session);
+
+  } catch (err) {
+    console.error("Session error:", err);
+    updateUI(null);
+  }
+}
+
+// =======================
 // INITIAL SESSION
-supabase.auth.getSession()
-  .then(({ data }) => {
+// =======================
+checkUser();
 
-    checkUser(data.session);
-  });
-
+// =======================
 // AUTH CHANGES
-supabase.auth.onAuthStateChange(
+// =======================
+const {
+  data: { subscription }
+} = supabase.auth.onAuthStateChange(
   (event, session) => {
-
     console.log("AUTH EVENT:", event);
-
-    checkUser(session);
+    updateUI(session);
   }
 );
+
+// Optional cleanup
+  window.addEventListener("beforeunload", () => {
+  subscription?.unsubscribe();
+});
+
+// =======================
+// HELPERS
+// =======================
+
+function escapeHTML(str = "") {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function safeUrl(url = "") {
+  try {
+    const parsed = new URL(url);
+    return ["http:", "https:"].includes(parsed.protocol)
+      ? parsed.href
+      : "#";
+  } catch {
+    return "#";
+  }
+}
 
 // =======================
 // CREATE POST CARD
 // =======================
 
   function createPostCard(event) {
-
-     function escapeHTML(str = "") {
-      return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-   }
 
     return `
       <div class="post-card" id="post-${event.id}">
@@ -279,7 +230,7 @@ supabase.auth.onAuthStateChange(
             📅 ${event.date}
           </p>
 
-          <a href="${event.location || '#'}" target="_blank">
+          <a href="${safeUrl(event.location)}" target="_blank" rel="noopener noreferrer">
             📍 View location
           </a>
 
@@ -439,66 +390,71 @@ async function savePost(post) {
   // FORM SUBMIT
   // =======================
 
-  if (eventForm) {
+ if (eventForm) {
+    eventForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    eventForm.addEventListener(
-      "submit",
-      async (e) => {
+    const imageFile = imageInput.files[0];
+    let imageUrl = "image-skates/spot_1.jpeg";
 
-        e.preventDefault();
+    if (imageFile) {
 
-        const imageFile =
-          imageInput.files[0];
-
-        let imageUrl =
-          "image-skates/spot_1.jpeg";
-
-        if (imageFile) {
-
-          const uploadedUrl =
-            await uploadImage(imageFile);
-
-          if (uploadedUrl) {
-
-            imageUrl = uploadedUrl;
-          }
-        }
-
-        const newEvent = {
-
-          title:
-            document.getElementById("title").value,
-
-          description:
-            document.getElementById("description").value,
-
-          date:
-            document.getElementById("date").value,
-
-          location:
-            document.getElementById("location").value,
-
-          imageUrl: imageUrl
-        };
-
-        console.log(
-          "NEW EVENT:",
-          newEvent
-        );
-
-        await savePost(newEvent);
-
-        await loadPosts();
-
-        eventForm.reset();
-
-        document.getElementById(
-          "file-name"
-        ).textContent =
-          "No file selected";
+      // 1. SIZE VALIDATION
+      if (imageFile.size > 3 * 1024 * 1024) {
+        alert("Max 3MB");
+        return;
       }
-    );
-  }
+
+      // 2. TYPE VALIDATION
+      const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+      if (!allowed.includes(imageFile.type)) {
+        alert("Only JPG, PNG, WEBP");
+        return;
+      }
+
+      // 3. UPLOAD ONLY AFTER VALIDATION
+      const uploadedUrl = await uploadImage(imageFile);
+
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      }
+    }
+
+    const newEvent = {
+      title: document.getElementById("title").value.trim(),
+      description: document.getElementById("description").value.trim(),
+      date: document.getElementById("date").value,
+      location: document.getElementById("location").value.trim(),
+      imageUrl: imageUrl
+    };
+
+    // 4. REQUIRED FIELDS CHECK
+    if (
+      !newEvent.title ||
+      !newEvent.description ||
+      !newEvent.date ||
+      !newEvent.location
+    ) {
+      alert("All fields required");
+      return;
+    }
+
+    console.log("NEW EVENT:", newEvent);
+
+    await savePost(newEvent);
+    await loadPosts();
+
+    eventForm.reset();
+
+    document.getElementById("file-name").textContent =
+      "No file selected";
+  });
+}
 
   // =======================
   // FILE NAME
@@ -706,5 +662,4 @@ async function savePost(post) {
   // =======================
 
   loadPosts();
-
 });
