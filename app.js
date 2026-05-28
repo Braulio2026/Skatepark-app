@@ -271,47 +271,72 @@ function safeUrl(url = "") {
     });
   }
 
-  // =======================
-  // LOAD POSTS
-  // =======================
+   // =======================
+// LOAD POSTS
+// =======================
 
-   async function loadPosts() {
+async function loadPosts() {
 
-  // GET CURRENT USER
+  // CURRENT USER
   const {
     data: { user }
   } = await supabase.auth.getUser();
 
-  // LOAD POSTS
-  const { data, error } =
-    await supabase
-      .from('posts')
-      .select('*')
-      .order('created_at', {
-        ascending: false
-      });
+  // GET POSTS
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", {
+      ascending: false
+    });
 
   if (error) {
+
     console.error(
       "❌ Error loading posts:",
       error.message
     );
+
     return;
   }
 
-  // FORMAT POSTS
-  const formattedPosts = data.map(post => ({
-    ...post,
-    imageUrl: post.image_url,
-    canDelete: user?.id === post.user_id
-  }));
+  // GET LIKE COUNTS
+  const postsWithLikes =
+    await Promise.all(
 
-  renderPosts(formattedPosts);
+      data.map(async (post) => {
+
+        const {
+          count
+        } = await supabase
+          .from("post_likes")
+          .select("*", {
+            count: "exact",
+            head: true
+          })
+          .eq("post_id", post.id);
+
+        return {
+
+          ...post,
+
+          imageUrl: post.image_url,
+
+          likes: count || 0,
+
+          canDelete:
+            user?.id === post.user_id
+        };
+      })
+
+    ); // <- IMPORTANT MISSING )
+
+  renderPosts(postsWithLikes);
 }
 
-  // =======================
-  // SAVE POST
-  // =======================
+// =======================
+// SAVE POST
+// =======================
 
 async function savePost(post) {
 
@@ -320,12 +345,13 @@ async function savePost(post) {
   } = await supabase.auth.getUser();
 
   if (!user) {
+
     alert("Login required");
     return;
   }
 
   const { error } = await supabase
-    .from('posts')
+    .from("posts")
     .insert([
       {
         title: post.title,
@@ -333,7 +359,6 @@ async function savePost(post) {
         date: post.date,
         location: post.location,
         image_url: post.imageUrl,
-        likes: 0,
         user_id: user.id
       }
     ]);
@@ -485,45 +510,74 @@ async function savePost(post) {
     );
   }
 
-  // =======================
-  // LIKE + DELETE
-  // =======================
+// =======================
+// LIKE + DELETE
+// =======================
 
-  if (userPosts) {
+if (userPosts) {
 
-    userPosts.addEventListener(
-      "click",
-      async (e) => {
+  userPosts.addEventListener(
+    "click",
+    async (e) => {
 
-        const postId =
-          e.target.dataset.id;
+      // SAFER BUTTON DETECTION
+      const likeBtn =
+        e.target.closest(".like-btn");
 
-        if (!postId) return;
+      const deleteBtn =
+        e.target.closest(".delete-btn");
 
-        // =======================
-        // LIKE
-        // =======================
+      const postId =
+        likeBtn?.dataset.id ||
+        deleteBtn?.dataset.id;
 
-        if (
-          e.target.classList.contains(
-            "like-btn"
-          )
-        ) {
+      if (!postId) return;
 
-          let likedPosts =
-            JSON.parse(
-              localStorage.getItem(
-                "likedPosts"
-              )
-            ) || [];
+      // =======================
+      // LIKE
+      // =======================
 
-          console.log("LIKED POSTS:", likedPosts);
+      if (likeBtn) {
+
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+
+          alert("Login required");
+          return;
+        }
+
+        try {
+
+          console.log("AUTH USER:", user);
+          console.log("USER ID:", user.id);
           console.log("POST ID:", postId);
 
+          // CHECK IF USER ALREADY LIKED
+          const {
+            data: existingLike,
+            error: likeCheckError
+          } = await supabase
+            .from("post_likes")
+            .select("id")
+            .eq("user_id", user.id)
+            .eq("post_id", postId)
+            .maybeSingle();
 
-          if (
-            likedPosts.includes(String(postId))
-          ) {
+          if (likeCheckError) {
+
+            console.error(
+              "❌ Like check error:",
+              likeCheckError.message
+            );
+
+            return;
+          }
+
+          // PREVENT DOUBLE LIKE
+          if (existingLike) {
 
             alert(
               "You already liked this post ❤️"
@@ -532,122 +586,130 @@ async function savePost(post) {
             return;
           }
 
-          const { data, error } =
-            await supabase
-              .from('posts')
-              .select('likes')
-              .eq('id', postId)
-              .single();
+          // INSERT LIKE RECORD
+          const likePayload = {
+            user_id: user.id,
+            post_id: postId
+          };
 
-          if (error) {
-
-            console.error(error);
-            return;
-          }
-
-          const currentLikes =
-            data.likes || 0;
+          console.log(
+            "INSERTING LIKE:",
+            likePayload
+          );
 
           const {
-            error: updateError
+            error: insertError
           } = await supabase
-            .from('posts')
-            .update({
-              likes:
-                currentLikes + 1
-            })
-            .eq('id', postId);
+            .from("post_likes")
+            .insert(likePayload);
 
-          if (updateError) {
+          if (insertError) {
 
             console.error(
-              updateError
+              "❌ Insert like error:",
+              insertError.message
             );
 
             return;
           }
 
-       console.log("LIKES UPDATED:", currentLikes + 1);
+          // RELOAD POSTS
+         await loadPosts();
 
-      // UPDATE BUTTON UI INSTANTLY
-       e.target.innerHTML =
-        `❤️ ${currentLikes + 1}`;
+          console.log(
+            "❤️ Like added:",
+            postId
+          );
 
-      // SAVE LOCAL LIKE
-        likedPosts.push(String(postId));
+        } catch (err) {
 
-       localStorage.setItem(
-        "likedPosts",
-         JSON.stringify(likedPosts)
-       );
+          console.error(
+            "❌ Unexpected like error:",
+            err
+          );
+        }
       }
 
-        // =======================
-        // DELETE
-        // =======================
+      // =======================
+      // DELETE
+      // =======================
 
-         if (
-            e.target.classList.contains(
-             "delete-btn"
-            )
-         ) {
+      if (deleteBtn) {
 
-           const {
-            data: { user }
-            } = await supabase.auth.getUser();
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
 
-          if (!user) {
-            alert("Login required");
+        if (!user) {
+
+          alert("Login required");
+          return;
+        }
+
+        try {
+
+      // DELETE POST
+          const {
+            error
+          } = await supabase
+            .from("posts")
+            .delete()
+            .eq("id", postId)
+            .eq("user_id", user.id);
+
+          if (error) {
+
+            console.error(
+              "❌ Delete error:",
+              error.message
+            );
+
             return;
           }
 
-         const { error } =
-                await supabase
-                .from('posts')
-                .delete()
-                .eq('id', postId)
-                .eq('user_id', user.id);
+      // DELETE RELATED LIKES
+          console.log(
+            "🗑️ Post deleted:",
+            postId
+          );
 
-       if (error) {
+          await loadPosts();
 
-       console.error(
-        "❌ Delete error:",
-         error.message
-         );
+        } catch (err) {
 
-         } else {
-
-         await loadPosts();
+          console.error(
+            "❌ Unexpected delete error:",
+            err
+          );
         }
-       }
       }
-    );
-  }
+    }
+  );
+}
 
   // =======================
   // REALTIME POSTS
   // =======================
 
-  supabase
-    .channel('posts-channel')
+     supabase
+  .channel('likes-channel')
 
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'posts'
-      },
-      async (payload) => {
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'post_likes'
+    },
+    async () => {
 
-        console.log(
-          "🔄 Realtime change:",
-          payload
-        );
+      console.log(
+        "❤️ Realtime likes update"
+      );
 
-        await loadPosts();
-      }
-    )
+      await loadPosts();
+    }
+  )
 
     .subscribe((status) => {
 
