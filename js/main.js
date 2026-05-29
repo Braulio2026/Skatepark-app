@@ -235,8 +235,9 @@ window.addEventListener('load', showSlide);
   let startX = 0;
   let prevTranslate = 0;
   let autoSlideInterval;
+  const GAP = 16;
 
-  const TRANSITION = "transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)";
+  const TRANSITION = "transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1)";
 
   // =======================
   // DATA
@@ -331,11 +332,11 @@ window.addEventListener('load', showSlide);
   // =======================
 
   function setPosition() {
-    const slideWidth = slider.offsetWidth;
-    track.style.transform = `translate3d(-${slideWidth * index}px, 0, 0)`;
-  }
 
-  setPosition();
+    const slideWidth = slider.offsetWidth + GAP;
+          track.style.transform = `translate3d(-${slideWidth * index}px,0,0)`
+    ;}
+    setPosition();
 
   // =======================
   // AUTO SLIDE
@@ -360,30 +361,49 @@ window.addEventListener('load', showSlide);
     moveSlider();
   }
 
-  function moveSlider() {
+ function moveSlider() {
+
+  const slideWidth =
+  slider.clientWidth + GAP;
+
+  requestAnimationFrame(() => {
+
     track.style.transition = TRANSITION;
-    track.style.transform = `translate3d(-${slider.offsetWidth * index}px, 0, 0)`;
-  }
+
+    track.style.transform =
+      `translate3d(-${slideWidth * index}px,0,0)`;
+  });
+}
 
   // =======================
   // LOOP FIX
   // =======================
 
-  track.addEventListener('transitionend', () => {
+track.addEventListener('transitionend', () => {
 
-    if (cards[index] === firstClone) {
-      track.style.transition = "none";
-      index = 1;
-      setPosition();
-    }
+  const slideWidth =
+    slider.offsetWidth + GAP;
 
-    if (cards[index] === lastClone) {
-      track.style.transition = "none";
-      index = cards.length - 2;
-      setPosition();
-    }
+  if (cards[index] === firstClone) {
 
-  });
+    track.style.transition = "none";
+
+    index = 1;
+
+    track.style.transform =
+      `translate3d(-${slideWidth * index}px,0,0)`;
+  }
+
+  if (cards[index] === lastClone) {
+
+    track.style.transition = "none";
+
+    index = cards.length - 2;
+
+    track.style.transform =
+      `translate3d(-${slideWidth * index}px,0,0)`;
+  }
+});
 
   // =======================
   // DRAG
@@ -397,7 +417,8 @@ window.addEventListener('load', showSlide);
       ? e.pageX
       : e.touches[0].clientX;
 
-    prevTranslate = -slider.offsetWidth * index;
+    prevTranslate =
+     -(slider.offsetWidth + GAP) * index;
   }
 
   function touchMove(e) {
@@ -409,7 +430,7 @@ window.addEventListener('load', showSlide);
 
     const diff = currentX - startX;
 
-    track.style.transition = "none";
+    track.style.transition = "transform 0s";
     track.style.transform = `translate3d(${prevTranslate + diff}px, 0, 0)`;
   }
 
@@ -423,12 +444,17 @@ window.addEventListener('load', showSlide);
 
     const movedBy = endX - startX;
 
-    if (movedBy < -80) moveToNext();
-    else if (movedBy > 80) moveToPrev();
-    else moveSlider();
+    if (movedBy < -50) {
+       moveToNext();
 
-    startAutoSlide();
-  }
+     } else if (movedBy > 50) {
+        moveToPrev();
+
+     } else {
+        moveSlider();
+     }
+       startAutoSlide();
+   }
 
   // =======================
   // TRACKING
@@ -452,6 +478,14 @@ window.addEventListener('load', showSlide);
   slider.addEventListener('touchstart', touchStart);
   slider.addEventListener('touchmove', touchMove);
   slider.addEventListener('touchend', touchEnd);
+
+  slider.addEventListener(
+  'touchmove',
+  (e) => {
+    if (isDragging) e.preventDefault();
+  },
+  { passive: false }
+  );
 
   slider.addEventListener('mouseenter', stopAutoSlide);
   slider.addEventListener('mouseleave', startAutoSlide);
