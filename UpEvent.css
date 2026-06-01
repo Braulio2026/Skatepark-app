@@ -60,10 +60,10 @@ main {
   display: flex;
   gap: 8px;
 
-  background: rgb(232, 255, 25);
-  padding: 6px;
+  background: rgba(19, 47, 172, 0.658);
+  padding: 4px;
   border-radius: 999px;
-  border: 1px solid rgb(88, 88, 88);
+  border: 1px solid rgb(0, 0, 0);
 
   box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 
@@ -101,7 +101,7 @@ main {
 .slide-buttons button:hover {
   transform: translateY(-2px);
   opacity: 0.8;
-  color: rgb(124, 43, 255);
+  color: rgb(255, 255, 255);
 }
 
 .slide-buttons button:active {
@@ -170,7 +170,7 @@ main {
 }
 
 .toggle-btn{
-  background:#fd7404;
+  background: #02fdd385;
   border:none;
   color:white;
   padding:6px 12px;
@@ -247,7 +247,7 @@ main {
   border-radius: 30px;
   border: 1px solid rgb(0, 0, 0);
 
-  background: #e9ff20;
+  background: #02fdd360;
   color: #000;
   font-weight: bold;
   cursor: pointer;
