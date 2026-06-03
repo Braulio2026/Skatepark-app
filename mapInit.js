@@ -140,6 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
      lat: 9.9786,
      lng: -84.1840,
      description: "XRMJ+2QM, Calle 112, Heredia, Belén, 40703"
+   },
+    {
+    name: "San Ramón Skatepark",
+    lat: 10.100109,
+    lng: -84.473479,
+    description: "3GXG+9X4, Provincia de Alajuela, San Ramón"
    }
   ];
 
