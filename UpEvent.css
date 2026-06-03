@@ -221,6 +221,16 @@ main {
   scroll-behavior: smooth;
 }
 
+.event-info {
+  display: none;
+}
+
+.event-info.show {
+  display: block;
+  color: white;
+  margin-top: 12px;
+}
+
 #events-list::-webkit-scrollbar {
   width: 6px;
 }
