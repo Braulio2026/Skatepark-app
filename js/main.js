@@ -17,7 +17,7 @@ const skateparks = [
   },
   {
     title: "Salvador Skatepark",
-    image: "image-skates/savador_skatepark.webp",
+    image: "image-skates/salvador_skatepark.webp",
     description: "Beginner-friendly park near Sabana (Mantica). Known as a safe local skate spot with basic features.",
     map: "https://www.google.com/maps?q=Salvador+Skatepark+San+Jose"
   },
