@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Community Spots</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="navbar.css">
+</head>
+
+<body>
+
+  <main class="community-page">
+
+    <div id="navbar"></div>
+
+    <!-- HEADER -->
+
+    <section class="community-header">
+      <h1>Community Spots</h1>
+      <p>Discover spots shared by local skaters.</p>
+    </section>
+
+    <!-- FORM -->
+
+    <form id="spotForm" class="form-style" style="background-color: rgb(20, 20, 20);">
+
+      <textarea
+        id="spot-description"
+        placeholder="Describe this spot"
+        required
+      ></textarea>
+
+      <input
+        type="text"
+        id="spot-location"
+        placeholder="Google Maps link"
+        required
+      >
+
+      <input
+        type="file"
+        id="spot-image"
+        accept="image/*"
+      >
+
+      <button type="submit">
+        Share Spot
+      </button>
+
+    </form>
+
+    <!-- SUPABASE POSTS LOAD HERE -->
+
+    <section id="community-spots">
+      <!-- Cards inserted automatically by spots.js -->
+    </section>
+
+  </main>
+
+  <script type="module" src="./navbar.js"></script>
+  <script type="module" src="./app.js"></script>
+  <script type="module" src="./spots.js"></script>
+
+  <script
+    src="https://kit.fontawesome.com/b0440afd81.js"
+    crossorigin="anonymous">
+  </script>
+
+</body>
+</html>
