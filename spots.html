@@ -25,38 +25,72 @@
 
     <!-- FORM -->
 
-    <form id="spotForm" class="form-style" style="background-color: rgb(20, 20, 20);">
+     <form id="spotForm" class="event-form-container">
 
-      <textarea
-        id="spot-description"
-        placeholder="Describe this spot"
-        required
-      ></textarea>
+  <h3>Share a New Spot</h3>
 
-      <input
-        type="text"
-        id="spot-location"
-        placeholder="Google Maps link"
-        required
-      >
+  <label for="spot-location">
+    Spot Location
+  </label>
 
-      <input
-        type="file"
-        id="spot-image"
-        accept="image/*"
-      >
+  <input
+    type="text"
+    id="spot-location"
+    placeholder="Google Maps link"
+    required
+  >
 
-      <button type="submit">
-        Share Spot
-      </button>
+  <label for="spot-description">
+    Spot Description
+  </label>
 
-    </form>
+  <textarea
+    id="spot-description"
+    placeholder="Describe the spot..."
+    required
+  ></textarea>
+
+  <!-- Hidden file input -->
+  <input
+    type="file"
+    id="spot-image"
+    accept="image/*"
+    hidden
+  >
+
+  <!-- Custom Upload Button -->
+  <label
+    for="spot-image"
+    class="file-upload"
+  >
+    Upload Image
+  </label>
+
+  <span id="spot-file-name">
+    No file selected
+  </span>
+
+  <button type="submit">
+    Share Spot
+  </button>
+
+</form>
 
     <!-- SUPABASE POSTS LOAD HERE -->
 
     <section id="community-spots">
       <!-- Cards inserted automatically by spots.js -->
     </section>
+    
+    <footer class="footer">
+      <nav>
+        <ul>
+          <li><a href="skatepark.html">Skateparks List</a></li>
+          <li><a href="#">Home page</a></li>
+          <li><a href="#">Upcoming Event & more</a></li>
+        </ul>
+      </nav>
+    </footer>
 
   </main>
 

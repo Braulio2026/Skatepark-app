@@ -1,0 +1,188 @@
+/* RESET */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* PAGE */
+
+body {
+  background: #111;
+  color: white;
+  font-family: sans-serif;
+}
+
+.community-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 140px 15px 40px;
+}
+
+/* HEADER */
+.community-header {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.community-header h1 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.community-header p {
+  color: #bdbdbd;
+  font-size: .95rem;
+}
+
+/* =======================
+   COMMUNITY SPOTS FORM
+======================= */
+
+#spotForm{
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto 30px;
+}
+
+/* Custom file input */
+#spot-image{
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Community posts container */
+#community-spots{
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Spot card */
+.spot-card{
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+  overflow: hidden;
+
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+/* User name */
+.spot-header{
+  padding: 12px 15px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Location */
+.spot-meta{
+  padding: 0 15px 12px;
+  color: #02fdd3;
+  font-size: .9rem;
+}
+
+/* Spot image */
+.spot-image{
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content */
+.spot-content{
+  padding: 15px;
+}
+
+.spot-content p{
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+/* Map button */
+.map-btn{
+  display: inline-block;
+
+  padding: 10px 15px;
+
+  border-radius: 10px;
+
+  background: #000;
+  color: #fff;
+
+  text-decoration: none;
+  font-weight: bold;
+
+  border: 1px solid #686868;
+
+  transition: .2s;
+}
+
+.map-btn:hover{
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+
+/* FOOTER */
+.footer {
+  background: #000;
+  width: 100%;
+  height: 30vh;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+}
+
+.footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  display: block;
+  margin-top: 50px;
+  padding: 20px 50px;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.footer a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+
+@media (max-width: 768px){
+
+  .community-header h1{
+    font-size: 1.6rem;
+  }
+
+  .community-header p{
+    font-size: .9rem;
+  }
+
+  #community-spots{
+    grid-template-columns: 1fr;
+  }
+}
