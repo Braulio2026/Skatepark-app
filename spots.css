@@ -1,0 +1,231 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* PAGE */
+
+body {
+  color: white;
+  font-family: sans-serif;
+}
+
+.community-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.community-header {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 70px 0px;
+}
+
+.community-header h1 {
+  color: rgb(2, 2, 2);
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.community-header p {
+  color: #999999;
+  font-size: .95rem;
+}
+
+/* =======================
+   COMMUNITY SPOTS FORM
+======================= */
+
+.event-form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgb(26, 4, 0);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.event-form-container h3 {
+  color: #fff;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#spotForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#spotForm label {
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+#spotForm input,
+#spotForm textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: .95rem;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  transition: .2s ease;
+}
+
+#spotForm input::placeholder,
+#spotForm textarea::placeholder {
+  color: rgba(255,255,255,.6);
+}
+
+#spotForm input:focus,
+#spotForm textarea:focus {
+  background: rgba(255,255,255,.2);
+  transform: scale(1.02);
+}
+
+#spotForm textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+/* Upload button */
+
+.file-upload {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgb(104,104,104);
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.file-upload:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+
+/* file name */
+
+#spot-file-name {
+  color: #ccc;
+  font-size: .85rem;
+  text-align: center;
+}
+
+/* submit button */
+
+#spotForm button {
+  padding: 14px;
+  border: 1px solid #686868;
+  border-radius: 12px;
+  background: #000;
+  color: #fff;
+  font: 700 1rem sans-serif;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+#spotForm button:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+
+/* =======================
+   COMMUNITY SPOT POSTS
+======================= */
+
+#community-spots {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.spot-card {
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.spot-header {
+  padding: 15px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.spot-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.spot-content {
+  padding: 15px;
+}
+
+.spot-content p {
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.map-btn {
+  display: inline-block;
+  margin-top: 10px;
+  color: #ff7b00;
+  text-decoration: none;
+  font-weight: bold;
+}
+/* FOOTER */
+.footer {
+  background: #000;
+  width: 100%;
+  height: 30vh;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+}
+
+.footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  display: block;
+  margin-top: 50px;
+  padding: 20px 50px;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.footer a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
