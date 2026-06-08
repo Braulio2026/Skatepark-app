@@ -1,5 +1,3 @@
-/* RESET */
-
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +7,6 @@
 /* PAGE */
 
 body {
-  background: #111;
   color: white;
   font-family: sans-serif;
 }
@@ -17,12 +14,6 @@ body {
 .community-page {
   width: 100%;
   min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  padding: 140px 15px 40px;
 }
 
 /* HEADER */
@@ -30,17 +21,17 @@ body {
   display: block;
   width: 100%;
   text-align: center;
-  margin-bottom: 25px;
+  margin: 70px 0px;
 }
 
 .community-header h1 {
-  color: white;
+  color: rgb(2, 2, 2);
   font-size: 2rem;
   margin-bottom: 10px;
 }
 
 .community-header p {
-  color: #bdbdbd;
+  color: #999999;
   font-size: .95rem;
 }
 
@@ -48,98 +39,165 @@ body {
    COMMUNITY SPOTS FORM
 ======================= */
 
-#spotForm{
+.event-form-container {
   width: 100%;
   max-width: 500px;
-  margin: 20px auto 30px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgb(26, 4, 0);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* Custom file input */
-#spot-image{
-  background: rgba(255,255,255,0.1);
+.event-form-container h3 {
   color: #fff;
-  cursor: pointer;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-/* Community posts container */
-#community-spots{
+#spotForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#spotForm label {
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+#spotForm input,
+#spotForm textarea {
   width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: .95rem;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  transition: .2s ease;
+}
+
+#spotForm input::placeholder,
+#spotForm textarea::placeholder {
+  color: rgba(255,255,255,.6);
+}
+
+#spotForm input:focus,
+#spotForm textarea:focus {
+  background: rgba(255,255,255,.2);
+  transform: scale(1.02);
+}
+
+#spotForm textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+/* Upload button */
+
+.file-upload {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgb(104,104,104);
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.file-upload:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+
+/* file name */
+
+#spot-file-name {
+  color: #ccc;
+  font-size: .85rem;
+  text-align: center;
+}
+
+/* submit button */
+
+#spotForm button {
+  padding: 14px;
+  border: 1px solid #686868;
+  border-radius: 12px;
+  background: #000;
+  color: #fff;
+  font: 700 1rem sans-serif;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+#spotForm button:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+
+/* =======================
+   COMMUNITY SPOT POSTS
+======================= */
+
+#community-spots {
+  width: 90%;
   max-width: 900px;
+  margin: 40px auto;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Spot card */
-.spot-card{
-  background: rgba(255,255,255,.08);
+.spot-card {
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(10px);
-
   border-radius: 16px;
   overflow: hidden;
-
-  border: 1px solid rgba(255,255,255,.1);
 }
 
-/* User name */
-.spot-header{
-  padding: 12px 15px;
-  font-weight: bold;
+.spot-header {
+  padding: 15px;
   color: #fff;
+  font-weight: bold;
 }
 
-/* Location */
-.spot-meta{
-  padding: 0 15px 12px;
-  color: #02fdd3;
-  font-size: .9rem;
-}
-
-/* Spot image */
-.spot-image{
+.spot-image {
   width: 100%;
   height: 250px;
   object-fit: cover;
-  display: block;
 }
 
-/* Content */
-.spot-content{
+.spot-content {
   padding: 15px;
 }
 
-.spot-content p{
+.spot-content p {
   color: #fff;
   line-height: 1.5;
   margin-bottom: 15px;
 }
 
-/* Map button */
-.map-btn{
+.map-btn {
   display: inline-block;
-
-  padding: 10px 15px;
-
-  border-radius: 10px;
-
-  background: #000;
-  color: #fff;
-
+  margin-top: 10px;
+  color: #ff7b00;
   text-decoration: none;
   font-weight: bold;
-
-  border: 1px solid #686868;
-
-  transition: .2s;
 }
-
-.map-btn:hover{
-  background: #fff;
-  color: #000;
-  box-shadow: 0 0 15px rgba(255,255,255,.4);
-}
-
 /* FOOTER */
 .footer {
   background: #000;
@@ -170,19 +228,4 @@ body {
 .footer a:hover {
   background: rgba(255,255,255,0.1);
   border-radius: 8px;
-}
-
-@media (max-width: 768px){
-
-  .community-header h1{
-    font-size: 1.6rem;
-  }
-
-  .community-header p{
-    font-size: .9rem;
-  }
-
-  #community-spots{
-    grid-template-columns: 1fr;
-  }
 }
