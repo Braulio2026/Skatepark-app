@@ -100,8 +100,8 @@ body {
 
 /* Upload button */
 
-.file-upload {
-  display: block;
+.file-upload,
+#spotForm button {
   text-align: center;
   padding: 14px;
   border-radius: 12px;
@@ -109,15 +109,24 @@ body {
   background: #000;
   color: #fff;
   font-weight: bold;
-  cursor: pointer;
   transition: .2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.file-upload:hover {
+@media (hover: hover) {
+.file-upload:hover,
+#spotForm button:hover {
   background: #fff;
   color: #000;
   transform: translateY(-2px);
   box-shadow: 0 0 15px rgba(255,255,255,.4);
+}
+}
+.file-upload:active,
+#spotForm button:active {
+  background: #fff;
+  color: #000;
+  transform: scale(.98);
 }
 
 /* file name */
@@ -159,7 +168,7 @@ body {
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 80px;
 }
 
 .spot-card {
@@ -170,8 +179,8 @@ body {
 }
 
 .spot-header {
-  padding: 15px;
-  color: #fff;
+  padding: 15px 0;
+  color: #000000;
   font-weight: bold;
 }
 
@@ -186,9 +195,9 @@ body {
 }
 
 .spot-content p {
-  color: #fff;
+  color: #000;
   line-height: 1.5;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .map-btn {
