@@ -55,7 +55,7 @@
     type="file"
     id="spot-image"
     accept="image/*"
-    hidden
+    style="display:none;"
   >
 
   <!-- Custom Upload Button -->
@@ -81,21 +81,22 @@
     <section id="community-spots">
       <!-- Cards inserted automatically by spots.js -->
     </section>
-    
+  
     <footer class="footer">
+      <p>© 2026 Skate Routes Costa Rica</p>
+
       <nav>
-        <ul>
-          <li><a href="skatepark.html">Skateparks List</a></li>
-          <li><a href="#">Home page</a></li>
-          <li><a href="#">Upcoming Event & more</a></li>
-        </ul>
+        <a href="index.html">Home</a>
+        <a href="skatepark.html">Parks</a>
+        <a href="spots.html">Spots</a>
+        <a href="UpEvent.html">Events</a>
       </nav>
-    </footer>
+  </footer>
 
   </main>
-
-  <script type="module" src="./navbar.js"></script>
-  <script type="module" src="./app.js"></script>
+  
+  <script type="module" src="./js/navbar.js" defer></script>
+  <script type="module" src="./js./app.js"></script>
   <script type="module" src="./spots.js"></script>
 
   <script

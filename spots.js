@@ -123,10 +123,6 @@ async function loadCommunitySpots() {
       👤 Community Skater
     </div>
 
-    <div class="spot-meta">
-      📍 Shared Spot
-    </div>
-
     <img
       src="${spot.image_url}"
       alt="Community Spot"
@@ -223,6 +219,17 @@ if (spotForm) {
     }
   );
 }
+
+const imageInput = document.getElementById("spot-image");
+const fileName = document.getElementById("spot-file-name");
+
+imageInput.addEventListener("change", () => {
+  if (imageInput.files.length > 0) {
+    fileName.textContent = imageInput.files[0].name;
+  } else {
+    fileName.textContent = "No file selected";
+  }
+});
 
 // =======================
 // INIT

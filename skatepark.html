@@ -6,6 +6,9 @@
     <title>skate-list</title>
     <link rel="stylesheet" type="text/css" href="skatepark.css">
     <link rel="stylesheet" type="text/css" href="navbar.css">
+
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
 </head>
  <body>
   
@@ -26,19 +29,21 @@
   <div id="skateparks-container"></div>
 </section>
 
-    <footer class="footer">
-      <nav>
-          <ul>
-          <li><a href="skatepark.html">Skateparks List</a></li>
-          <li><a href="#">Home page</a></li>
-          <li><a href="#">Upcoming Event & more</a></li>
-      </ul>
-      </nav>
-    </footer>
+  <footer class="footer">
+   <p>© 2026 Skate Routes Costa Rica</p>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="skatepark.html">Parks</a>
+    <a href="spots.html">Spots</a>
+    <a href="UpEvent.html">Events</a>
+  </nav>
+</footer>
+
 </body>
 
-  <script type="module" src="./navbar.js"></script>
-  <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
+<script type="module" src="./js/navbar.js" defer></script>
+
   <script>
   
   const skateparks = [
@@ -243,9 +248,6 @@
   schedule: "Open daily (public outdoor skatepark).",
   images: [
     "image-skates/sn_ramon_skate.jpeg",
-    "",
-    "",
-    ""
   ]
 },
 ];
@@ -263,9 +265,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slider.innerHTML = `
   <div class="carousel-track">
-    ${park.images.map((img, i) => `
-      <img class="carousel-image ${i === 0 ? "active" : ""}" src="${img}" alt="${park.name} image ${i + 1}" >
-    `).join("")}
+     ${park.images.map((img, i) => `
+  <img
+    class="carousel-image ${i === 0 ? "active" : ""}"
+    src="${img}"
+    loading="lazy"
+    decoding="async"
+    alt="${park.name} image ${i + 1}"
+  >
+   `).join("")}
   </div>
 
   <div class="carousel-text">

@@ -1,3 +1,13 @@
+import { supabase } from "./js/supabase.js";
+
+import {
+  loadPosts
+} from "./js/posts.js";
+
+import {
+  loadEvents
+} from "./js/events-post.js";
+
 // ==== SLIDER IMAGE #1 ====
 let index = 0;
 
@@ -79,7 +89,7 @@ const skateparks = [
   {
    title: "San Ramón Skatepark",
    image: "image-skates/sn_ramon_skate.jpeg",
-   description: "San Ramón Skatepark is a public outdoor skatepark located in San Ramón, Alajuela. It offers a concrete layout designed for street skating and general progression, featuring ramps, banks, ledges, and open riding areas. The park is a popular gathering spot for local skaters and provides a welcoming environment for beginners and experienced riders alike.",
+   description: "San Ramón Skatepark is a public outdoor skatepark located in San Ramón, Alajuela. It offers a concrete layout designed for street skating and general progression, featuring ramps, banks, ledges, and open riding areas.",
    map: "https://www.google.com/maps?q=10.100109,-84.473479"
   },
  ];

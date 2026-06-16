@@ -42,34 +42,32 @@
   <main id="mainApp" style="display: none;">
 
     <div id="navbar"></div>
-     
-     <div class="hero-image">
 
-        <div class="hero-image">
+      <div class="hero-image">
 
-  <img
-    src="image-skates/main_image_big.webp"
+     <img
+      src="image-skates/main_image_medium.webp"
 
-    srcset="
-      image-skates/main_image_small.webp 800w,
-      image-skates/main_image_medium.webp 1200w,
-      image-skates/main_image_big.webp 1920w
-    "
+       srcset="
+              image-skates/main_image_small.webp 800w,
+              image-skates/main_image_medium.webp 1200w,
+              image-skates/main_image_big.webp 1920w
+             "
 
-    sizes="
-      (max-width: 768px) 100vw,
-      (max-width: 1200px) 100vw,
-      100vw
-    "
+       sizes="
+              (max-width: 768px) 100vw,
+              (max-width: 1200px) 100vw,
+              100vw
+             "
 
-    alt="Skate routes Costa Rica"
-    loading="eager"
-    fetchpriority="high"
-    decoding="async"
-    width="1600"
-    height="900">
+            alt="Skate routes Costa Rica"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="1600"
+            height="900">
 
-</div>
+   </div>
 
       <div class="banner-text">
         <h2>Skate Routes CR</h2>
@@ -98,7 +96,6 @@
   </div>
 </a>
 
- </div>
 </div>
 
 <div class="content-section">
@@ -106,7 +103,7 @@
   <div class="text-1">
     Not sure where to skate next or how to get there?
     No worries—we've got it all in one place.
-    Scroll down and discover your next ride! 🛹
+    Scroll down and discover spots, Skate events and more! 🛹
   </div>
 
   <label for="searchInput" class="visually-hidden">Filter by name</label>
@@ -147,8 +144,9 @@
 <section>
     <div class="text-2">
     <h3>
-       Got an event or skate spot to share? Add it below and let the community know all the details—don't forget to include an image!
-       You can also discover skate shops and the best spots around the city to film your skate videos.
+       Share events. Discover spots. Stay connected.
+       Publish upcoming skate events and sessions with photos and details for the community.
+       Explore local skate shops, find gear and repairs, and stay up to date with everything happening in the skate scene.
     </h3>
   </div>
 </section>
@@ -190,56 +188,23 @@
 
   <div id="userPosts"></div>
 </section>
-
-<section class="about">
-  <div class="container">
-    
-    <header class="about-header">
-      <h2>About This Project</h2>
-      <p>Who I am and what this application does</p>
-    </header>
-
-    <div class="about-content">
-      <div class="about-text">
-        <h3>Who I Am</h3>
-        <p>
-          Hi, I'm [Your Name], a developer passionate about building useful web applications.
-        </p>
-
-        <h3>What This App Does</h3>
-        <p>
-          This application helps users [describe main functionality clearly and simply].
-        </p>
-
-        <h3>Why I Built It</h3>
-        <p>
-          I created this project to [solve a problem, practice skills, or help users].
-        </p>
-      </div>
-
-      <div class="about-actions">
-        <button class="btn-primary">Send Feedback</button>
-      </div>
-    </div>
-
-  </div>
-</section>
           
-    <footer class="footer">
-      <nav>
-        <ul>
-          <li><a href="skatepark.html">Skateparks List</a></li>
-          <li><a href="#">Home page</a></li>
-          <li><a href="#">Upcoming Event & more</a></li>
-        </ul>
-      </nav>
-    </footer>
+  <footer class="footer">
+    <p>© 2026 Skate Routes Costa Rica</p>
 
-   </main>
-     <script type="module" src="./navbar.js" defer></script>
-     <script src="./js/main.js" defer></script>
-     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-     <script type="module" src="./app.js" defer></script>
-     <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous" defer></script>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="skatepark.html">Parks</a>
+      <a href="spots.html">Spots</a>
+      <a href="UpEvent.html">Events</a>
+    </nav>
+  </footer>
+
+  </main>
+    <script type="module" src="./main.js"></script>
+    <script type="module" src="./js/app.js"></script>
+    <script type="module" src="./js/navbar.js" defer></script>
+    <script type="module" src="./js/auth.js"></script>
+    <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
   </body>
 </html>
