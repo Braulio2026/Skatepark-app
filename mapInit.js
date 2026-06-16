@@ -200,54 +200,86 @@ document.addEventListener("DOMContentLoaded", () => {
     routeLayers = [];
   }
 
-  function drawMainRoute() {
-    if (!userLocation) {
-      alert("Waiting for your location...");
-      return;
-    }
+// =======================
+// ROUTING
+// =======================
 
-    if (!selectedDestination) {
-      alert("Select a skatepark first.");
-      return;
-    }
-
-    if (!navigator.onLine) {
-      alert("You must be online to calculate routes.");
-      return;
-    }
+async function drawMainRoute() {
+  if (!map || !userLocation || !selectedDestination) {
+    console.warn("Map, user location, or destination missing");
+    return;
 
     clearRoutes();
+  }
+ 
+  // =======================
+  // OFFLINE FALLBACK
+  // =======================
+  if (!navigator.onLine) {
+    const line = L.polyline(
+      [
+        userLocation,
+        [selectedDestination.lat, selectedDestination.lng]
+      ],
+      {
+        color: "blue",
+        weight: 5
+      }
+    ).addTo(map);
 
+    routeLayers.push(line);
+
+    L.popup()
+      .setLatLng([
+        selectedDestination.lat,
+        selectedDestination.lng
+      ])
+      .setContent(`
+        🛹 <b>${selectedDestination.name}</b><br>
+        📡 Offline mode<br>
+        📏 Direct path (no roads)
+      `)
+      .openOn(map);
+
+    return;
+  }
+
+  // =======================
+  // ONLINE ROUTING
+  // =======================
+  try {
     const url =
       `https://router.project-osrm.org/route/v1/driving/` +
       `${userLocation[1]},${userLocation[0]};` +
       `${selectedDestination.lng},${selectedDestination.lat}` +
-      `?overview=full&alternatives=false&geometries=geojson`;
+      `?overview=full&geometries=geojson`;
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.routes?.length) {
-          alert("Route not found.");
-          return;
-        }
+    const res = await fetch(url);
+    const data = await res.json();
 
-        const route = data.routes[0];
+    if (!data.routes?.length) {
+      console.warn("No route found");
+      return;
+    }
 
-        const layer = L.geoJSON(route.geometry, {
-          style: {
-            color: "blue",
-            weight: 5
-          }
-        }).addTo(map);
+    const route = data.routes[0].geometry.coordinates.map(
+      ([lng, lat]) => [lat, lng]
+    );
 
-        routeLayers.push(layer);
-        map.fitBounds(layer.getBounds());
-      })
-      .catch((err) => {
-        console.error("Routing error:", err);
-      });
+    const line = L.polyline(route, {
+      weight: 5
+    }).addTo(map);
+
+    routeLayers.push(line);
+
+    map.fitBounds(line.getBounds(), {
+      padding: [30, 30]
+    });
+
+  } catch (error) {
+    console.error("Routing error:", error);
   }
+}
 
   function drawAlternativeRoutes() {
     if (!userLocation) {
@@ -360,86 +392,3 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("online", loadTiles);
   window.addEventListener("offline", removeTiles);
 });
-
-// =======================
-// ROUTING
-// =======================
-
-async function drawMainRoute() {
-  if (!map || !userLocation || !selectedDestination) {
-    console.warn("Map, user location, or destination missing");
-    return;
-  }
-
-  // clear old routes
-  routeLayers.forEach(layer => map.removeLayer(layer));
-  routeLayers = [];
-
-  // =======================
-  // OFFLINE FALLBACK
-  // =======================
-  if (!navigator.onLine) {
-    const line = L.polyline(
-      [
-        userLocation,
-        [selectedDestination.lat, selectedDestination.lng]
-      ],
-      {
-        color: "blue",
-        weight: 5
-      }
-    ).addTo(map);
-
-    routeLayers.push(line);
-
-    L.popup()
-      .setLatLng([
-        selectedDestination.lat,
-        selectedDestination.lng
-      ])
-      .setContent(`
-        🛹 <b>${selectedDestination.name}</b><br>
-        📡 Offline mode<br>
-        📏 Direct path (no roads)
-      `)
-      .openOn(map);
-
-    return;
-  }
-
-  // =======================
-  // ONLINE ROUTING
-  // =======================
-  try {
-    const url =
-      `https://router.project-osrm.org/route/v1/driving/` +
-      `${userLocation[1]},${userLocation[0]};` +
-      `${selectedDestination.lng},${selectedDestination.lat}` +
-      `?overview=full&geometries=geojson`;
-
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.routes?.length) {
-      console.warn("No route found");
-      return;
-    }
-
-    const route = data.routes[0].geometry.coordinates.map(
-      ([lng, lat]) => [lat, lng]
-    );
-
-    const line = L.polyline(route, {
-      weight: 5
-    }).addTo(map);
-
-    routeLayers.push(line);
-
-    map.fitBounds(line.getBounds(), {
-      padding: [30, 30]
-    });
-
-  } catch (error) {
-    console.error("Routing error:", error);
-  }
-}

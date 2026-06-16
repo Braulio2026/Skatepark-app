@@ -1,5 +1,5 @@
 // ===== LOAD NAVBAR =====
-import { supabase } from './js/supabase.js';
+import { supabase } from './supabase.js';
 
 fetch("navbar.html")
   .then(response => response.text())

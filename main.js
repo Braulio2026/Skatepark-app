@@ -1,3 +1,13 @@
+import { supabase } from "./js/supabase.js";
+
+import {
+  loadPosts
+} from "./js/posts.js";
+
+import {
+  loadEvents
+} from "./js/events-post.js";
+
 // ==== SLIDER IMAGE #1 ====
 let index = 0;
 
