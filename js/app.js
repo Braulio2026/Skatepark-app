@@ -50,10 +50,6 @@ form?.addEventListener("submit", async (e) => {
 
         });
 
-        await loadPosts(userPosts);
-
-        await loadEvents();
-
         form.reset();
 
         document.getElementById("file-name").textContent =
@@ -165,44 +161,78 @@ if (userPosts) {
     // =====================
     // DELETE
     // =====================
+    
+  if (deleteBtn) {
 
-    if (deleteBtn) {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Login required");
+    return;
+  }
 
-      if (!user) {
-        alert("Login required");
-        return;
+  const { error } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", postId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+}
+
+});
+
+}
+
+// =======================
+// REALTIME POSTS
+// =======================
+
+const postsChannel = supabase
+  .channel("posts-channel")
+
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "posts"
+    },
+    async (payload) => {
+
+      console.log("📢 Posts updated:", payload.eventType);
+
+      const userPosts =
+        document.getElementById("userPosts");
+
+      if (userPosts) {
+        await loadPosts(userPosts);
       }
-
-      const { error } = await supabase
-        .from("posts")
-        .delete()
-        .eq("id", postId)
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      await loadPosts(userPosts);
 
       if (typeof loadEvents === "function") {
         await loadEvents();
       }
-    }
 
+    }
+  )
+
+  .subscribe(status => {
+    console.log("📡 Posts realtime:", status);
   });
 
-}
+  // =======================
+// REALTIME LIKES
+// =======================
 
-// REALTIME LIKES //
-
-supabase
+const likesChannel = supabase
   .channel("likes-channel")
+
   .on(
     "postgres_changes",
     {
@@ -221,4 +251,7 @@ supabase
 
     }
   )
-  .subscribe();
+
+  .subscribe(status => {
+    console.log("❤️ Likes realtime:", status);
+  });

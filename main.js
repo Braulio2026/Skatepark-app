@@ -40,7 +40,7 @@ const skateparks = [
   {
     title: "Tecma Skatepark",
     image: "image-skates/tecma_2.jpeg",
-    description: "The Tecma / Sabanilla skatepark is a small outdoor skate spot located in the Sabanilla area of San José. It features basic street-style obstacles such as rails, a box, an inclined plane, and quarter pipes, making it suitable mainly for beginner to intermediate skaters.",
+    description: "Compact skatepark with street features, banks, rails, and quarter pipes for all skill levels.",
     map: "https://maps.app.goo.gl/k71HagxcxBhH6LZ17"
   },
   {
@@ -59,7 +59,7 @@ const skateparks = [
     title: "Bowl Guachipelin Escazu",
     image: "image-skates/escazu_skate3.jpeg",
     description: "Recreational park in Escazú with skate areas, courts, and playgrounds. Great for families and skating.",
-    map: "" // no map provided yet
+    map: "https://www.google.com/maps?q=9.937505,-84.152561"
   },
   {
     title: "Zapote Skatepark",
@@ -76,20 +76,20 @@ const skateparks = [
   {
     title: "Plaza Barrio Pinto",
     image: "image-skates/pinto_2.jpeg",
-    description: "Plaza Barrio Pinto is a popular street skate spot located in San Pedro, San José. It features ledges, stairs, rails, and open flat areas, making it ideal for street skating and intermediate to advanced riders.",
+    description: "Popular street skate spot with ledges, stairs, rails, and open flat areas. Great for intermediate and advanced skaters.",
     map: "https://www.google.com/maps?q=WXH3+9R8,San+José,San+Pedro,Barrio+Pinto,11801"
   },
    {
     title: "Bell Air Skatepark",
     image: "image-skates/bel_air4.jpeg",
-    description: "Bel Air Skatepark is a local outdoor skatepark located in Belén, Heredia. It features a smooth concrete layout with basic street and transition obstacles including rails, banks, quarter pipes, and open flow areas, making it ideal for casual sessions and beginner to intermediate skaters.",
+    description: "Local outdoor skatepark with smooth concrete, street features, and transition obstacles. Great for beginners and intermediate skaters.",
     map: "https://www.google.com/maps?q=9.982640,-84.168113"
   },
 
   {
    title: "San Ramón Skatepark",
    image: "image-skates/sn_ramon_skate.jpeg",
-   description: "San Ramón Skatepark is a public outdoor skatepark located in San Ramón, Alajuela. It offers a concrete layout designed for street skating and general progression, featuring ramps, banks, ledges, and open riding areas.",
+   description: "Outdoor concrete skatepark with ramps, banks, ledges, and open riding areas. Great for street skating and progression.",
    map: "https://www.google.com/maps?q=10.100109,-84.473479"
   },
  ];
