@@ -14,7 +14,7 @@ function escapeHTML(str = "") {
 
 function safeUrl(url = "") {
   try {
-    const parsed = new URL(url);
+    const parsed = new URL(url, window.location.origin);
     return ["http:", "https:"].includes(parsed.protocol)
       ? parsed.href
       : "#";
@@ -183,7 +183,6 @@ export async function uploadImage(file) {
 
     return null;
   }
-
   const { data } = supabase.storage
     .from("events-images")
     .getPublicUrl(fileName);

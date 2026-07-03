@@ -1,3 +1,11 @@
+import { supabase } from "./supabase.js";
+import { loadPosts } from "./posts.js";
+
+import { supabase } from "./supabase.js";
+
+console.log("POSTS JS LOADED");
+console.log("SUPABASE:", supabase);
+
 const userPosts = document.getElementById("userPosts");
 
 if (userPosts) {
@@ -7,11 +15,13 @@ if (userPosts) {
     const likeBtn = e.target.closest(".like-btn");
     const deleteBtn = e.target.closest(".delete-btn");
 
+    if (!likeBtn && !deleteBtn) return;
+
     const postId =
       likeBtn?.dataset.id ||
       deleteBtn?.dataset.id;
 
-    if (!postId) return;
+    console.log("POST ID:", postId);
 
     // =======================
     // LIKE
@@ -19,19 +29,30 @@ if (userPosts) {
 
     if (likeBtn) {
 
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        alert("Login required");
-        return;
-      }
+      console.log("❤️ LIKE CLICKED");
 
       try {
 
         const {
-          data: existingLike
+          data: { user },
+          error: userError
+        } = await supabase.auth.getUser();
+
+        console.log("USER:", user);
+
+        if (userError) {
+          console.error(userError);
+          return;
+        }
+
+        if (!user) {
+          alert("Login required");
+          return;
+        }
+
+        const {
+          data: existingLike,
+          error: likeCheckError
         } = await supabase
           .from("post_likes")
           .select("id")
@@ -39,29 +60,52 @@ if (userPosts) {
           .eq("post_id", postId)
           .maybeSingle();
 
+        console.log("EXISTING LIKE:", existingLike);
+
+        if (likeCheckError) {
+          console.error("LIKE CHECK ERROR:", likeCheckError);
+          return;
+        }
+
         if (existingLike) {
           alert("You already liked this post ❤️");
           return;
         }
 
-        await supabase
-          .from("post_likes")
-          .insert({
-            user_id: user.id,
-            post_id: postId
-          });
+        const { error: insertError } =
+          await supabase
+            .from("post_likes")
+            .insert({
+              user_id: user.id,
+              post_id: postId
+            });
+
+        if (insertError) {
+          console.error(
+            "INSERT ERROR:",
+            insertError
+          );
+          return;
+        }
+
+        console.log("✅ LIKE SAVED");
 
         await loadPosts(userPosts);
 
       } catch (err) {
 
         console.error(
-          "❌ Like error:",
+          "❌ LIKE ERROR:",
           err
         );
 
       }
+
     }
+
+  });
+
+}
 
     // =======================
     // DELETE
@@ -103,10 +147,6 @@ if (userPosts) {
 
       }
     }
-
-  });
-
-}
 
 supabase
   .channel("likes-channel")

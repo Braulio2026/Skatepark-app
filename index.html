@@ -173,9 +173,20 @@
     
     <textarea id="description" placeholder="Describe your event..." required></textarea>
 
-    <label for="image" class="file-upload">Upload Image</label>
-      <input type="file" id="image" accept="image/webp,image/jpeg,image/png" style="display: none;">
-     <span id="file-name">No file selected</span>
+    <label for="image" class="file-upload">
+      Upload Image
+    </label>
+
+    <input
+        type="file"
+        id="image"
+        accept="image/webp,image/jpeg,image/png"
+        style="display:none;"
+    >
+
+    <span id="file-name">
+       No file selected
+    </span>
 
     <button type="submit">Publish Event</button>
   </form>
@@ -200,11 +211,25 @@
     </nav>
   </footer>
 
+  <div id="loadingOverlay" class="loading-overlay hidden">
+
+    <div class="loader"></div>
+
+    <p>Uploading event...</p>
+
+  </div>
+
   </main>
+    
     <script type="module" src="./main.js"></script>
     <script type="module" src="./js/app.js"></script>
-    <script type="module" src="./js/navbar.js" defer></script>
+    <script type="module" src="./js/navbar.js"></script>
     <script type="module" src="./js/auth.js"></script>
-    <script src="https://kit.fontawesome.com/b0440afd81.js" crossorigin="anonymous"></script>
+
+    <script
+     src="https://kit.fontawesome.com/b0440afd81.js"
+     crossorigin="anonymous">
+    </script>
+
   </body>
 </html>
