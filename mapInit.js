@@ -17,6 +17,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let userLocation = null;
   let selectedDestination = null;
   let routeLayers = [];
+  let currentRoute = null;
+  let selectedMarker = null;
+
+   const defaultIcon = L.icon({
+     iconUrl: "image-skates/marker-blue.png",
+     iconSize: [32, 32],
+     iconAnchor: [16, 32]
+});
+
+   const activeIcon = L.icon({
+     iconUrl: "image-skates/marker-red.png",
+     iconSize: [38, 38],
+     iconAnchor: [19, 38]
+});
 
   // =======================
   // INIT MAP
@@ -160,6 +174,15 @@ document.addEventListener("DOMContentLoaded", () => {
         .bindPopup(`<b>${park.name}</b><br>${park.description}`);
 
       marker.on("click", () => {
+
+    if (selectedMarker) {
+        selectedMarker.setIcon(defaultIcon);
+    }
+
+    marker.setIcon(activeIcon);
+
+    selectedMarker = marker;
+
         selectedDestination = park;
         drawMainRoute();
       });
@@ -191,113 +214,256 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // =======================
-  // ROUTES
-  // =======================
+// =======================
+// ROUTES
+// =======================
 
-  function clearRoutes() {
-    routeLayers.forEach((layer) => map.removeLayer(layer));
-    routeLayers = [];
+   function clearRoutes() {
+
+  routeLayers.forEach(layer => {
+    map.removeLayer(layer);
+  });
+
+  routeLayers = [];
+  currentRoute = null;
+
+  const card =
+    document.getElementById("routeInfo");
+
+  if (card) {
+    card.classList.add("hidden");
   }
 
-// =======================
-// ROUTING
-// =======================
+}
 
 async function drawMainRoute() {
-  if (!map || !userLocation || !selectedDestination) {
-    console.warn("Map, user location, or destination missing");
-    return;
 
-    clearRoutes();
-  }
- 
-  // =======================
-  // OFFLINE FALLBACK
-  // =======================
+  if (!userLocation || !selectedDestination) return;
+
+  clearRoutes();
+
+  // -----------------------
+  // OFFLINE
+  // -----------------------
+
   if (!navigator.onLine) {
-    const line = L.polyline(
-      [
+
+    const coordinates = [
+      userLocation,
+      [selectedDestination.lat, selectedDestination.lng]
+    ];
+
+    const distanceKm = (
+      map.distance(
         userLocation,
         [selectedDestination.lat, selectedDestination.lng]
-      ],
+      ) / 1000
+    ).toFixed(1);
+
+    currentRoute = L.polyline(coordinates,{
+      color:"#2979ff",
+      weight:6
+    }).addTo(map);
+
+    currentRoute.bindTooltip(
+      `📏 ${distanceKm} km`,
       {
-        color: "blue",
-        weight: 5
+        permanent:true,
+        direction:"center",
+        className:"route-label"
       }
-    ).addTo(map);
+    );
 
-    routeLayers.push(line);
+    routeLayers.push(currentRoute);
 
-    L.popup()
-      .setLatLng([
-        selectedDestination.lat,
-        selectedDestination.lng
-      ])
-      .setContent(`
-        🛹 <b>${selectedDestination.name}</b><br>
-        📡 Offline mode<br>
-        📏 Direct path (no roads)
-      `)
-      .openOn(map);
+    showRouteInfo(
+      selectedDestination.name,
+      distanceKm,
+      "--",
+      "--",
+      "--"
+    );
+
+    map.flyTo(
+      [selectedDestination.lat, selectedDestination.lng],
+      13,
+      { duration:1.5 }
+    );
 
     return;
+
   }
 
-  // =======================
-  // ONLINE ROUTING
-  // =======================
+  // -----------------------
+  // ONLINE
+  // -----------------------
+
   try {
+
     const url =
       `https://router.project-osrm.org/route/v1/driving/` +
       `${userLocation[1]},${userLocation[0]};` +
       `${selectedDestination.lng},${selectedDestination.lat}` +
       `?overview=full&geometries=geojson`;
 
-    const res = await fetch(url);
-    const data = await res.json();
+    const response = await fetch(url);
 
-    if (!data.routes?.length) {
-      console.warn("No route found");
-      return;
-    }
+    const data = await response.json();
 
-    const route = data.routes[0].geometry.coordinates.map(
-      ([lng, lat]) => [lat, lng]
-    );
+    if (!data.routes?.length) return;
 
-    const line = L.polyline(route, {
-      weight: 5
+    const route = data.routes[0];
+
+    const coordinates =
+      route.geometry.coordinates.map(
+        ([lng,lat]) => [lat,lng]
+      );
+
+    const distanceKm =
+      (route.distance / 1000).toFixed(1);
+
+    const drive =
+      Math.round(route.duration / 60);
+
+    const bike =
+      Math.round((distanceKm / 18) * 60);
+
+    const walk =
+      Math.round((distanceKm / 5) * 60);
+
+    currentRoute = L.polyline(coordinates,{
+      color:"#2979ff",
+      weight:6
     }).addTo(map);
 
-    routeLayers.push(line);
+    currentRoute.bindTooltip(
+      `📏 ${distanceKm} km`,
+      {
+        permanent:true,
+        direction:"center",
+        className:"route-label"
+      }
+    );
 
-    map.fitBounds(line.getBounds(), {
-      padding: [30, 30]
-    });
+    routeLayers.push(currentRoute);
 
-  } catch (error) {
-    console.error("Routing error:", error);
+    showRouteInfo(
+      selectedDestination.name,
+      distanceKm,
+      drive,
+      bike,
+      walk
+    );
+
+    if (Number(distanceKm) < 20) {
+
+      map.fitBounds(
+        currentRoute.getBounds(),
+        {
+          padding:[40,40]
+        }
+      );
+
+    } else {
+
+      map.flyTo(
+        [selectedDestination.lat, selectedDestination.lng],
+        12,
+        {
+          duration:1.5
+        }
+      );
+
+    }
+
   }
+
+  catch(err){
+
+    console.error(err);
+
+  }
+
 }
 
-  function drawAlternativeRoutes() {
-    if (!userLocation) {
-      alert("Waiting for your location...");
-      return;
-    }
+function showRouteInfo(name, distance, drive, bike, walk) {
 
-    if (!selectedDestination) {
-      alert("Please select a skatepark first.");
-      return;
-    }
+    L.popup({
+        maxWidth: 260,
+        closeButton: true
+    })
+    .setLatLng([
+        selectedDestination.lat,
+        selectedDestination.lng
+    ])
+    .setContent(`
+        <div class="route-popup">
 
-    if (!navigator.onLine) {
-      alert("You must be online.");
-      return;
-    }
+            <h3>🛹 ${name}</h3>
 
-    clearRoutes();
+            <div class="route-stats">
+                <span>📏 ${distance} km</span>
+                <span>🚗 ${drive} min</span>
+                <span>🚲 ${bike} min</span>
+                <span>🚶 ${walk} min</span>
+            </div>
+
+            <div class="route-buttons">
+                <button id="centerRoute">📍 Center</button>
+                <button id="googleRoute">🧭 Google</button>
+            </div>
+
+        </div>
+    `)
+    .openOn(map);
+
+    setTimeout(() => {
+
+        document.getElementById("centerRoute")
+        ?.addEventListener("click", () => {
+
+            if (currentRoute) {
+                map.fitBounds(currentRoute.getBounds(), {
+                    padding:[40,40]
+                });
+            }
+
+        });
+
+        document.getElementById("googleRoute")
+        ?.addEventListener("click", () => {
+
+            window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${selectedDestination.lat},${selectedDestination.lng}`,
+                "_blank"
+            );
+
+        });
+
+    },0);
+
+}
+
+async function drawAlternativeRoutes() {
+
+  if (!userLocation) {
+    alert("Waiting for your location...");
+    return;
+  }
+
+  if (!selectedDestination) {
+    alert("Please select a skatepark first.");
+    return;
+  }
+
+  if (!navigator.onLine) {
+    alert("You must be online.");
+    return;
+  }
+
+  clearRoutes();
+
+  try {
 
     const url =
       `https://router.project-osrm.org/route/v1/driving/` +
@@ -305,29 +471,74 @@ async function drawMainRoute() {
       `${selectedDestination.lng},${selectedDestination.lat}` +
       `?overview=full&alternatives=true&geometries=geojson`;
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.routes?.length) {
-          alert("No routes found.");
-          return;
-        }
+    const response = await fetch(url);
 
-        data.routes.forEach((route, index) => {
-          const layer = L.geoJSON(route.geometry, {
-            style: {
-              color: index === 0 ? "blue" : "green",
-              weight: 5
-            }
-          }).addTo(map);
+    const data = await response.json();
 
-          routeLayers.push(layer);
-        });
-      })
-      .catch((err) => {
-        console.error("Routing error:", err);
-      });
+    if (!data.routes?.length) {
+      alert("No routes found.");
+      return;
+    }
+
+    data.routes.forEach((route,index)=>{
+
+      const coordinates =
+        route.geometry.coordinates.map(
+          ([lng,lat]) => [lat,lng]
+        );
+
+      const polyline = L.polyline(coordinates,{
+        color:index===0 ? "#2979ff" : "#08550b",
+        weight:5,
+        opacity:index===0 ? 1 : 0.7
+      }).addTo(map);
+
+      routeLayers.push(polyline);
+
+      if(index===0){
+
+        currentRoute = polyline;
+
+        const distanceKm =
+          (route.distance/1000).toFixed(1);
+
+        currentRoute.bindTooltip(
+          `📏 ${distanceKm} km`,
+          {
+            permanent:true,
+            direction:"center",
+            className:"route-label"
+          }
+        );
+
+        showRouteInfo(
+          selectedDestination.name,
+          distanceKm,
+          Math.round(route.duration/60),
+          Math.round((distanceKm/18)*60),
+          Math.round((distanceKm/5)*60)
+        );
+
+      }
+
+    });
+
+    map.fitBounds(
+      currentRoute.getBounds(),
+      {
+        padding:[40,40]
+      }
+    );
+
   }
+
+  catch(err){
+
+    console.error(err);
+
+  }
+
+}
 
   // =======================
   // FIND NEAREST
@@ -355,13 +566,6 @@ async function drawMainRoute() {
     });
 
     selectedDestination = nearest;
-
-    L.popup()
-      .setLatLng([nearest.lat, nearest.lng])
-      .setContent(
-        `🔥 Nearest Skatepark:<br><b>${nearest.name}</b><br>Distance: ${(minDistance / 1000).toFixed(2)} km`
-      )
-      .openOn(map);
 
     drawMainRoute();
   }
