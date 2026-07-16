@@ -20,17 +20,53 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentRoute = null;
   let selectedMarker = null;
 
-   const defaultIcon = L.icon({
-     iconUrl: "image-skates/marker-blue.png",
-     iconSize: [32, 32],
-     iconAnchor: [16, 32]
+const defaultIcon = L.icon({
+    iconUrl: "icons/skate-blue.svg",
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -45]
 });
 
-   const activeIcon = L.icon({
-     iconUrl: "image-skates/marker-red.png",
-     iconSize: [38, 38],
-     iconAnchor: [19, 38]
+const activeIcon = L.icon({
+    iconUrl: "icons/skate-active.svg",
+    iconSize: [46, 58],
+    iconAnchor: [23, 58],
+    popupAnchor: [0, -52]
 });
+
+
+// == SKATE MARKERS == //
+ 
+function addSkateparkMarkers() {
+
+  skateparks.forEach((park) => {
+
+    const marker = L.marker(
+      [park.lat, park.lng],
+      { icon: defaultIcon }
+    ).addTo(map);
+
+    park.marker = marker;
+
+    marker.on("click", () => {
+
+      if (selectedMarker) {
+        selectedMarker.setIcon(defaultIcon);
+      }
+
+      marker.setIcon(activeIcon);
+
+      selectedMarker = marker;
+
+      selectedDestination = park;
+
+      drawMainRoute();
+
+    });
+
+  });
+
+}
 
   // =======================
   // INIT MAP
@@ -193,26 +229,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // USER LOCATION
   // =======================
 
-  function getUserLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
+let firstLocation = true;
+
+function getUserLocation() {
+
+    navigator.geolocation.getCurrentPosition(position => {
+
         userLocation = [
-          position.coords.latitude,
-          position.coords.longitude
+            position.coords.latitude,
+            position.coords.longitude
         ];
 
         L.marker(userLocation)
-          .addTo(map)
-          .bindPopup("📍 You are here")
-          .openPopup();
+            .addTo(map)
+            .bindPopup("📍 You are here");
 
-        map.setView(userLocation, 13);
-      },
-      () => {
-        alert("Please enable location access.");
-      }
-    );
-  }
+        if (firstLocation) {
+
+            map.setView(userLocation, 13);
+
+            firstLocation = false;
+        }
+
+    });
+
+}
 
 // =======================
 // ROUTES
@@ -284,11 +325,14 @@ async function drawMainRoute() {
       "--"
     );
 
-    map.flyTo(
-      [selectedDestination.lat, selectedDestination.lng],
-      13,
-      { duration:1.5 }
-    );
+   if (currentRoute) {
+
+    map.fitBounds(currentRoute.getBounds(), {
+        padding: [60, 60],
+        maxZoom: 12
+    });
+
+}
 
     return;
 

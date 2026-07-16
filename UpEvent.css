@@ -141,6 +141,17 @@ main {
     cursor:pointer;
 }
 
+.skate-Marker img {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+.skate-Marker-active img {
+  filter: drop-shadow(0 0 10px rgba(246, 72, 153, 0.8))
+          drop-shadow(0 0 18px rgba(168, 85, 246, 0.6));
+
+          transform: scale( 1.1);
+          transition: all 0.2s ease;
+}
+
 /* ==========================
    DISTANCE LABEL
 ========================== */
