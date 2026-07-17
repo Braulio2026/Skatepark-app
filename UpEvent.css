@@ -108,6 +108,104 @@ main {
   transform: scale(0.96);
 }
 
+/* ==========================
+   ROUTE INFO
+========================== */
+
+.route-popup{
+    text-align:center;
+    min-width:220px;
+}
+
+.route-popup h3{
+    margin-bottom:12px;
+}
+
+.route-popup .route-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.route-popup .route-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.route-popup button{
+    flex:1;
+    padding:8px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.skate-Marker img {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+.skate-Marker-active img {
+  filter: drop-shadow(0 0 10px rgba(246, 72, 153, 0.8))
+          drop-shadow(0 0 18px rgba(168, 85, 246, 0.6));
+
+          transform: scale( 1.1);
+          transition: all 0.2s ease;
+}
+
+/* ==========================
+   DISTANCE LABEL
+========================== */
+
+.route-label{
+
+    background:rgba(17,17,17,.72);
+
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    color:#fff;
+
+    padding:8px 14px;
+
+    border-radius:20px;
+
+    font-weight:700;
+
+    font-size:14px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.35);
+
+}
+
+.route-label::before{
+
+    display:none;
+
+}
+
+.route-info button:first-of-type{
+
+    background:linear-gradient(
+        135deg,
+        #3b82f6,
+        #2563eb
+    );
+
+}
+
+.route-info button:last-of-type{
+
+    background:linear-gradient(
+        135deg,
+        #22c55e,
+        #16a34a
+    );
+
+}
+
 .container-card {
   display: flex;
   margin: 0 20px;
