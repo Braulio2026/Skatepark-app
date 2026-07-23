@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let routeLayers = [];
   let currentRoute = null;
   let selectedMarker = null;
+  let userMarker = null;
+  let nearestMarker = null;
 
 const defaultIcon = L.icon({
     iconUrl: "icons/skate-blue.svg",
@@ -34,18 +36,33 @@ const activeIcon = L.icon({
     popupAnchor: [0, -52]
 });
 
+const userIcon = L.icon({
+    iconUrl: "icons/user-marker.svg",
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -45]
+});
+
+const nearestIcon = L.icon({
+    iconUrl: "icons/nearest-marker.svg",
+    iconSize: [46, 58],
+    iconAnchor: [23, 58],
+    popupAnchor: [0, -52]
+});
 
 // == SKATE MARKERS == //
- 
+
+
 function addSkateparkMarkers() {
 
   skateparks.forEach((park) => {
 
-    const marker = L.marker(
-      [park.lat, park.lng],
-      { icon: defaultIcon }
-    ).addTo(map);
+   const marker = L.marker(
+    [park.lat, park.lng],
+    { icon: defaultIcon }
+   )
 
+    // IMPORTANT
     park.marker = marker;
 
     marker.on("click", () => {
@@ -54,10 +71,13 @@ function addSkateparkMarkers() {
         selectedMarker.setIcon(defaultIcon);
       }
 
+      if (nearestMarker) {
+        nearestMarker.setIcon(defaultIcon);
+      }
+
       marker.setIcon(activeIcon);
 
       selectedMarker = marker;
-
       selectedDestination = park;
 
       drawMainRoute();
@@ -123,7 +143,7 @@ function addSkateparkMarkers() {
       name: "Los Lagos Skatepark",
       lat: 9.974303,
       lng: -84.114172,
-      description: "Heredia"
+      description: "Heredia",
     },
     {
       name: "Plaza Cleto González Víquez Skatepark",
@@ -204,26 +224,45 @@ function addSkateparkMarkers() {
   // =======================
 
   function addSkateparkMarkers() {
-    skateparks.forEach((park) => {
-      const marker = L.marker([park.lat, park.lng])
-        .addTo(map)
-        .bindPopup(`<b>${park.name}</b><br>${park.description}`);
 
-      marker.on("click", () => {
+  skateparks.forEach((park) => {
 
-    if (selectedMarker) {
+    const marker = L.marker(
+      [park.lat, park.lng],
+      { icon: defaultIcon }
+    ).addTo(map);
+
+    // Save marker reference
+    park.marker = marker;
+
+    marker.bindPopup(`
+      <b>${park.name}</b><br>
+      ${park.description}
+    `);
+
+    marker.on("click", () => {
+
+      if (selectedMarker) {
         selectedMarker.setIcon(defaultIcon);
-    }
+      }
 
-    marker.setIcon(activeIcon);
+      if (nearestMarker) {
+        nearestMarker.setIcon(defaultIcon);
+        nearestMarker = null;
+      }
 
-    selectedMarker = marker;
+      marker.setIcon(activeIcon);
 
-        selectedDestination = park;
-        drawMainRoute();
-      });
+      selectedMarker = marker;
+      selectedDestination = park;
+
+      drawMainRoute();
+
     });
-  }
+
+  });
+
+}
 
   // =======================
   // USER LOCATION
@@ -240,9 +279,12 @@ function getUserLocation() {
             position.coords.longitude
         ];
 
-        L.marker(userLocation)
-            .addTo(map)
-            .bindPopup("📍 You are here");
+        userMarker = L.marker(userLocation, {
+        icon: userIcon
+        })
+
+        .addTo(map)
+        .bindPopup("📍 You are here");
 
         if (firstLocation) {
 
@@ -588,31 +630,49 @@ async function drawAlternativeRoutes() {
   // FIND NEAREST
   // =======================
 
-  function findNearestSkatepark() {
+   function findNearestSkatepark() {
+
     if (!userLocation) {
-      alert("Waiting for your location...");
-      return;
+        alert("Waiting for your location...");
+        return;
     }
 
     let nearest = null;
     let minDistance = Infinity;
 
     skateparks.forEach((park) => {
-      const distance = map.distance(
-        userLocation,
-        [park.lat, park.lng]
-      );
 
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearest = park;
-      }
+        const distance = map.distance(
+            userLocation,
+            [park.lat, park.lng]
+        );
+
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearest = park;
+        }
+
     });
 
+    if (!nearest || !nearest.marker) return;
+
+    if (selectedMarker) {
+        selectedMarker.setIcon(defaultIcon);
+    }
+
+    if (nearestMarker) {
+        nearestMarker.setIcon(defaultIcon);
+    }
+
+    nearest.marker.setIcon(nearestIcon);
+
+    selectedMarker = nearest.marker;
+    nearestMarker = nearest.marker;
     selectedDestination = nearest;
 
     drawMainRoute();
-  }
+
+}
 
   // =======================
   // BUTTONS
