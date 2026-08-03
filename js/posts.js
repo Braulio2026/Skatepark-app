@@ -30,7 +30,9 @@ function safeUrl(url = "") {
 function createPostCard(event) {
   return `
     <div class="post-card" id="post-${event.id}">
-      <img src="${event.imageUrl}" alt="Post image">
+      <img
+         src="${event.imageUrl || 'images/default-post.png'}"
+         alt="Post image">
 
       <div class="post-content">
 
