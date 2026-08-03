@@ -1,3 +1,4 @@
+import "./likes.js";
 import { loadPosts } from "./posts.js";
 import { loadEvents } from "./events-post.js";
 import { supabase } from "./supabase.js";
