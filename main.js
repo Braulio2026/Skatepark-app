@@ -15,7 +15,7 @@ let index = 0;
 const skateparks = [
   {
     title: "Moravia Skatepark",
-    image: "image-skates/Skatepark_moravia.jpg",
+    image: "image-skates/moravia_skate2.webp",
     description: "Free public park in San Vicente, Moravia. Open 24h with bowl and street elements. Family-friendly with green areas and playgrounds.",
     map: "https://www.google.com/maps?q=Moravia+Skatepark+Costa+Rica"
   },
@@ -33,62 +33,62 @@ const skateparks = [
   },
   {
     title: "Turba Alajuelita Skatepark",
-    image: "image-skates/alajuelita_1.jpeg",
+    image: "image-skates/alajuelita_1.webp",
     description: "Modern 3-level skatepark opened in 2023. Includes street, bowl, and BMX zones. One of the best in Costa Rica.",
     map: "https://www.google.com/maps?q=Alajuelita+Skatepark"
   },
   {
     title: "Tecma Skatepark",
-    image: "image-skates/tecma_2.jpeg",
+    image: "image-skates/tecma_1.webp",
     description: "Compact skatepark with street features, banks, rails, and quarter pipes for all skill levels.",
     map: "https://maps.app.goo.gl/k71HagxcxBhH6LZ17"
   },
   {
     title: "Lagos de Lindora Skatepark",
-    image: "image-skates/santa_ana_skatepark.jpeg",
+    image: "image-skates/lindora_sntana_skte.webp",
     description: "Planned skatepark in Santa Ana (Lindora area). Project announced by the municipality.",
     map: "https://www.google.com/maps?q=Lindora+lagos+skatepark"
   },
   {
     title: "Plaza Viquez Skatepark",
-    image: "image-skates/viquez_skat2.jpeg",
+    image: "image-skates/viquez_skat2.webp",
     description: "Concrete skatepark in Cartago behind Escuela Vial. Open 9AM-5PM. Includes rails, ledges, and quarter pipes.",
     map: "https://www.google.com/maps?q=Plaza+gonzalez+viquez+skatepark"
   },
   {
     title: "Bowl Guachipelin Escazu",
-    image: "image-skates/escazu_skate3.jpeg",
+    image: "image-skates/escazu_skate2.webp",
     description: "Recreational park in Escazú with skate areas, courts, and playgrounds. Great for families and skating.",
     map: "https://www.google.com/maps?q=9.937505,-84.152561"
   },
   {
     title: "Zapote Skatepark",
-    image: "image-skates/zapote_skate2.jpg",
+    image: "image-skates/zapote_skate4.webp",
     description: "Street-style municipal park in Zapote with boxes, ramps, and ledges. Popular local skate spot.",
     map: "https://www.google.com/maps?q=Zapote+Skatepark"
   },
   {
     title: "Los Lagos Skatepark",
-    image: "image-skates/lagos_skat7.jpeg",
+    image: "image-skates/lagos_skate.webp",
     description: "Large modern park in Heredia with street, bowl, and pumptrack areas. Suitable for all skill levels.",
     map: "https://www.google.com/maps?q=Los+lagos+skatepark"
   },
   {
     title: "Plaza Barrio Pinto",
-    image: "image-skates/pinto_2.jpeg",
+    image: "image-skates/pinto_4.webp",
     description: "Popular street skate spot with ledges, stairs, rails, and open flat areas. Great for intermediate and advanced skaters.",
     map: "https://www.google.com/maps?q=WXH3+9R8,San+José,San+Pedro,Barrio+Pinto,11801"
   },
    {
     title: "Bell Air Skatepark",
-    image: "image-skates/bel_air4.jpeg",
+    image: "image-skates/bel_air1.webp",
     description: "Local outdoor skatepark with smooth concrete, street features, and transition obstacles. Great for beginners and intermediate skaters.",
     map: "https://www.google.com/maps?q=9.982640,-84.168113"
   },
 
   {
    title: "San Ramón Skatepark",
-   image: "image-skates/sn_ramon_skate.jpeg",
+   image: "image-skates/sn_ramon1.webp",
    description: "Outdoor concrete skatepark with ramps, banks, ledges, and open riding areas. Great for street skating and progression.",
    map: "https://www.google.com/maps?q=10.100109,-84.473479"
   },
